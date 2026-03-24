@@ -1,0 +1,113 @@
+<div class="timesheets-container">
+  <div class="page-header">
+    <h2>Timesheets</h2>
+    <button class="btn btn-primary" (click)="submitTimesheet()">
+      <i class="fas fa-plus"></i> Submit Timesheet
+    </button>
+  </div>
+
+  <div class="summary-cards" *ngIf="hasSummary()">
+    <div class="summary-card">
+      <div class="summary-icon">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="summary-content">
+        <div class="summary-value">{{ summary.total_hours || 0 }}</div>
+        <div class="summary-label">Total Hours</div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon">
+        <i class="fas fa-dollar-sign"></i>
+      </div>
+      <div class="summary-content">
+        <div class="summary-value">{{ summary.total_billable_hours || 0 }}</div>
+        <div class="summary-label">Billable Hours</div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon">
+        <i class="fas fa-list"></i>
+      </div>
+      <div class="summary-content">
+        <div class="summary-value">{{ summary.total_entries || 0 }}</div>
+        <div class="summary-label">Total Entries</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Start Date:</label>
+      <input type="date" [(ngModel)]="filters.start_date" (change)="onFilterChange()">
+    </div>
+    <div class="filter-group">
+      <label>End Date:</label>
+      <input type="date" [(ngModel)]="filters.end_date" (change)="onFilterChange()">
+    </div>
+    <div class="filter-group">
+      <label>Status:</label>
+      <select [(ngModel)]="filters.status" (change)="onFilterChange()">
+        <option value="">All</option>
+        <option value="Draft">Draft</option>
+        <option value="Submitted">Submitted</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="timesheets-list" *ngIf="!loading">
+    <div class="timesheet-card" *ngFor="let timesheet of timesheets">
+      <div class="timesheet-header">
+        <div class="timesheet-project">
+          <h3>{{ timesheet.project_name || 'N/A' }}</h3>
+          <span class="project-code">{{ timesheet.project_code || '' }}</span>
+        </div>
+        <span class="badge badge-{{ timesheet.status.toLowerCase() }}">
+          {{ timesheet.status }}
+        </span>
+      </div>
+      <div class="timesheet-details">
+        <div class="detail-row">
+          <span class="detail-label">Date:</span>
+          <span class="detail-value">{{ timesheet.timesheet_date | date:'shortDate' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Hours:</span>
+          <span class="detail-value highlight">{{ timesheet.hours_worked || 0 }} hrs</span>
+        </div>
+        <div class="detail-row" *ngIf="timesheet.billable_hours > 0">
+          <span class="detail-label">Billable:</span>
+          <span class="detail-value highlight">{{ timesheet.billable_hours }} hrs</span>
+        </div>
+        <div class="detail-row" *ngIf="timesheet.task_name">
+          <span class="detail-label">Task:</span>
+          <span class="detail-value">{{ timesheet.task_name }}</span>
+        </div>
+        <div class="detail-row" *ngIf="timesheet.description">
+          <span class="detail-label">Description:</span>
+          <span class="detail-value">{{ timesheet.description }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="no-timesheets" *ngIf="timesheets.length === 0">
+      <p>No timesheets found</p>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="total > limit">
+    <button class="btn btn-sm" [disabled]="page === 1" (click)="onPageChange(page - 1)">
+      Previous
+    </button>
+    <span>Page {{ page }} of {{ getTotalPages() }}</span>
+    <button class="btn btn-sm" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
+      Next
+    </button>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+  </div>
+</div>
+

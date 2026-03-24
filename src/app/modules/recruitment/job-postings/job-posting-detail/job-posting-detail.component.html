@@ -1,0 +1,37 @@
+<div class="job-detail-container">
+  <div class="page-header">
+    <h2>Job posting</h2>
+    <div class="actions">
+      <button type="button" class="btn btn-outline-secondary btn-sm me-2" (click)="back()">Back to list</button>
+      <button type="button" class="btn btn-primary btn-sm" (click)="edit()" *ngIf="job">Edit</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-muted py-4">Loading…</div>
+  <div *ngIf="error" class="alert alert-warning">{{ error }}</div>
+
+  <div class="card shadow-sm border-0" *ngIf="!loading && job">
+    <div class="card-body">
+      <h4 class="card-title">{{ job.job_title }}</h4>
+      <p class="text-muted mb-2">{{ job.job_code }} · {{ job.department_name }} · {{ job.designation_name }}</p>
+      <p><span class="badge bg-secondary">{{ job.status }}</span>
+        <span class="ms-2 small text-muted" *ngIf="job.posted_date">Posted {{ job.posted_date | date:'mediumDate' }}</span>
+      </p>
+      <hr />
+      <div class="row small">
+        <div class="col-md-6 mb-2" *ngIf="job.location"><strong>Location:</strong> {{ job.location }}</div>
+        <div class="col-md-6 mb-2" *ngIf="job.employment_type"><strong>Type:</strong> {{ job.employment_type }}</div>
+        <div class="col-md-6 mb-2"><strong>Openings:</strong> {{ job.no_of_positions }}</div>
+        <div class="col-md-6 mb-2"><strong>Applications:</strong> {{ job.applications_count ?? 0 }}</div>
+      </div>
+      <div class="mt-3" *ngIf="job.job_description">
+        <h6>Description</h6>
+        <p class="small mb-0" style="white-space: pre-wrap">{{ job.job_description }}</p>
+      </div>
+      <div class="mt-3" *ngIf="job.requirements">
+        <h6>Requirements</h6>
+        <p class="small mb-0" style="white-space: pre-wrap">{{ job.requirements }}</p>
+      </div>
+    </div>
+  </div>
+</div>

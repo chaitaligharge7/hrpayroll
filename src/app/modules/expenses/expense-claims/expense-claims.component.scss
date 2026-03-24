@@ -1,0 +1,154 @@
+.expense-claims-container {
+  padding: 20px;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      margin: 0;
+      color: #1e293b;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
+  .claims-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .claim-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.2s;
+
+      &:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .claim-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #e2e8f0;
+
+        .claim-amount {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+
+          .currency {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 500;
+          }
+
+          .amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+          }
+        }
+
+        .badge {
+          padding: 6px 16px;
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 600;
+
+          &.badge-pending {
+            background-color: #fef3c7;
+            color: #d97706;
+          }
+
+          &.badge-approved {
+            background-color: #dcfce7;
+            color: #16a34a;
+          }
+
+          &.badge-rejected {
+            background-color: #fee2e2;
+            color: #dc2626;
+          }
+
+          &.badge-paid {
+            background-color: #dbeafe;
+            color: #2563eb;
+          }
+        }
+      }
+
+      .claim-details {
+        p {
+          margin: 8px 0;
+          color: #475569;
+          font-size: 14px;
+
+          strong {
+            color: #1e293b;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .claim-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
+
+        .btn {
+          padding: 8px 16px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.2s;
+
+          &.btn-success {
+            background-color: #10b981;
+            color: white;
+
+            &:hover {
+              background-color: #059669;
+            }
+          }
+
+          &.btn-danger {
+            background-color: #ef4444;
+            color: white;
+
+            &:hover {
+              background-color: #dc2626;
+            }
+          }
+
+          &.btn-info {
+            background-color: #3b82f6;
+            color: white;
+
+            &:hover {
+              background-color: #2563eb;
+            }
+          }
+        }
+      }
+    }
+
+    .no-claims {
+      text-align: center;
+      padding: 40px;
+      color: #64748b;
+    }
+  }
+}
+

@@ -1,0 +1,82 @@
+<div class="reports-container">
+  <div class="page-header">
+    <h2>Reports & Analytics</h2>
+  </div>
+
+  <div class="report-selection">
+    <div class="report-type-selector">
+      <label>Select Report Type:</label>
+      <select [(ngModel)]="selectedReportType" class="report-select">
+        <option value="">-- Select Report --</option>
+        <option *ngFor="let report of reportTypes" [value]="report.value">
+          {{ report.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="report-filters" *ngIf="selectedReportType">
+      <h3>Filters</h3>
+      <div class="filter-group" *ngIf="selectedReportType === 'attendance_summary'">
+        <label>Start Date:</label>
+        <input type="date" [(ngModel)]="filters.start_date">
+      </div>
+      <div class="filter-group" *ngIf="selectedReportType === 'attendance_summary'">
+        <label>End Date:</label>
+        <input type="date" [(ngModel)]="filters.end_date">
+      </div>
+      <div class="filter-group" *ngIf="selectedReportType === 'payroll_summary'">
+        <label>Payroll Month:</label>
+        <input type="month" [(ngModel)]="filters.payroll_month">
+      </div>
+      <div class="filter-group" *ngIf="selectedReportType === 'leave_summary'">
+        <label>Year:</label>
+        <input type="number" [(ngModel)]="filters.year">
+      </div>
+    </div>
+
+    <div class="report-actions">
+      <button class="btn btn-primary" (click)="generateReport()" [disabled]="!selectedReportType || loading">
+        <i class="fas fa-chart-bar"></i> Generate Report
+      </button>
+      <button class="btn btn-success" 
+              (click)="exportReport('excel')" 
+              [disabled]="!selectedReportType || reportData.length === 0">
+        <i class="fas fa-file-excel"></i> Export Excel
+      </button>
+      <button class="btn btn-danger" 
+              (click)="exportReport('pdf')" 
+              [disabled]="!selectedReportType || reportData.length === 0">
+        <i class="fas fa-file-pdf"></i> Export PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="report-results" *ngIf="reportData.length > 0">
+    <div class="results-header">
+      <h3>Report Results ({{ reportData.length }} records)</h3>
+    </div>
+    <div class="table-container">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th *ngFor="let key of getTableHeaders()">{{ formatHeader(key) }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of reportData">
+            <td *ngFor="let key of getTableHeaders()">{{ row[key] || 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i> Generating report...
+  </div>
+
+  <div class="no-results" *ngIf="!loading && selectedReportType && reportData.length === 0">
+    <p>No data found for the selected criteria</p>
+  </div>
+</div>
+

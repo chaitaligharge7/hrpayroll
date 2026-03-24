@@ -1,0 +1,40 @@
+<div class="container-fluid py-3">
+  <h4 class="mb-3">Compliance</h4>
+  <p class="text-muted small">Gratuity is per employee. Bonus calculation runs for all active employees for the given financial year.</p>
+
+  <div *ngIf="message" class="alert alert-secondary py-2">{{ message }}</div>
+  <div *ngIf="result" class="alert alert-light small"><pre class="mb-0">{{ result | json }}</pre></div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header">Gratuity</div>
+        <div class="card-body">
+          <label class="form-label small">Employee ID</label>
+          <input type="number" class="form-control form-control-sm mb-2" [(ngModel)]="employeeIdGratuity" />
+          <button type="button" class="btn btn-primary btn-sm" (click)="calculateGratuity()">Calculate</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header">Bonus (all active employees)</div>
+        <div class="card-body">
+          <label class="form-label small">Financial year</label>
+          <input class="form-control form-control-sm mb-2" [(ngModel)]="financialYear" placeholder="2024-25" />
+          <label class="form-label small">Bonus type</label>
+          <select class="form-select form-select-sm mb-2" [(ngModel)]="bonusType">
+            <option value="Statutory">Statutory</option>
+            <option value="Performance">Performance</option>
+            <option value="Annual">Annual</option>
+          </select>
+          <div *ngIf="bonusType === 'Performance' || bonusType === 'Annual'">
+            <label class="form-label small">Bonus %</label>
+            <input type="number" class="form-control form-control-sm mb-2" [(ngModel)]="bonusPercentage" />
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" (click)="calculateBonus()">Calculate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

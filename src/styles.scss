@@ -1,0 +1,329 @@
+/**
+ * HR Payroll Management System
+ * Professional Theme - Mobile Responsive & Retina Ready
+ * 
+ * Color Scheme:
+ * Primary: #2563eb (Professional Blue)
+ * Secondary: #64748b (Slate Gray)
+ * Success: #10b981 (Emerald Green)
+ * Warning: #f59e0b (Amber)
+ * Danger: #ef4444 (Red)
+ * Info: #3b82f6 (Blue)
+ * 
+ * Fonts:
+ * Primary: 'Inter', 'Segoe UI', sans-serif
+ * Monospace: 'JetBrains Mono', 'Courier New', monospace
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+// Color Variables
+$primary-color: #2563eb;
+$primary-dark: #1e40af;
+$primary-light: #3b82f6;
+$secondary-color: #64748b;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$info-color: #3b82f6;
+
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$text-muted: #94a3b8;
+
+$bg-primary: #ffffff;
+$bg-secondary: #f8fafc;
+$bg-tertiary: #f1f5f9;
+
+$border-color: #e2e8f0;
+$border-radius: 8px;
+$box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+// Typography
+* {
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $bg-secondary;
+  color: $text-primary;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: $text-primary;
+  margin-top: 0;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.125rem; }
+h6 { font-size: 1rem; }
+
+// Buttons
+.btn {
+  padding: 0.625rem 1.25rem;
+  border-radius: $border-radius;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $box-shadow-lg;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-primary {
+  background-color: $primary-color;
+  color: white;
+  
+  &:hover {
+    background-color: $primary-dark;
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary-color;
+  color: white;
+  
+  &:hover {
+    background-color: darken($secondary-color, 10%);
+  }
+}
+
+.btn-success {
+  background-color: $success-color;
+  color: white;
+}
+
+.btn-danger {
+  background-color: $danger-color;
+  color: white;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid $border-color;
+  color: $text-primary;
+  
+  &:hover {
+    background-color: $bg-tertiary;
+  }
+}
+
+// Cards
+.card {
+  background: $bg-primary;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  
+  .card-header {
+    border-bottom: 1px solid $border-color;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+  }
+  
+  .card-body {
+    padding: 0;
+  }
+}
+
+// Forms
+.form-group {
+  margin-bottom: 1.25rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $text-primary;
+    font-size: 0.875rem;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+  }
+  
+  .form-error {
+    color: $danger-color;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+}
+
+// Tables
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $bg-primary;
+  border-radius: $border-radius;
+  overflow: hidden;
+  
+  thead {
+    background-color: $bg-tertiary;
+    
+    th {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: $text-primary;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid $border-color;
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: $bg-secondary;
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    td {
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: $text-primary;
+    }
+  }
+}
+
+// Badges
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: $success-color;
+}
+
+.badge-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: $warning-color;
+}
+
+.badge-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: $danger-color;
+}
+
+.badge-info {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: $info-color;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  .table {
+    font-size: 0.8125rem;
+    
+    thead th, tbody td {
+      padding: 0.625rem 0.5rem;
+    }
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+}
+
+// Retina Display Support
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+// Loading Spinner
+.spinner {
+  border: 3px solid $bg-tertiary;
+  border-top: 3px solid $primary-color;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Utilities
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: $text-muted; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+

@@ -1,0 +1,135 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>Payroll Records</h3>
+    <div>
+      <button class="btn btn-success me-2" (click)="generateBankSheet()" [disabled]="!selectedPeriod">
+        <i class="bi bi-download"></i> Generate Bank Sheet
+      </button>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <!-- Filters -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <select class="form-select" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
+          <option [value]="null">All Periods</option>
+          <option *ngFor="let period of periods" [value]="period.period_id">
+            {{ period.period_name }} ({{ period.start_date | date:'short' }})
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
+          <option value="">All Status</option>
+          <option value="Draft">Draft</option>
+          <option value="Processed">Processed</option>
+          <option value="Approved">Approved</option>
+          <option value="Paid">Paid</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card bg-light">
+          <div class="card-body">
+            <h6 class="text-muted">Total Gross</h6>
+            <h4>{{ summary.total_gross | number:'1.2-2' }}</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-light">
+          <div class="card-body">
+            <h6 class="text-muted">Total Deductions</h6>
+            <h4>{{ summary.total_deductions | number:'1.2-2' }}</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-light">
+          <div class="card-body">
+            <h6 class="text-muted">Total Net</h6>
+            <h4>{{ summary.total_net | number:'1.2-2' }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payroll Table -->
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Employee Code</th>
+            <th>Employee Name</th>
+            <th>Period</th>
+            <th>Gross Salary</th>
+            <th>Deductions</th>
+            <th>Net Salary</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payroll of payrolls">
+            <td>{{ payroll.employee_code }}</td>
+            <td>{{ payroll.employee_name }}</td>
+            <td>{{ payroll.period_name }}</td>
+            <td>{{ payroll.gross_salary | number:'1.2-2' }}</td>
+            <td>{{ payroll.total_deductions | number:'1.2-2' }}</td>
+            <td>{{ payroll.net_salary | number:'1.2-2' }}</td>
+            <td>
+              <span class="badge" 
+                    [ngClass]="{
+                      'badge-warning': payroll.status === 'Draft',
+                      'badge-info': payroll.status === 'Processed',
+                      'badge-success': payroll.status === 'Approved',
+                      'badge-primary': payroll.status === 'Paid'
+                    }">
+                {{ payroll.status }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline me-1" (click)="viewPayslip(payroll)">
+                <i class="bi bi-file-pdf"></i> Payslip
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="payrolls.length === 0">
+            <td colspan="8" class="text-center text-muted py-4">
+              No payroll records found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="pagination.total_pages > 1" class="d-flex justify-content-between align-items-center mt-3">
+      <div class="text-muted">
+        Showing {{ (pagination.page - 1) * pagination.limit + 1 }} to 
+        {{ getMath().min(pagination.page * pagination.limit, pagination.total) }} of 
+        {{ pagination.total }} entries
+      </div>
+      <nav>
+        <ul class="pagination mb-0">
+          <li class="page-item" [class.disabled]="pagination.page === 1">
+            <a class="page-link" (click)="previousPage()">Previous</a>
+          </li>
+          <li *ngFor="let page of [].constructor(pagination.total_pages); let i = index"
+              class="page-item" 
+              [class.active]="pagination.page === i + 1">
+            <a class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="pagination.page === pagination.total_pages">
+            <a class="page-link" (click)="nextPage()">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+

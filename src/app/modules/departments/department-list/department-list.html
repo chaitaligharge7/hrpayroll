@@ -1,0 +1,126 @@
+<p>department-list works!</p>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>Departments</h3>
+
+    <button class="btn btn-light btn-sm" (click)="goToEmployees()">
+      Employees
+    </button>
+
+    <button class="btn btn-light btn-sm" [class.active]="true">
+      Departments
+    </button>
+
+    <button class="btn btn-light btn-sm" >
+      Designations
+    </button>
+
+    <button class="btn btn-primary" (click)="createDepartment()">
+      <i class="bi bi-plus-circle"></i> Add Department
+    </button>
+  </div>
+
+  <div class="card-body">
+    
+    <!-- Search -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search departments..."
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+        />
+      </div>
+
+      <div class="col-md-2">
+        <button class="btn btn-outline w-100" (click)="onSearch()">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!loading" class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Head</th>
+            <th>Employees</th>
+            <th>Cost Center</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dept of departments">
+            <td>{{ dept.department_code }}</td>
+            <td>{{ dept.department_name }}</td>
+            <td>
+              {{ dept.head_first_name || '-' }} {{ dept.head_last_name || '' }}
+            </td>
+            <td>{{ dept.employee_count }}</td>
+            <td>{{ dept.cost_center || '-' }}</td>
+
+            <td>
+              <button class="btn btn-sm btn-outline me-1" (click)="viewDepartment(dept)">
+                <i class="bi bi-eye"></i>
+              </button>
+
+              <button class="btn btn-sm btn-outline me-1" (click)="editDepartment(dept)">
+                <i class="bi bi-pencil"></i>
+              </button>
+
+              <button class="btn btn-sm btn-outline btn-danger" (click)="deleteDepartment(dept)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="departments.length === 0">
+            <td colspan="6" class="text-center text-muted py-4">
+              No departments found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!loading && pagination.total_pages > 1"
+         class="d-flex justify-content-between align-items-center mt-3">
+
+      <div class="text-muted">
+        Showing {{ (pagination.page - 1) * pagination.limit + 1 }}
+        to {{ getMath().min(pagination.page * pagination.limit, pagination.total) }}
+        of {{ pagination.total }} entries
+      </div>
+
+      <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="pagination.page === 1">
+          <a class="page-link" (click)="onPageChange(pagination.page - 1)">Previous</a>
+        </li>
+
+        <li *ngFor="let page of [].constructor(pagination.total_pages); let i = index"
+            class="page-item"
+            [class.active]="pagination.page === i + 1">
+          <a class="page-link" (click)="onPageChange(i + 1)">
+            {{ i + 1 }}
+          </a>
+        </li>
+
+        <li class="page-item" [class.disabled]="pagination.page === pagination.total_pages">
+          <a class="page-link" (click)="onPageChange(pagination.page + 1)">Next</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>

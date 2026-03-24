@@ -1,0 +1,62 @@
+<div class="container-fluid py-3">
+  <h4 class="mb-3">Leaves</h4>
+
+  <div *ngIf="message" class="alert alert-info py-2">{{ message }}</div>
+
+  <div class="card mb-4">
+    <div class="card-header">Apply for leave</div>
+    <div class="card-body row g-2">
+      <div class="col-md-3">
+        <label class="form-label small">Type</label>
+        <select class="form-select form-select-sm" [(ngModel)]="form.leave_type_id">
+          <option [ngValue]="null">Select…</option>
+          <option *ngFor="let t of types" [ngValue]="t.leave_type_id || t.id">{{ t.leave_type_name || t.name }}</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">Start</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="form.start_date" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">End</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="form.end_date" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small">Reason</label>
+        <input class="form-control form-control-sm" [(ngModel)]="form.reason" />
+      </div>
+      <div class="col-12">
+        <button type="button" class="btn btn-primary btn-sm" (click)="apply()">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>Requests</span>
+      <button type="button" class="btn btn-link btn-sm p-0" (click)="loadRequests()" [disabled]="loading">Refresh</button>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="loading" class="p-3 text-muted">Loading…</div>
+      <div *ngIf="!loading && requests.length === 0" class="p-3 text-muted">No leave requests.</div>
+      <div class="table-responsive" *ngIf="!loading && requests.length > 0">
+        <table class="table table-sm table-striped mb-0">
+          <thead>
+            <tr>
+              <th>Dates</th>
+              <th>Days</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of requests">
+              <td>{{ r.start_date }} – {{ r.end_date }}</td>
+              <td>{{ r.total_days || r.days || '—' }}</td>
+              <td>{{ r.status || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

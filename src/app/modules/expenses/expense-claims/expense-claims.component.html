@@ -1,0 +1,72 @@
+<div class="expense-claims-container">
+  <div class="page-header">
+    <h2>Expense Claims</h2>
+    <button class="btn btn-primary" (click)="createExpenseClaim()">
+      <i class="fas fa-plus"></i> New Claim
+    </button>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Status:</label>
+      <select [(ngModel)]="filters.status" (change)="onFilterChange()">
+        <option value="">All</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Paid">Paid</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="claims-list" *ngIf="!loading">
+    <div class="claim-card" *ngFor="let claim of expenseClaims">
+      <div class="claim-header">
+        <div class="claim-amount">
+          <span class="currency">₹</span>
+          <span class="amount">{{ claim.total_amount || 0 }}</span>
+        </div>
+        <span class="badge badge-{{ claim.status.toLowerCase() }}">
+          {{ claim.status }}
+        </span>
+      </div>
+      <div class="claim-details">
+        <p><strong>Employee:</strong> {{ claim.first_name }} {{ claim.last_name }} ({{ claim.employee_code }})</p>
+        <p><strong>Date:</strong> {{ claim.expense_date | date:'shortDate' }}</p>
+        <p><strong>Items:</strong> {{ claim.items_count || 0 }} items</p>
+        <p><strong>Type:</strong> {{ claim.expense_type || 'Other' }}</p>
+      </div>
+      <div class="claim-actions" *ngIf="userRole !== 'employee' && claim.status === 'Pending'">
+        <button class="btn btn-success" (click)="approveClaim(claim.expense_id)">
+          Approve
+        </button>
+        <button class="btn btn-danger" (click)="rejectClaim(claim.expense_id)">
+          Reject
+        </button>
+      </div>
+      <div class="claim-actions">
+        <button class="btn btn-info" (click)="viewExpenseClaim(claim.expense_id)">
+          View Details
+        </button>
+      </div>
+    </div>
+    <div class="no-claims" *ngIf="expenseClaims.length === 0">
+      <p>No expense claims found</p>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="total > limit">
+    <button class="btn btn-sm" [disabled]="page === 1" (click)="onPageChange(page - 1)">
+      Previous
+    </button>
+    <span>Page {{ page }} of {{ getTotalPages() }}</span>
+    <button class="btn btn-sm" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
+      Next
+    </button>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+  </div>
+</div>
+

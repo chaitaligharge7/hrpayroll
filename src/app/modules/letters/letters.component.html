@@ -1,0 +1,80 @@
+<div class="letters-container">
+  <div class="page-header">
+    <h2>Generate HR Letters</h2>
+  </div>
+
+  <div class="letter-generation-form">
+    <div class="form-section">
+      <div class="form-group">
+        <label>Letter Type:</label>
+        <select [(ngModel)]="selectedLetterType" (change)="onLetterTypeChange()" class="form-control">
+          <option value="">-- Select Letter Type --</option>
+          <option *ngFor="let type of letterTypes" [value]="type.type">
+            {{ type.name }}
+          </option>
+        </select>
+        <small *ngIf="selectedLetterType" class="form-text">
+          {{ getSelectedLetterDescription() }}
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Employee:</label>
+        <input type="number" [(ngModel)]="selectedEmployeeId" class="form-control" placeholder="Employee ID">
+        <!-- TODO: Replace with employee autocomplete/select component -->
+        <small class="form-text">Enter Employee ID or use employee search</small>
+      </div>
+
+      <div class="form-group" *ngIf="selectedLetterType && additionalParams">
+        <div *ngFor="let param of getAdditionalParamsKeys()">
+          <label>{{ formatParamLabel(param) }}:</label>
+          <input type="number" [(ngModel)]="additionalParams[param]" class="form-control" [placeholder]="param">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" (click)="generateLetter()" [disabled]="loading || !selectedLetterType || !selectedEmployeeId">
+          <i class="fas fa-file-pdf"></i> Generate Letter
+        </button>
+      </div>
+    </div>
+
+    <div class="letter-preview" *ngIf="generatedLetter">
+      <div class="preview-header">
+        <h3>Letter Generated Successfully</h3>
+        <button class="btn btn-success" (click)="downloadLetter()">
+          <i class="fas fa-download"></i> Download Letter
+        </button>
+      </div>
+      <div class="preview-info">
+        <p><strong>File:</strong> {{ generatedLetter.filename }}</p>
+        <p><strong>Path:</strong> {{ generatedLetter.letter_path }}</p>
+        <a [href]="generatedLetter.letter_url" target="_blank" class="btn btn-info">
+          <i class="fas fa-external-link-alt"></i> View Letter
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="available-letters">
+    <h3>Available Letter Types</h3>
+    <div class="letters-grid">
+      <div class="letter-card" *ngFor="let type of letterTypes">
+        <div class="letter-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="letter-info">
+          <h4>{{ type.name }}</h4>
+          <p>{{ type.description }}</p>
+          <div class="letter-requirements" *ngIf="type.requires.length > 0">
+            <small>Requires: {{ type.requires.join(', ') }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i> Generating letter...
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="container-fluid py-3">
+  <h4 class="mb-3">Shifts</h4>
+
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <button type="button" class="nav-link" [class.active]="activeTab === 'rosters'" (click)="activeTab = 'rosters'">Rosters</button>
+    </li>
+    <li class="nav-item">
+      <button type="button" class="nav-link" [class.active]="activeTab === 'swaps'" (click)="activeTab = 'swaps'">Swap requests</button>
+    </li>
+  </ul>
+
+  <div *ngIf="loading" class="text-muted">Loading…</div>
+
+  <div *ngIf="activeTab === 'rosters'">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="text-muted small">{{ rosters.length }} roster(s)</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="createRoster()">Create roster</button>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let r of rosters" class="list-group-item">
+        {{ r.roster_name || r.shift_name || 'Roster' }} — <span class="text-muted">{{ r.status }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="activeTab === 'swaps'">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="text-muted small">{{ shiftSwaps.length }} request(s)</span>
+      <button type="button" class="btn btn-outline-primary btn-sm" (click)="requestShiftSwap()">Request swap</button>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let s of shiftSwaps" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Swap #{{ s.swap_id || s.id }} — {{ s.status }}</span>
+        <button *ngIf="s.status === 'pending' || s.status === 'Pending'" type="button" class="btn btn-success btn-sm" (click)="approveSwap(s.swap_id || s.id)">Approve</button>
+      </li>
+    </ul>
+  </div>
+</div>

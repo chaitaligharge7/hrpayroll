@@ -1,0 +1,86 @@
+<div class="app-container">
+  <nav *ngIf="isAuthenticated" class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/dashboard">
+        <i class="bi bi-briefcase"></i> HR Payroll System
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/employees" routerLinkActive="active">Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/payroll" routerLinkActive="active">Payroll</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/attendance" routerLinkActive="active">Attendance</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/leaves" routerLinkActive="active">Leaves</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/recruitment" routerLinkActive="active">Recruitment</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/reports" routerLinkActive="active">Reports</a>
+          <!-- </li>
+              <li class="nav-item">
+            <a class="nav-link" routerLink="/departments" routerLinkActive="active">Departments</a>
+          </li>
+              <li class="nav-item">
+            <a class="nav-link" routerLink="/designations" routerLinkActive="active">Designations</a>
+          </li> -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navMoreDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              More
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navMoreDropdown">
+              <li><a class="dropdown-item" routerLink="/assets">Assets</a></li>
+              <li><a class="dropdown-item" routerLink="/expenses">Expenses</a></li>
+              <li><a class="dropdown-item" routerLink="/projects">Projects</a></li>
+              <li><a class="dropdown-item" routerLink="/timesheets">Timesheets</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" routerLink="/letters">Letters</a></li>
+              <li><a class="dropdown-item" routerLink="/documents">Documents</a></li>
+              <li><a class="dropdown-item" routerLink="/training">Training</a></li>
+              <li><a class="dropdown-item" routerLink="/performance">Performance</a></li>
+              <li><a class="dropdown-item" routerLink="/shifts">Shifts</a></li>
+              <li><a class="dropdown-item" routerLink="/compliance">Compliance</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" routerLink="/settings">Settings</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle"></i> {{ currentUser?.first_name }} {{ currentUser?.last_name }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

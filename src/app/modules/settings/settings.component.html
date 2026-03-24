@@ -1,0 +1,16 @@
+<div class="container-fluid py-3">
+  <h4 class="mb-3">Settings</h4>
+
+  <div *ngIf="loading" class="text-muted">Loading…</div>
+  <div *ngIf="error" class="alert alert-warning">{{ error }}</div>
+
+  <div *ngFor="let cat of categoryKeys()" class="card mb-3">
+    <div class="card-header text-capitalize">{{ cat }}</div>
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let key of keysFor(cat)" class="list-group-item d-flex justify-content-between align-items-center">
+        <span class="fw-medium text-break me-2">{{ key }}</span>
+        <code class="small text-break">{{ valueAt(cat, key) | json }}</code>
+      </li>
+    </ul>
+  </div>
+</div>

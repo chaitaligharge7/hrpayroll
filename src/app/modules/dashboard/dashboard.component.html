@@ -1,0 +1,114 @@
+<div class="dashboard-container">
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-muted mb-2">Total Employees</h6>
+              <h2 class="mb-0">{{ stats.total_employees }}</h2>
+            </div>
+            <div class="stat-icon">
+              <i class="bi bi-people-fill"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-muted mb-2">Active Employees</h6>
+              <h2 class="mb-0">{{ stats.active_employees }}</h2>
+            </div>
+            <div class="stat-icon">
+              <i class="bi bi-person-check-fill"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-muted mb-2">Pending Leaves</h6>
+              <h2 class="mb-0">{{ stats.pending_leaves }}</h2>
+            </div>
+            <div class="stat-icon">
+              <i class="bi bi-calendar-x-fill"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+      <div class="card stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="text-muted mb-2">Today Attendance</h6>
+              <h2 class="mb-0">{{ stats.present_today }}/{{ stats.today_attendance }}</h2>
+            </div>
+            <div class="stat-icon">
+              <i class="bi bi-clock-history"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts and Activities -->
+  <div class="row">
+    <div class="col-md-8 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5>Recent Activities</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="recentActivities.length === 0" class="text-center text-muted py-4">
+            No recent activities
+          </div>
+          <div *ngFor="let activity of recentActivities" class="activity-item mb-3 pb-3 border-bottom">
+            <div class="d-flex">
+              <div class="activity-icon me-3">
+                <i [class]="getActivityIcon(activity.type)"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h6 class="mb-1">{{ activity.title }}</h6>
+                <p class="text-muted mb-0 small">{{ activity.message }}</p>
+                <span class="text-muted small">{{ activity.created_at | date:'short' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5>Upcoming Events</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="upcomingEvents.length === 0" class="text-center text-muted py-4">
+            No upcoming events
+          </div>
+          <div *ngFor="let event of upcomingEvents" class="event-item mb-3">
+            <h6>{{ event.title }}</h6>
+            <p class="text-muted small mb-0">{{ event.date | date:'medium' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

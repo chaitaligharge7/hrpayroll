@@ -1,0 +1,39 @@
+<div class="container-fluid py-3">
+  <h4 class="mb-3">Performance</h4>
+
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <button type="button" class="nav-link" [class.active]="activeTab === 'appraisals'" (click)="activeTab = 'appraisals'">Appraisals</button>
+    </li>
+    <li class="nav-item">
+      <button type="button" class="nav-link" [class.active]="activeTab === 'cycles'" (click)="activeTab = 'cycles'">Cycles</button>
+    </li>
+  </ul>
+
+  <div *ngIf="loading" class="text-muted">Loading…</div>
+
+  <div *ngIf="activeTab === 'appraisals'">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="text-muted small">{{ appraisals.length }} appraisal(s)</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="createAppraisal()">New appraisal</button>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let a of appraisals" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ a.employee_name || a.title || 'Appraisal ' + (a.appraisal_id || a.id) }}</span>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="viewAppraisal(a.appraisal_id || a.id)">View</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="activeTab === 'cycles'">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="text-muted small">{{ cycles.length }} cycle(s)</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="createCycle()">New cycle</button>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let c of cycles" class="list-group-item">
+        {{ c.cycle_name || c.name }} — <span class="text-muted">{{ c.status }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

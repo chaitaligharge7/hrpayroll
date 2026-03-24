@@ -1,0 +1,51 @@
+<div class="container-fluid py-3">
+  <h4 class="mb-3">Training</h4>
+
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <button type="button" class="nav-link" [class.active]="activeTab === 'programs'" (click)="activeTab = 'programs'">Programs</button>
+    </li>
+    <li class="nav-item">
+      <button type="button" class="nav-link" [class.active]="activeTab === 'courses'" (click)="activeTab = 'courses'">Courses</button>
+    </li>
+    <li class="nav-item">
+      <button type="button" class="nav-link" [class.active]="activeTab === 'enrollments'" (click)="activeTab = 'enrollments'">Enrollments</button>
+    </li>
+  </ul>
+
+  <div *ngIf="loading" class="text-muted">Loading…</div>
+
+  <div *ngIf="activeTab === 'programs'">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="text-muted small">{{ programs.length }} program(s)</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="createProgram()">New program</button>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let p of programs" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ p.program_name || p.name }}</span>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="enrollInTraining(p.program_id || p.id)">Enroll</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="activeTab === 'courses'">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="text-muted small">{{ courses.length }} course(s)</span>
+      <button type="button" class="btn btn-primary btn-sm" (click)="createCourse()">New course</button>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let c of courses" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ c.course_name || c.name }}</span>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="enrollInTraining(undefined, c.course_id || c.id)">Enroll</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="activeTab === 'enrollments'">
+    <ul class="list-group">
+      <li *ngFor="let e of enrollments" class="list-group-item">
+        {{ e.program_name || e.course_name || 'Enrollment' }} — <span class="text-muted">{{ e.status }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

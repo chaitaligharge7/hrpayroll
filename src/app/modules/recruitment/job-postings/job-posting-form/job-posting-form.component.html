@@ -1,0 +1,99 @@
+<div class="job-form-container">
+  <div class="page-header">
+    <h2>{{ isEditMode ? 'Edit job posting' : 'Create job posting' }}</h2>
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Cancel</button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
+  <div *ngIf="message" class="alert alert-info py-2">{{ message }}</div>
+  <div *ngIf="loadingJob" class="text-muted py-2">Loading job…</div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="card shadow-sm border-0" *ngIf="!loadingJob || !isEditMode">
+    <div class="card-body row g-3">
+      <div class="col-md-4">
+        <label class="form-label">Job code <span class="text-danger">*</span></label>
+        <input class="form-control form-control-sm" formControlName="job_code" placeholder="e.g. JD-2025-001" />
+        <div class="invalid-feedback d-block" *ngIf="form.get('job_code')?.touched && form.get('job_code')?.invalid">Required</div>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Job title <span class="text-danger">*</span></label>
+        <input class="form-control form-control-sm" formControlName="job_title" />
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Department <span class="text-danger">*</span></label>
+        <select class="form-select form-select-sm" formControlName="department_id">
+          <option [ngValue]="null">Select department…</option>
+          <option *ngFor="let d of departments" [ngValue]="d.department_id">{{ d.department_name }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Designation <span class="text-danger">*</span></label>
+        <select class="form-select form-select-sm" formControlName="designation_id">
+          <option [ngValue]="null">Select designation…</option>
+          <option *ngFor="let des of designations" [ngValue]="des.designation_id">{{ des.designation_name }}</option>
+        </select>
+        <small class="text-muted" *ngIf="form.value.department_id && !designations.length && !loadingMaster">No designations for this department.</small>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea class="form-control form-control-sm" rows="3" formControlName="job_description"></textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Requirements</label>
+        <textarea class="form-control form-control-sm" rows="3" formControlName="requirements"></textarea>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Experience min (years)</label>
+        <input type="number" class="form-control form-control-sm" formControlName="experience_min" min="0" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Experience max (years)</label>
+        <input type="number" class="form-control form-control-sm" formControlName="experience_max" min="0" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Salary min</label>
+        <input type="number" class="form-control form-control-sm" formControlName="salary_min" min="0" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Salary max</label>
+        <input type="number" class="form-control form-control-sm" formControlName="salary_max" min="0" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Location</label>
+        <input class="form-control form-control-sm" formControlName="location" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Employment type</label>
+        <input class="form-control form-control-sm" formControlName="employment_type" placeholder="Full-time, Contract…" />
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Openings</label>
+        <input type="number" class="form-control form-control-sm" formControlName="no_of_positions" min="1" />
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Closing date</label>
+        <input type="date" class="form-control form-control-sm" formControlName="closing_date" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Status</label>
+        <select class="form-select form-select-sm" formControlName="status">
+          <option value="Draft">Draft</option>
+          <option value="Published">Published</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+
+      <div class="col-12 d-flex gap-2 pt-2">
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving || form.invalid || loadingJob">
+          {{ saving ? 'Saving…' : (isEditMode ? 'Save changes' : 'Create posting') }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()" [disabled]="saving">Cancel</button>
+      </div>
+    </div>
+  </form>
+</div>

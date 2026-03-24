@@ -1,0 +1,90 @@
+<div class="candidates-container">
+  <div class="page-header">
+    <h2>Candidates</h2>
+    <button class="btn btn-primary" type="button" (click)="addCandidate()">
+      <i class="fas fa-plus"></i> Add candidate
+    </button>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Status:</label>
+      <select [(ngModel)]="filters.status" (change)="onFilterChange()">
+        <option value="">All</option>
+        <option value="Applied">Applied</option>
+        <option value="Screening">Screening</option>
+        <option value="Interview">Interview</option>
+        <option value="Offer">Offer</option>
+        <option value="Hired">Hired</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Search:</label>
+      <input type="text" [(ngModel)]="filters.search" (keyup)="onFilterChange()" placeholder="Name, email, phone...">
+    </div>
+  </div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Job Title</th>
+          <th>Status</th>
+          <th>Applied Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let candidate of candidates">
+          <td>{{ candidate.first_name }} {{ candidate.last_name }}</td>
+          <td>{{ candidate.email }}</td>
+          <td>{{ candidate.phone || 'N/A' }}</td>
+          <td>{{ candidate.job_title || 'N/A' }}</td>
+          <td>
+            <span class="badge" [ngClass]="'badge-' + (candidate.status || 'applied').toLowerCase()">
+              {{ candidate.status }}
+            </span>
+          </td>
+          <td>{{ candidate.applied_date | date:'shortDate' }}</td>
+          <td>
+            <button class="btn btn-sm btn-info" (click)="viewCandidate(candidate.candidate_id)">
+              View
+            </button>
+            <button class="btn btn-sm btn-success" 
+                    *ngIf="candidate.status === 'Interview'" 
+                    (click)="createOffer(candidate.candidate_id)">
+              Offer
+            </button>
+            <button class="btn btn-sm btn-primary" 
+                    *ngIf="candidate.status === 'Applied' || candidate.status === 'Screening'" 
+                    (click)="scheduleInterview(candidate.candidate_id)">
+              Interview
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="candidates.length === 0">
+          <td colspan="7" class="text-center">No candidates found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="total > limit">
+    <button class="btn btn-sm" [disabled]="page === 1" (click)="onPageChange(page - 1)">
+      Previous
+    </button>
+    <span>Page {{ page }} of {{ getTotalPages() }}</span>
+    <button class="btn btn-sm" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
+      Next
+    </button>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+  </div>
+</div>
+

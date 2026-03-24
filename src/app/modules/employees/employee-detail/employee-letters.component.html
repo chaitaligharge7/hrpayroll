@@ -1,0 +1,15 @@
+<div class="employee-letters">
+  <h3>Generate Letters</h3>
+  <div class="letters-grid">
+    <div class="letter-card" *ngFor="let letter of availableLetters" (click)="generateLetter(letter.type)">
+      <div class="letter-icon">
+        <i class="fas" [ngClass]="letter.icon"></i>
+      </div>
+      <div class="letter-name">{{ letter.name }}</div>
+    </div>
+  </div>
+  <div class="loading-spinner" *ngIf="loading">
+    <i class="fas fa-spinner fa-spin"></i> Generating...
+  </div>
+</div>
+

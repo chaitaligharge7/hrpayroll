@@ -1,0 +1,60 @@
+<div class="container-fluid py-3 candidate-form-wrap">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">{{ isEditMode ? 'Edit candidate' : 'Add candidate' }}</h4>
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Cancel</button>
+  </div>
+  <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
+  <div *ngIf="loadingCandidate" class="text-muted py-2">Loading…</div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="card shadow-sm" *ngIf="!loadingCandidate || !isEditMode">
+    <div class="card-body row g-3">
+      <div class="col-md-6" *ngIf="!isEditMode">
+        <label class="form-label small">Job posting *</label>
+        <select class="form-select form-select-sm" formControlName="job_id">
+          <option [ngValue]="null">Select job…</option>
+          <option *ngFor="let j of jobs" [ngValue]="j.job_id">{{ j.job_code }} — {{ j.job_title }}</option>
+        </select>
+      </div>
+      <div class="col-md-6" *ngIf="isEditMode">
+        <label class="form-label small">Job (optional change)</label>
+        <select class="form-select form-select-sm" formControlName="job_id">
+          <option [ngValue]="null">—</option>
+          <option *ngFor="let j of jobs" [ngValue]="j.job_id">{{ j.job_code }} — {{ j.job_title }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small">First name *</label>
+        <input class="form-control form-control-sm" formControlName="first_name" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small">Last name *</label>
+        <input class="form-control form-control-sm" formControlName="last_name" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small">Email *</label>
+        <input type="email" class="form-control form-control-sm" formControlName="email" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small">Phone</label>
+        <input class="form-control form-control-sm" formControlName="phone" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small">Current company</label>
+        <input class="form-control form-control-sm" formControlName="current_company" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small">Total experience</label>
+        <input class="form-control form-control-sm" formControlName="total_experience" placeholder="e.g. 5 years" />
+      </div>
+      <div class="col-12">
+        <label class="form-label small">Cover letter</label>
+        <textarea class="form-control form-control-sm" rows="3" formControlName="cover_letter"></textarea>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving || loadingJobs || loadingCandidate">
+          {{ saving ? 'Saving…' : (isEditMode ? 'Save' : 'Create candidate') }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

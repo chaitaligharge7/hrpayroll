@@ -1,0 +1,26 @@
+<div class="container-fluid py-3 project-detail-wrap">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Project</h4>
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="back()">Back</button>
+  </div>
+
+  <div *ngIf="loading" class="text-muted">Loading…</div>
+  <div *ngIf="error" class="alert alert-warning">{{ error }}</div>
+
+  <div *ngIf="!loading && project" class="card shadow-sm">
+    <div class="card-body">
+      <h5>{{ project.project_name }}</h5>
+      <p class="text-muted mb-2">{{ project.project_code }} · <span class="badge bg-secondary">{{ project.status }}</span></p>
+      <p *ngIf="project.client_name" class="small"><strong>Client:</strong> {{ project.client_name }}</p>
+      <p *ngIf="project.manager_first_name" class="small">
+        <strong>Manager:</strong> {{ project.manager_first_name }} {{ project.manager_last_name }}
+      </p>
+      <p *ngIf="project.project_description" class="small mt-2" style="white-space: pre-wrap">{{ project.project_description }}</p>
+      <div class="row small mt-3">
+        <div class="col-md-4" *ngIf="project.start_date"><strong>Start:</strong> {{ project.start_date | date:'mediumDate' }}</div>
+        <div class="col-md-4" *ngIf="project.end_date"><strong>End:</strong> {{ project.end_date | date:'mediumDate' }}</div>
+        <div class="col-md-4" *ngIf="project.budget != null"><strong>Budget:</strong> {{ project.budget }}</div>
+      </div>
+    </div>
+  </div>
+</div>

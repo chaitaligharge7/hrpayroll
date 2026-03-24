@@ -1,0 +1,179 @@
+/* --- Card Container --- */
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  max-width: 1000px; /* keep form width reasonable */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Card Header --- */
+.card-header {
+  border-bottom: none;
+  margin-bottom: 0.5rem;
+}
+
+.card-header h3 {
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin: 0;
+  color: #2563eb; /* professional blue */
+}
+
+/* --- Section Titles --- */
+.card-body h5 {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1f2937;
+  padding-left: 0.4rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+/* --- Form Groups --- */
+.form-group {
+  margin-bottom: 0.4rem; /* very compact spacing */
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 0.82rem;
+  color: #374151;
+  margin-bottom: 0.15rem; /* label closer to input */
+  display: block;
+}
+
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 0.3rem 0.5rem; /* smaller input height */
+  font-size: 0.82rem;
+  transition: all 0.2s ease;
+  height: 32px; /* uniform input height including date input */
+  box-sizing: border-box;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+/* --- Validation Errors --- */
+.form-error {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.1rem;
+}
+
+/* --- Buttons --- */
+.btn {
+  border-radius: 6px;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  transition: all 0.25s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4338ca, #1d4ed8);
+}
+
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+/* --- Row / Columns --- */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.row > [class*="col-"] {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+/* --- Make most fields 50% width on desktop --- */
+.col-md-4 {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+}
+
+.col-md-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-md-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* --- Compact Number Inputs --- */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --- Responsive for Mobile --- */
+@media (max-width: 768px) {
+  .card {
+    padding: 0.75rem;
+  }
+
+  .card-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .card-body h5 {
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.45rem;
+    height: 30px;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .row > [class*="col-"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0.35rem;
+  }
+}
