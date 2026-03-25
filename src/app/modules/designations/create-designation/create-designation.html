@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Create Designation</h3>
+  </div>
+
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()">
+
+      <!-- Name -->
+      <div class="mb-3">
+        <label>Name *</label>
+        <input type="text" [(ngModel)]="form.designation_name" name="name" class="form-control" required />
+      </div>
+
+      <!-- Code -->
+      <div class="mb-3">
+        <label>Code</label>
+        <input type="text" [(ngModel)]="form.designation_code" name="code" class="form-control" />
+      </div>
+
+      <!-- Department -->
+      <div class="mb-3">
+        <label>Department *</label>
+        <select [(ngModel)]="form.department_id" name="department" class="form-select" required>
+          <option value="">Select Department</option>
+          <option *ngFor="let d of departments" [value]="d.department_id">
+            {{ d.department_name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label>Description</label>
+        <input type="text" [(ngModel)]="form.designation_description" name="desc" class="form-control" />
+      </div>
+
+      <!-- Buttons -->
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Saving...' : 'Create' }}
+      </button>
+
+      <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">
+        Cancel
+      </button>
+
+    </form>
+  </div>
+</div>

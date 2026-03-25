@@ -2,9 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { EmployeeService } from "../employee.service";
 import { DepartmentsService } from "../../departments/departments.service";
+import { NgZone } from "@angular/core";
 
 @Component({
   selector: "app-employee-list",
+
   templateUrl: "./employee-list.component.html",
   styleUrls: ["./employee-list.component.scss"],
   standalone: false,
@@ -41,13 +43,14 @@ export class EmployeeListComponent implements OnInit {
     private employeeService: EmployeeService,
     private departmentsService: DepartmentsService,
     private router: Router,
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
+    this.filters.employment_status = this.selectedStatus; // ✅ IMPORTANT
+
     this.loadDepartments();
-    setTimeout(() => {
-      this.loadEmployees();
-    }, 0);
+    this.loadEmployees();
   }
 
   loadDepartments(): void {
@@ -63,29 +66,75 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
+  // loadEmployees(): void {
+  //   this.loading = true;
+  //   const params = {
+  //     page: this.page,
+  //     limit: this.limit,
+  //     ...this.filters,
+  //   };
+  //   this.employeeService.getEmployees(params).subscribe({
+  //     next: (response: any) => {
+  //       if (response.success && response.data) {
+  //         this.employees = response.data.employees || [];
+  //         this.cdr.detectChanges(); // ✅ FORCE UI UPDATE
+  //         this.total = response.data.pagination?.total || 0;
+  //         this.pagination = {
+  //           page: response.data.pagination?.page || this.page,
+  //           limit: response.data.pagination?.limit || this.limit,
+  //           total: response.data.pagination?.total || 0,
+  //           total_pages:
+  //             response.data.pagination?.total_pages ||
+  //             Math.ceil(this.total / this.limit),
+  //         };
+  //       }
+  //       this.loading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error("Error loading employees:", error);
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
   loadEmployees(): void {
     this.loading = true;
-    const params = {
+
+    const params: any = {
       page: this.page,
       limit: this.limit,
-      ...this.filters,
     };
+
+    if (this.selectedDepartment) {
+      params.department_id = this.selectedDepartment;
+    }
+
+    if (this.selectedStatus) {
+      params.employment_status = this.selectedStatus;
+    }
+
+    if (this.searchTerm) {
+      params.search = this.searchTerm;
+    }
 
     this.employeeService.getEmployees(params).subscribe({
       next: (response: any) => {
-        if (response.success && response.data) {
-          this.employees = response.data.employees || [];
-          this.total = response.data.pagination?.total || 0;
-          this.pagination = {
-            page: response.data.pagination?.page || this.page,
-            limit: response.data.pagination?.limit || this.limit,
-            total: response.data.pagination?.total || 0,
-            total_pages:
-              response.data.pagination?.total_pages ||
-              Math.ceil(this.total / this.limit),
-          };
-        }
-        this.loading = false;
+        this.ngZone.run(() => {
+          // ✅ FIX HERE
+
+          if (response.success && response.data) {
+            this.employees = response.data.employees || [];
+            this.total = response.data.pagination?.total || 0;
+            this.pagination = {
+              page: response.data.pagination?.page || this.page,
+              limit: response.data.pagination?.limit || this.limit,
+              total: response.data.pagination?.total || 0,
+              total_pages:
+                response.data.pagination?.total_pages ||
+                Math.ceil(this.total / this.limit),
+            };
+          }
+          this.loading = false;
+        });
       },
       error: (error) => {
         console.error("Error loading employees:", error);
@@ -93,7 +142,6 @@ export class EmployeeListComponent implements OnInit {
       },
     });
   }
-
   viewEmployee(employee: any): void {
     this.router.navigate(["/employees", employee.employee_id || employee.id]);
   }
@@ -169,9 +217,9 @@ export class EmployeeListComponent implements OnInit {
   }
 
   goToDepartments() {
-
-    this.router.navigate([''])
-
+    this.router.navigate(["/departments"]);
   }
-  goToDesignations() {}
+  goToDesignations() {
+    this.router.navigate(["/designations"]);
+  }
 }

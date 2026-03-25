@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { DepartmentListComponent } from "./department-list/department-list"; } from "./department-list/department-list";
+import { DepartmentListComponent } from "./department-list/department-list" 
 import { CreateDepartment } from "./create-department/create-department";
 
 const routes: Routes = [

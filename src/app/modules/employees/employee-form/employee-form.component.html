@@ -59,7 +59,7 @@
           <div class="form-group">
             <label>Department *</label>
             <select class="form-select" formControlName="department_id" (change)="onDepartmentChange()">
-              <option value="">Select Department</option>
+              <option  value="">Select Department</option>
               <option *ngFor="let dept of departments" [value]="dept.department_id">
                 {{ dept.department_name }}
               </option>

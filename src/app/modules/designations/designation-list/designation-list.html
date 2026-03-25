@@ -1,0 +1,112 @@
+<p>designation-list works!</p>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>Designations</h3>
+
+    <button class="btn btn-light btn-sm" (click)="goToDepartments()">
+      Departments
+    </button>
+
+    <button class="btn btn-light btn-sm" [class.active]="true">
+      Designations
+    </button>
+
+    <button class="btn btn-primary" (click)="createDesignation()">
+      <i class="bi bi-plus-circle"></i> Add Designation
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- Search -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search designations..."
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+        />
+      </div>
+
+      <div class="col-md-2">
+        <button class="btn btn-outline w-100" (click)="onSearch()">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!loading" class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Employees</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of designations">
+            <td>{{ d.designation_id }}</td>
+            <td>{{ d.designation_name }}</td>
+            <td>{{ d.department_name || '-' }}</td>
+            <td>{{ d.employee_count }}</td>
+
+            <td>
+              <button class="btn btn-sm btn-outline me-1" >
+                <i class="bi bi-eye"></i>
+              </button>
+
+              <button class="btn btn-sm btn-outline me-1" (click)="editDesignation(d)">
+                <i class="bi bi-pencil"></i>
+              </button>
+
+              <!-- <button class="btn btn-sm btn-outline btn-danger" (click)="deleteDesignation(d)">
+                <i class="bi bi-trash"></i>
+              </button> -->
+            </td>
+          </tr>
+
+          <tr *ngIf="designations.length === 0">
+            <td colspan="5" class="text-center text-muted py-4">
+              No designations found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!loading && pagination.total_pages > 1"
+         class="d-flex justify-content-between align-items-center mt-3">
+
+      <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="pagination.page === 1">
+          <a class="page-link" (click)="onPageChange(pagination.page - 1)">Previous</a>
+        </li>
+
+        <li *ngFor="let page of [].constructor(pagination.total_pages); let i = index"
+            class="page-item"
+            [class.active]="pagination.page === i + 1">
+          <a class="page-link" (click)="onPageChange(i + 1)">
+            {{ i + 1 }}
+          </a>
+        </li>
+
+        <li class="page-item" [class.disabled]="pagination.page === pagination.total_pages">
+          <a class="page-link" (click)="onPageChange(pagination.page + 1)">Next</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>

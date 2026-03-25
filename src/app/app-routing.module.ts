@@ -163,12 +163,11 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
-
   {
     path: "designations",
     loadChildren: () =>
-      import("./modules/expenses/expenses.module").then(
-        (m) => m.ExpensesModule,
+      import("./modules/designations/designations.module").then(
+        (m) => m.DesignationsModule,
       ),
     canActivate: [AuthGuard],
   },
