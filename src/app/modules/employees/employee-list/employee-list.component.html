@@ -64,7 +64,7 @@
     </div>
 
     <!-- Employees Table -->
-    <div *ngIf="!loading" class="table-responsive">
+    <div class="table-responsive" [hidden]="loading">
       <table class="table">
         <thead>
           <tr>

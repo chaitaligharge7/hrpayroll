@@ -111,6 +111,7 @@ export class EmployeeFormComponent implements OnInit {
           Array.isArray(response.data.employees)
         ) {
           this.managers = response.data.employees;
+          this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
         } else if (response.success && Array.isArray(response.data)) {
           this.managers = response.data;
         } else {

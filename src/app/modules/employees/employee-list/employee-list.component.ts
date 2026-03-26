@@ -2,14 +2,15 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { EmployeeService } from "../employee.service";
 import { DepartmentsService } from "../../departments/departments.service";
-import { NgZone } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: "app-employee-list",
-
+  imports: [CommonModule, FormsModule],
   templateUrl: "./employee-list.component.html",
   styleUrls: ["./employee-list.component.scss"],
-  standalone: false,
 })
 export class EmployeeListComponent implements OnInit {
   employees: any[] = [];
@@ -43,14 +44,15 @@ export class EmployeeListComponent implements OnInit {
     private employeeService: EmployeeService,
     private departmentsService: DepartmentsService,
     private router: Router,
-    private ngZone: NgZone,
+      private cdr: ChangeDetectorRef // ✅ ADD THIS
+
   ) {}
 
   ngOnInit(): void {
     this.filters.employment_status = this.selectedStatus; // ✅ IMPORTANT
+    this.loadEmployees();
 
     this.loadDepartments();
-    this.loadEmployees();
   }
 
   loadDepartments(): void {
@@ -118,23 +120,23 @@ export class EmployeeListComponent implements OnInit {
 
     this.employeeService.getEmployees(params).subscribe({
       next: (response: any) => {
-        this.ngZone.run(() => {
-          // ✅ FIX HERE
+        // ✅ FIX HERE
 
-          if (response.success && response.data) {
-            this.employees = response.data.employees || [];
-            this.total = response.data.pagination?.total || 0;
-            this.pagination = {
-              page: response.data.pagination?.page || this.page,
-              limit: response.data.pagination?.limit || this.limit,
-              total: response.data.pagination?.total || 0,
-              total_pages:
-                response.data.pagination?.total_pages ||
-                Math.ceil(this.total / this.limit),
-            };
-          }
-          this.loading = false;
-        });
+        if (response.success && response.data) {
+          this.employees = response.data.employees || [];
+          this.total = response.data.pagination?.total || 0;
+          this.pagination = {
+            page: response.data.pagination?.page || this.page,
+            limit: response.data.pagination?.limit || this.limit,
+            total: response.data.pagination?.total || 0,
+            total_pages:
+              response.data.pagination?.total_pages ||
+              Math.ceil(this.total / this.limit),
+          };
+        }
+        this.loading = false;
+            this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
+
       },
       error: (error) => {
         console.error("Error loading employees:", error);

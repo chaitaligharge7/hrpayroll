@@ -3,6 +3,7 @@ import { DepartmentsService } from "../departments.service";
 import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { ChangeDetectorRef } from "@angular/core"; // ✅ NEW
 
 @Component({
   selector: "app-department-list",
@@ -26,6 +27,7 @@ export class DepartmentListComponent implements OnInit {
   constructor(
     private departmentService: DepartmentsService,
     private router: Router,
+    private cdr: ChangeDetectorRef, // ✅ ADD THIS
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +54,7 @@ export class DepartmentListComponent implements OnInit {
           this.pagination.total_pages = res.total_pages || 0;
         }
         this.loading = false;
+        this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
       },
       error: () => {
         this.loading = false;
