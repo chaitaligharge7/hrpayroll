@@ -37,3 +37,76 @@
   }
 }
 
+/* Fix row spacing issue */
+.dashboard-container .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Make welcome take full width properly */
+.dashboard-welcome {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.12) 0%,
+    rgba(37, 99, 235, 0.05) 100%
+  );
+
+  border-radius: 10px;
+  border: 1px solid rgba(37, 99, 235, 0.15);
+
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Left content */
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title */
+.dashboard-welcome .welcome-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2563eb;
+  margin: 0;
+}
+
+/* Subtitle */
+.dashboard-welcome .welcome-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Right buttons */
+.welcome-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Responsive fix (VERY IMPORTANT) */
+@media (max-width: 768px) {
+  .dashboard-welcome {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .welcome-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+

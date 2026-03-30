@@ -48,6 +48,7 @@ $box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0
 body {
   margin: 0;
   padding: 0;
+    font-family: var(--font-family);
   background-color: $bg-secondary;
   color: $text-primary;
   font-size: 14px;
@@ -237,13 +238,17 @@ h6 { font-size: 1rem; }
   display: inline-block;
   padding: 0.25rem 0.625rem;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 2rem;
   font-weight: 500;
 }
 
 .badge-success {
-  background-color: rgba(16, 185, 129, 0.1);
+  // background-color: rgba(16, 185, 129, 0.1);
+  background-color: #10b981;
   color: $success-color;
+
+
+  
 }
 
 .badge-warning {
@@ -327,3 +332,231 @@ h6 { font-size: 1rem; }
 .p-2 { padding: 1rem; }
 .p-3 { padding: 1.5rem; }
 
+/* Buttons with 3D Effects */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transform: translateY(0);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left var(--transition-base);
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  &.btn-primary {
+    background: var(--primary-gradient);
+    color: #fff !important;
+    box-shadow: var(--shadow-colored);
+
+    i,
+    .bi,
+    span {
+      color: #fff !important;
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--primary-gradient-light);
+      color: #fff !important;
+      transform: var(--transform-hover);
+      box-shadow: var(--shadow-colored-lg);
+
+      i,
+      .bi,
+      span {
+        color: #fff !important;
+      }
+    }
+
+    &:active:not(:disabled) {
+      transform: var(--transform-active);
+      box-shadow: var(--shadow-md);
+      color: #fff !important;
+    }
+  }
+
+  &.btn-secondary {
+    background: var(--secondary-gradient);
+    color: white;
+    box-shadow: var(--shadow-md);
+
+    &:hover:not(:disabled) {
+      background: var(--secondary-color);
+      transform: var(--transform-hover);
+      box-shadow: var(--shadow-lg);
+    }
+
+    &:active:not(:disabled) {
+      transform: var(--transform-active);
+    }
+  }
+
+  &.btn-outline {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(10px);
+
+    &:hover:not(:disabled) {
+      background: var(--bg-secondary);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      transform: var(--transform-hover);
+      box-shadow: var(--shadow-md);
+    }
+
+    &:active:not(:disabled) {
+      transform: var(--transform-active);
+    }
+  }
+
+  &.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-xs);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &.btn-lg {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    font-size: var(--font-size-base);
+    box-shadow: var(--shadow-lg);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.02);
+    }
+  }
+}
+
+/* White text on all primary/dark primary background buttons (including anchor buttons) */
+a.btn.btn-primary,
+button.btn.btn-primary,
+.btn.btn-primary {
+  color: #fff !important;
+
+  i,
+  .bi,
+  span {
+    color: #fff !important;
+  }
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.1);
+    transform: translate(-50%, -50%);
+    transition:
+      width var(--transition-base),
+      height var(--transition-base);
+  }
+
+  &:hover::before {
+    width: 100%;
+    height: 100%;
+  }
+
+  i {
+    position: relative;
+    z-index: 1;
+    transition: transform var(--transition-base);
+  }
+
+  &:hover i {
+    transform: scale(1.2) rotate(5deg);
+  }
+
+  &.btn-edit {
+    &:hover {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: var(--shadow-colored);
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.95);
+    }
+  }
+
+  &.btn-delete {
+    &:hover {
+      background: var(--error-gradient);
+      color: white;
+      box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.95);
+    }
+  }
+
+  &.btn-view {
+    &:hover {
+      background: var(--info-color);
+      color: white;
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.95);
+    }
+  }
+}

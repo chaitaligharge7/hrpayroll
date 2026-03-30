@@ -62,3 +62,118 @@
 }
 
 
+/* --- Header Buttons Container --- */
+.card-header {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* --- Tab Buttons (Departments / Designations) --- */
+.card-header .btn-light {
+  background: transparent;
+  border: none;
+  color: #6b7280; /* gray */
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+/* Hover Effect */
+.card-header .btn-light:hover {
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+}
+
+/* Active Tab */
+.card-header .btn-light.active {
+  color: #2563eb;
+}
+
+/* Bottom border for active tab */
+.card-header .btn-light.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: #2563eb;
+  border-radius: 2px;
+}
+
+/* --- Employees Title --- */
+.card-header h3 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #111827;
+  margin-right: 10px;
+}
+
+/* --- Add Employee Button --- */
+.card-header .btn-primary {
+  margin-left: auto;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+}
+
+.card-header .btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+
+/* ===================================================== */
+/* 🔥 ADDED: ACTION BUTTONS (VIEW / EDIT / DELETE) */
+/* ===================================================== */
+
+td button{
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  margin-right: 5px;
+}
+
+/* 👁 VIEW - GREEN (faint) */
+td button:nth-child(1){
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+td button:nth-child(1):hover{
+  background: #16a34a;
+  color: #fff;
+}
+
+/* ✏️ EDIT - BLUE (faint) */
+td button:nth-child(2){
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+}
+
+td button:nth-child(2):hover{
+  background: #2563eb;
+  color: #fff;
+}
+
+/* 🗑 DELETE - RED (faint) */
+td button:nth-child(3){
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+td button:nth-child(3):hover{
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ICON SIZE */
+td button i{
+  font-size: 14px;
+}

@@ -4,7 +4,7 @@ import { EmployeeService } from "../employee.service";
 import { DepartmentsService } from "../../departments/departments.service";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef } from "@angular/core";
 
 @Component({
   selector: "app-employee-list",
@@ -44,8 +44,7 @@ export class EmployeeListComponent implements OnInit {
     private employeeService: EmployeeService,
     private departmentsService: DepartmentsService,
     private router: Router,
-      private cdr: ChangeDetectorRef // ✅ ADD THIS
-
+    private cdr: ChangeDetectorRef, // ✅ ADD THIS
   ) {}
 
   ngOnInit(): void {
@@ -135,8 +134,7 @@ export class EmployeeListComponent implements OnInit {
           };
         }
         this.loading = false;
-            this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
-
+        this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
       },
       error: (error) => {
         console.error("Error loading employees:", error);
@@ -146,6 +144,8 @@ export class EmployeeListComponent implements OnInit {
   }
   viewEmployee(employee: any): void {
     this.router.navigate(["/employees", employee.employee_id || employee.id]);
+      // this.router.navigate(['/employees',employee.employee_id]);
+
   }
 
   editEmployee(employee: any): void {

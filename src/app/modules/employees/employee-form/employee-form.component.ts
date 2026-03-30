@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { EmployeeService } from "../employee.service";
 import { ApiService } from "../../../core/services/api.service";
-import { ChangeDetectorRef } from "@angular/core"; // ✅ NEW
 
 @Component({
   selector: "app-employee-form",
@@ -27,8 +26,7 @@ export class EmployeeFormComponent implements OnInit {
     private employeeService: EmployeeService,
     private api: ApiService,
     private router: Router,
-    private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef, // ✅ NEW
+    private route: ActivatedRoute
   ) {
     this.employeeForm = this.createForm();
   }
@@ -79,7 +77,6 @@ export class EmployeeFormComponent implements OnInit {
       next: (response: any) => {
         if (response.success) {
           this.departments = Array.isArray(response.data) ? response.data : [];
-          this.cdr.detectChanges(); // ✅ NEW (IMPORTANT)
         }
       },
     });
@@ -89,6 +86,7 @@ export class EmployeeFormComponent implements OnInit {
       next: (response: any) => {
         if (response.success) {
           this.designations = Array.isArray(response.data) ? response.data : [];
+          // this.cdr.detectChanges(); // ✅ NEW (IMPORTANT)
         }
       },
     });
@@ -111,7 +109,7 @@ export class EmployeeFormComponent implements OnInit {
           Array.isArray(response.data.employees)
         ) {
           this.managers = response.data.employees;
-          this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
+          // this.cdr.detectChanges();
         } else if (response.success && Array.isArray(response.data)) {
           this.managers = response.data;
         } else {
