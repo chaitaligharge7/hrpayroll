@@ -13,6 +13,7 @@ import { ChangeDetectorRef } from "@angular/core"; // ✅ NEW
 })
 export class DepartmentListComponent implements OnInit {
   departments: any[] = []; // using any as requested
+selectedDeptId!: number;
 
   loading = false;
   searchTerm = "";
@@ -74,7 +75,7 @@ export class DepartmentListComponent implements OnInit {
   }
 
   viewDepartment(dept: any): void {
-    this.router.navigate(["/departments", dept.department_id]);
+    this.router.navigate(["/departments/detail", dept.department_id]);
   }
 
   editDepartment(dept: any): void {
@@ -92,4 +93,7 @@ export class DepartmentListComponent implements OnInit {
   goToDesignations() {
     this.router.navigate(["/designations"]);
   }
+
+
+
 }

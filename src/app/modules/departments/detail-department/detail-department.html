@@ -1,0 +1,77 @@
+<div class="container-fluid py-3">
+  
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center text-muted">
+    Loading department details...
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Department Details -->
+  <div *ngIf="!loading && department" class="card shadow-sm">
+    
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{{ department.department_name }}</h4>
+      <button class="btn btn-sm btn-secondary" (click)="goBack()">
+        Back
+      </button>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+
+        <!-- Department Info -->
+        <div class="col-md-6 mb-3">
+          <label class="text-muted">Department ID</label>
+          <div class="fw-bold">{{ department.department_id }}</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="text-muted">Department Name</label>
+          <div class="fw-bold">{{ department.department_name }}</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="text-muted">Employee Count</label>
+          <div class="fw-bold">{{ department.employee_count }}</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="text-muted">Department Head</label>
+          <div class="fw-bold">
+            {{ department.head_first_name }} {{ department.head_last_name }}
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="text-muted">Status</label>
+          <div>
+            <span
+              class="badge"
+              [ngClass]="department.is_active ? 'bg-success' : 'bg-danger'"
+            >
+              {{ department.is_active ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-md-12 mb-3" *ngIf="department.description">
+          <label class="text-muted">Description</label>
+          <div class="fw-bold">
+            {{ department.description }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- No Data -->
+  <div *ngIf="!loading && !department" class="text-muted text-center">
+    No department found.
+  </div>
+
+</div>
