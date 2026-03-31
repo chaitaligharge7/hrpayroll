@@ -1,4 +1,4 @@
-<p>create-department works!</p>
+<p>{{ isEditMode ? 'Edit' : 'Create' }} Department</p>
 <form (ngSubmit)="onSubmit()">
   <input [(ngModel)]="form.department_name" name="name" placeholder="Department Name" required />
   
@@ -6,5 +6,5 @@
 
   <input [(ngModel)]="form.department_description" name="desc" placeholder="Description" />
 
-  <button type="submit">Create</button>
+  <button type="submit" [disabled]="loading">{{ isEditMode ? 'Update' : 'Create' }} Department</button>
 </form>

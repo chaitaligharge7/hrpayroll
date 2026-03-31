@@ -6,13 +6,26 @@
   <div class="card mb-4">
     <div class="card-header">Apply for leave</div>
     <div class="card-body row g-2">
-      <div class="col-md-3">
-        <label class="form-label small">Type</label>
-        <select class="form-select form-select-sm" [(ngModel)]="form.leave_type_id">
-          <option [ngValue]="null">Select…</option>
-          <option *ngFor="let t of types" [ngValue]="t.leave_type_id || t.id">{{ t.leave_type_name || t.name }}</option>
-        </select>
-      </div>
+    <div class="col-md-3">
+  <label class="form-label small">Type</label>
+  <select class="form-select form-select-sm"
+          [(ngModel)]="form.leave_type_id"
+          *ngIf="!loadingTypes">
+    <option [ngValue]="null">Select…</option>
+    <option *ngFor="let t of types"
+            [ngValue]="t.leave_type_id || t.id">
+      {{ t.leave_type_name || t.name }}
+    </option>
+  </select>
+  <!-- Loading -->
+  <div *ngIf="loadingTypes" class="text-muted small">
+    Loading leave types…
+  </div>
+  <!-- No Data -->
+  <div *ngIf="!loadingTypes && types.length === 0" class="text-danger small">
+    No leave types found
+  </div>
+</div>
       <div class="col-md-3">
         <label class="form-label small">Start</label>
         <input type="date" class="form-control form-control-sm" [(ngModel)]="form.start_date" />
@@ -43,16 +56,19 @@
         <table class="table table-sm table-striped mb-0">
           <thead>
             <tr>
-              <th>Dates</th>
-              <th>Days</th>
-              <th>Status</th>
+             <th>Type</th>
+             <th>Dates</th>
+             <th>Days</th>
+             <th>Status</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let r of requests">
-              <td>{{ r.start_date }} – {{ r.end_date }}</td>
-              <td>{{ r.total_days || r.days || '—' }}</td>
-              <td>{{ r.status || '—' }}</td>
+             <td>{{ r.leave_type_name || '—' }}</td>
+             <td>{{ r.start_date }} – {{ r.end_date }}</td>
+             <td>{{ r.total_days || r.days || '—' }}</td>
+             <td>{{ r.status || '—' }}</td>
+             
             </tr>
           </tbody>
         </table>

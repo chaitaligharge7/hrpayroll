@@ -1,16 +1,16 @@
 import { CommonModule } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { DepartmentsService } from "../departments.service";
 
 @Component({
   selector: "app-detail-department",
-  imports: [FormsModule, CommonModule],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: "./detail-department.html",
-  styleUrl: "./detail-department.scss",
+  styleUrls: ["./detail-department.scss"],
 })
-export class DetailDepartment {
+export class DetailDepartment implements OnInit {
   departmentId!: number;
   department: any = null;
 
@@ -20,12 +20,17 @@ export class DetailDepartment {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
+    private departmentService: DepartmentsService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.departmentId = Number(this.route.snapshot.paramMap.get("id"));
-    console.log("Department ID:", this.departmentId); // 👈 ADD THIS
+    if (!this.departmentId || isNaN(this.departmentId)) {
+      this.error = "Invalid department ID.";
+      this.loading = false;
+      return;
+    }
 
     this.getDepartment();
   }
@@ -34,21 +39,32 @@ export class DetailDepartment {
     this.loading = true;
     this.error = "";
 
-    this.http
-      .get<any>(`/api/v1/departments/get.php?id=${this.departmentId}`)
-      .subscribe({
-        next: (res) => {
-          this.department = res.data || res;
-          this.loading = false;
-        },
-        error: (err) => {
-          this.error = "Failed to load department";
-          this.loading = false;
-        },
-      });
+    this.departmentService.getDepartment(this.departmentId).subscribe({
+      next: (res) => {
+        if (res && res.success) {
+          this.department = res.data;
+          if (!this.department || Object.keys(this.department).length === 0) {
+            this.error = "Department not found.";
+          }
+        } else {
+          this.error = res?.message || "Failed to load department.";
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = "Failed to load department (network/API error).";
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   goBack() {
     this.router.navigate(["/departments"]);
+  }
+
+  edit() {
+    this.router.navigate(["/departments", this.departmentId, "edit"]);
   }
 }

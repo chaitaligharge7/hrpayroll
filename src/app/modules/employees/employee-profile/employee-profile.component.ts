@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EmployeeService, Employee } from "../employee.service";
 
@@ -18,6 +18,7 @@ export class EmployeeProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private employeeService: EmployeeService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -100,6 +101,7 @@ this.employeeId = +id;
       // ✅ FORCE UI UPDATE (IMPORTANT)
    
         this.loading = false;
+        this.cdr.detectChanges();
 
 
     },
@@ -109,6 +111,7 @@ this.employeeId = +id;
 
 
         this.loading = false;
+        this.cdr.detectChanges();
  
     },
   });
@@ -118,5 +121,9 @@ this.employeeId = +id;
     if (this.employeeId) {
       this.router.navigate(["/employees", this.employeeId, "edit"]);
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(["/employees"]);
   }
 }

@@ -7,9 +7,10 @@ import { ChangeDetectorRef } from "@angular/core"; // ✅ NEW
 
 @Component({
   selector: "app-department-list",
+  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: "./department-list.html",
-  styleUrl: "./department-list.scss",
+  styleUrls: ["./department-list.scss"],
 })
 export class DepartmentListComponent implements OnInit {
   departments: any[] = []; // using any as requested

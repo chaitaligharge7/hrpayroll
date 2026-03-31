@@ -70,15 +70,22 @@ export class LettersComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.generatedLetter = response.data;
-          // Open letter in new window
+          // Download letter instead of opening in new window
           if (this.generatedLetter.letter_url) {
-            window.open(this.generatedLetter.letter_url, '_blank');
+            const link = document.createElement('a');
+            link.href = this.generatedLetter.letter_url;
+            link.download = `${this.selectedLetterType}_letter.pdf`;
+            link.click();
           }
+        } else {
+          console.error('Failed to generate letter:', response.message || 'Unknown error');
+          alert(response.message || 'Failed to generate letter');
         }
         this.loading = false;
       },
       error: (error) => {
         console.error('Error generating letter:', error);
+        alert('Error generating letter. Please try again.');
         this.loading = false;
       }
     });
@@ -86,7 +93,10 @@ export class LettersComponent implements OnInit {
 
   downloadLetter(): void {
     if (this.generatedLetter && this.generatedLetter.letter_url) {
-      window.open(this.generatedLetter.letter_url, '_blank');
+      const link = document.createElement('a');
+      link.href = this.generatedLetter.letter_url;
+      link.download = `${this.selectedLetterType}_letter.pdf`;
+      link.click();
     }
   }
 

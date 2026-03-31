@@ -56,12 +56,20 @@ export class EmployeeLettersComponent implements OnChanges {
     this.lettersService.generateLetter(params).subscribe({
       next: (response) => {
         if (response.success && response.data?.letter_url) {
-          window.open(response.data.letter_url, "_blank");
+          // Create a download link instead of opening in new window
+          const link = document.createElement('a');
+          link.href = response.data.letter_url;
+          link.download = `${letterType}_letter.pdf`;
+          link.click();
+        } else {
+          console.error('Failed to generate letter:', response.message || 'Unknown error');
+          alert(response.message || 'Failed to generate letter');
         }
         this.loading = false;
       },
       error: (error) => {
         console.error("Error generating letter:", error);
+        alert('Error generating letter. Please try again.');
         this.loading = false;
       },
     });

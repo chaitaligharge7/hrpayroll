@@ -9,7 +9,7 @@ export class AttendanceService {
   constructor(private api: ApiService) {}
 
   checkIn(location?: string): Observable<ApiResponse<any>> {
-    return this.api.post<any>('attendance/checkin', {
+    return this.api.post<any>('attendance/checkin.php', {
       location,
       method: 'Web'
     });

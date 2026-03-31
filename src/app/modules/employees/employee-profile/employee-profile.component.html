@@ -1,51 +1,236 @@
 
 <div class="container-fluid py-3">
 
-  <!-- Loader -->
-  <!-- <div *ngIf="loading" class="text-muted">Loading...</div> -->
-
-  <!-- Error -->
-  <div *ngIf="error && !loading" class="alert alert-warning">
-    {{ error }}
+  <!-- Navigation Bar -->
+  <div class="d-flex align-items-center mb-4">
+    <div class="flex-grow-1">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item">
+            <a href="#" (click)="goBack()" class="text-decoration-none">Employees</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Employee Profile</li>
+        </ol>
+      </nav>
+    </div>
+    <button class="btn btn-edit-custom ms-auto shadow-sm" (click)="goBack()">
+      <i class="bi bi-arrow-left me-2"></i>
+      <span class="fw-semibold">Back to Employees</span>
+    </button>
   </div>
 
-  <!-- ✅ REMOVE loading dependency -->
-  <div *ngIf="employee">
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="mt-2 text-muted">Loading employee details...</div>
+  </div>
 
-    <div class="d-flex justify-content-between align-items-start mb-4">
-      <div>
-        <h4 class="mb-1">
-          {{ employee.first_name }} {{ employee.last_name }}
-        </h4>
-        <p class="text-muted mb-0">
-          {{ employee.employee_code }}
-          <span *ngIf="employee.department_name">
-            · {{ employee.department_name }}
-          </span>
-          <span *ngIf="employee.designation_name">
-            · {{ employee.designation_name }}
-          </span>
-        </p>
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="alert alert-danger d-flex align-items-center">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div>{{ error }}</div>
+  </div>
+
+  <!-- Employee Profile -->
+  <div *ngIf="employee && !loading">
+
+    <!-- Profile Header -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-header bg-white border-bottom-0 py-4">
+        <div class="d-flex align-items-center">
+          <div class="flex-shrink-0 me-4">
+            <div class="bg-primary bg-opacity-10 rounded-circle p-4">
+              <i class="bi bi-person-circle text-primary fs-1"></i>
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <h3 class="mb-2 text-dark">{{ employee.first_name }} {{ employee.middle_name || '' }} {{ employee.last_name }}</h3>
+            <p class="text-muted mb-2 fs-5">{{ employee.employee_code }}</p>
+            <div class="d-flex flex-wrap gap-3">
+              <span *ngIf="employee.department_name" class="badge bg-info bg-opacity-10 text-info px-3 py-2">
+                <i class="bi bi-building me-1"></i>{{ employee.department_name }}
+              </span>
+              <span *ngIf="employee.designation_name" class="badge bg-success bg-opacity-10 text-success px-3 py-2">
+                <i class="bi bi-briefcase me-1"></i>{{ employee.designation_name }}
+              </span>
+              <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
+                <i class="bi bi-circle-fill me-1 text-{{ employee.employment_status === 'Active' ? 'success' : 'danger' }}"></i>
+                {{ employee.employment_status || 'Active' }}
+              </span>
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            <button class="btn btn-edit-custom shadow-sm" (click)="edit()">
+              <i class="bi bi-pencil-square me-2"></i>
+              <span class="fw-semibold">Edit Profile</span>
+            </button>
+          </div>
+        </div>
       </div>
-
-      <button class="btn btn-primary btn-sm" (click)="edit()">
-        Edit
-      </button>
     </div>
 
-    <div class="card mb-4">
-      <div class="card-header">Letters</div>
-      <div class="card-body">
+    <!-- Employee Information Cards -->
+    <div class="row g-4 mb-4">
 
-        <!-- ✅ USE SAFE employeeId -->
+      <!-- Personal Information -->
+      <div class="col-lg-6 col-md-6">
+        <div class="card h-100 border-0 bg-light">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-4">
+              <i class="bi bi-person text-primary me-2 fs-4"></i>
+              <h5 class="mb-0 text-dark">Personal Information</h5>
+            </div>
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="border-start border-primary border-4 ps-3">
+                  <label class="text-muted small mb-1">Full Name</label>
+                  <div class="fw-bold fs-6">{{ employee.first_name }} {{ employee.middle_name || '' }} {{ employee.last_name }}</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="border-start border-info border-4 ps-3">
+                  <label class="text-muted small mb-1">Employee Code</label>
+                  <div class="fw-bold fs-6">{{ employee.employee_code }}</div>
+                </div>
+              </div>
+              <div class="col-12" *ngIf="employee.date_of_joining">
+                <div class="border-start border-success border-4 ps-3">
+                  <label class="text-muted small mb-1">Date of Joining</label>
+                  <div class="fw-bold fs-6">{{ employee.date_of_joining | date:'mediumDate' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="col-lg-6 col-md-6">
+        <div class="card h-100 border-0 bg-light">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-4">
+              <i class="bi bi-telephone text-primary me-2 fs-4"></i>
+              <h5 class="mb-0 text-dark">Contact Information</h5>
+            </div>
+            <div class="row g-3">
+              <div class="col-12" *ngIf="employee.official_email">
+                <div class="border-start border-warning border-4 ps-3">
+                  <label class="text-muted small mb-1">Official Email</label>
+                  <div class="fw-bold fs-6">{{ employee.official_email }}</div>
+                </div>
+              </div>
+              <div class="col-12" *ngIf="employee.personal_phone">
+                <div class="border-start border-danger border-4 ps-3">
+                  <label class="text-muted small mb-1">Phone Number</label>
+                  <div class="fw-bold fs-6">{{ employee.personal_phone }}</div>
+                </div>
+              </div>
+              <div class="col-12" *ngIf="!employee.official_email && !employee.personal_phone">
+                <div class="text-muted text-center py-3">
+                  <i class="bi bi-info-circle me-2"></i>
+                  No contact information available
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employment Details -->
+      <div class="col-lg-6 col-md-6">
+        <div class="card h-100 border-0 bg-light">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-4">
+              <i class="bi bi-briefcase text-primary me-2 fs-4"></i>
+              <h5 class="mb-0 text-dark">Employment Details</h5>
+            </div>
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="border-start border-primary border-4 ps-3">
+                  <label class="text-muted small mb-1">Department</label>
+                  <div class="fw-bold fs-6">{{ employee.department_name || 'Not Assigned' }}</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="border-start border-info border-4 ps-3">
+                  <label class="text-muted small mb-1">Designation</label>
+                  <div class="fw-bold fs-6">{{ employee.designation_name || 'Not Assigned' }}</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="border-start border-success border-4 ps-3">
+                  <label class="text-muted small mb-1">Employment Status</label>
+                  <div class="fw-bold fs-6">
+                    <span class="badge bg-{{ employee.employment_status === 'Active' ? 'success' : 'secondary' }} bg-opacity-10 text-{{ employee.employment_status === 'Active' ? 'success' : 'secondary' }}">
+                      {{ employee.employment_status || 'Active' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Salary Information -->
+      <div class="col-lg-6 col-md-6">
+        <div class="card h-100 border-0 bg-light">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-4">
+              <i class="bi bi-cash text-primary me-2 fs-4"></i>
+              <h5 class="mb-0 text-dark">Salary Information</h5>
+            </div>
+            <div class="row g-3">
+              <div class="col-12" *ngIf="employee.basic_salary">
+                <div class="border-start border-warning border-4 ps-3">
+                  <label class="text-muted small mb-1">Basic Salary</label>
+                  <div class="fw-bold fs-6 text-success">${{ employee.basic_salary | number }}</div>
+                </div>
+              </div>
+              <div class="col-12" *ngIf="!employee.basic_salary">
+                <div class="text-muted text-center py-3">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Salary information not available
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Employee Letters Section -->
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white border-bottom-0 py-4">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-envelope-paper text-primary me-2 fs-4"></i>
+          <h5 class="mb-0 text-dark">Employee Letters</h5>
+        </div>
+      </div>
+      <div class="card-body p-4">
         <app-employee-letters
           *ngIf="employeeId"
           [employeeId]="employeeId">
         </app-employee-letters>
-
       </div>
     </div>
 
+  </div>
+
+  <!-- No Employee Found -->
+  <div *ngIf="!employee && !loading && !error" class="text-center py-5">
+    <div class="mb-4">
+      <i class="bi bi-person-x display-1 text-muted"></i>
+    </div>
+    <h5 class="text-muted mb-2">Employee Not Found</h5>
+    <p class="text-muted mb-4">The employee you're looking for doesn't exist or has been removed.</p>
+    <button class="btn btn-primary shadow-sm" (click)="goBack()">
+      <i class="bi bi-arrow-left me-2"></i>
+      <span class="fw-semibold">Back to Employees</span>
+    </button>
   </div>
 
 </div>

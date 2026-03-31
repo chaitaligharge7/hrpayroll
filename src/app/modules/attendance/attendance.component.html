@@ -35,12 +35,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let r of records">
-              <td>{{ r.attendance_date || r.date | date:'mediumDate' }}</td>
-              <td>{{ r.check_in_time || r.check_in | date:'shortTime' }}</td>
-              <td>{{ r.check_out_time || r.check_out | date:'shortTime' }}</td>
-              <td>{{ r.status || '—' }}</td>
-            </tr>
+           <tr *ngFor="let r of records">
+  <td>{{ r.attendance_date_obj | date:'mediumDate' }}</td>
+  <td>{{ r.check_in_time_obj | date:'shortTime' }}</td>
+  <td>{{ r.check_out_time_obj | date:'shortTime' }}</td>
+  <td>{{ r.status || '—' }}</td>
+</tr>
           </tbody>
         </table>
       </div>

@@ -22,8 +22,17 @@ export class DepartmentsService {
     }
     return this.apiService.get("departments/list", query);
   }
+
+  getDepartment(id: number): Observable<any> {
+    return this.apiService.get("departments/get.php", { id });
+  }
+
   createDepartment(data: any): Observable<any> {
     // ✅ NEW
     return this.apiService.post("departments/create.php", data);
   }
+
+updateDepartment(id: number, data: any): Observable<any> {
+  return this.apiService.put(`departments/update.php?id=${id}`, data);
+}
 }

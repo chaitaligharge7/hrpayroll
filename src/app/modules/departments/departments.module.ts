@@ -7,10 +7,10 @@ import { CreateDepartment } from "./create-department/create-department";
 import { DetailDepartment } from "./detail-department/detail-department";
 
 const routes: Routes = [
-  { path: "", component:DepartmentListComponent },
+  { path: "", component: DepartmentListComponent },
   { path: "create", component: CreateDepartment },
-    { path: "detail/:id", component:DetailDepartment }
-
+  { path: "detail/:id", component: DetailDepartment },
+  { path: ":id/edit", component: CreateDepartment },
 ];
 
 @NgModule({

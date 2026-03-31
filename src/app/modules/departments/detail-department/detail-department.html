@@ -1,67 +1,138 @@
 <div class="container-fluid py-3">
   
+  <!-- Navigation Bar -->
+  <div class="d-flex align-items-center mb-4">
+    <div class="flex-grow-1">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item">
+            <a href="#" (click)="goBack()" class="text-decoration-none">Departments</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Department Details</li>
+        </ol>
+      </nav>
+    </div>
+    <button class="btn btn-outline-primary ms-auto" (click)="goBack()">
+      <i class="bi bi-arrow-left me-2"></i>
+      Back to Departments
+    </button>
+  </div>
+
   <!-- Loading -->
-  <div *ngIf="loading" class="text-center text-muted">
-    Loading department details...
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="mt-2 text-muted">Loading department details...</div>
   </div>
 
   <!-- Error -->
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
+  <div *ngIf="error" class="alert alert-danger d-flex align-items-center">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div>{{ error }}</div>
   </div>
 
   <!-- Department Details -->
-  <div *ngIf="!loading && department" class="card shadow-sm">
-    
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">{{ department.department_name }}</h4>
-      <button class="btn btn-sm btn-secondary" (click)="goBack()">
-        Back
-      </button>
-    </div>
+  <div *ngIf="!loading && department" class="card shadow-sm border-0">
 
-    <div class="card-body">
-      <div class="row">
+    <div class="card-header bg-white border-bottom-0 py-4">
+      <div class="d-flex align-items-center">
+        <div class="flex-shrink-0 me-3">
+          <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+            <i class="bi bi-building text-primary fs-4"></i>
+          </div>
+        </div>
+        <div class="flex-grow-1">
+          <h4 class="mb-1 text-dark">{{ department.department_name }}</h4>
+          <p class="text-muted mb-0">Department Information</p>
+        </div>
+        <div class="flex-shrink-0">
+          <span class="badge fs-6 px-3 py-2 me-3"
+                [class]="department.is_active ? 'bg-success' : 'bg-danger'">
+            <i class="bi" [class]="department.is_active ? 'bi-check-circle' : 'bi-x-circle'"></i>
+            {{ department.is_active ? 'Active' : 'Inactive' }}
+          </span>
+          <button class="btn btn-edit-custom shadow-sm" (click)="edit()">
+            <i class="bi bi-pencil-square me-2"></i>
+            <span class="fw-semibold">Edit Department</span>
+          </button>
+        </div>
+      </div>
+    <div class="card-body p-4">
+      <div class="row g-4">
 
         <!-- Department Info -->
-        <div class="col-md-6 mb-3">
-          <label class="text-muted">Department ID</label>
-          <div class="fw-bold">{{ department.department_id }}</div>
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label class="text-muted">Department Name</label>
-          <div class="fw-bold">{{ department.department_name }}</div>
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label class="text-muted">Employee Count</label>
-          <div class="fw-bold">{{ department.employee_count }}</div>
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label class="text-muted">Department Head</label>
-          <div class="fw-bold">
-            {{ department.head_first_name }} {{ department.head_last_name }}
+        <div class="col-lg-6 col-md-6">
+          <div class="card h-100 border-0 bg-light">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-hash text-primary me-2"></i>
+                <h6 class="mb-0 text-dark">Department ID</h6>
+              </div>
+              <div class="fs-5 fw-bold text-primary">{{ department.department_id }}</div>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="text-muted">Status</label>
-          <div>
-            <span
-              class="badge"
-              [ngClass]="department.is_active ? 'bg-success' : 'bg-danger'"
-            >
-              {{ department.is_active ? 'Active' : 'Inactive' }}
-            </span>
+        <div class="col-lg-6 col-md-6">
+          <div class="card h-100 border-0 bg-light">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-building text-primary me-2"></i>
+                <h6 class="mb-0 text-dark">Department Name</h6>
+              </div>
+              <div class="fs-5 fw-bold text-dark">{{ department.department_name }}</div>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-12 mb-3" *ngIf="department.description">
-          <label class="text-muted">Description</label>
-          <div class="fw-bold">
-            {{ department.description }}
+        <div class="col-lg-6 col-md-6">
+          <div class="card h-100 border-0 bg-light">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-people text-primary me-2"></i>
+                <h6 class="mb-0 text-dark">Employee Count</h6>
+              </div>
+              <div class="fs-5 fw-bold text-success">{{ department.employee_count }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6">
+          <div class="card h-100 border-0 bg-light">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-person-circle text-primary me-2"></i>
+                <h6 class="mb-0 text-dark">Department Head</h6>
+              </div>
+              <div class="fs-5 fw-bold text-dark">
+                {{ department.head_first_name || 'Not Assigned' }} {{ department.head_last_name || '' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6" *ngIf="department.cost_center">
+          <div class="card h-100 border-0 bg-light">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-cash text-primary me-2"></i>
+                <h6 class="mb-0 text-dark">Cost Center</h6>
+              </div>
+              <div class="fs-5 fw-bold text-info">{{ department.cost_center }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12" *ngIf="department.description">
+          <div class="card border-0 bg-light">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-file-text text-primary me-2"></i>
+                <h6 class="mb-0 text-dark">Description</h6>
+              </div>
+              <div class="text-muted">{{ department.description }}</div>
+            </div>
           </div>
         </div>
 
@@ -70,8 +141,16 @@
   </div>
 
   <!-- No Data -->
-  <div *ngIf="!loading && !department" class="text-muted text-center">
-    No department found.
+  <div *ngIf="!loading && !department" class="text-center py-5">
+    <div class="mb-4">
+      <i class="bi bi-building-x display-1 text-muted"></i>
+    </div>
+    <h5 class="text-muted mb-2">Department Not Found</h5>
+    <p class="text-muted mb-4">The department you're looking for doesn't exist or has been removed.</p>
+    <button class="btn btn-primary" (click)="goBack()">
+      <i class="bi bi-arrow-left me-2"></i>
+      Back to Departments
+    </button>
   </div>
 
 </div>

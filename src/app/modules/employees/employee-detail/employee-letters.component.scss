@@ -1,2 +1,60 @@
 // Employee Letters Component Styles
 
+.employee-letters {
+  .letters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .letter-card {
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #ffffff;
+  }
+
+  .letter-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .letter-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.65rem;
+    color: #2563eb;
+  }
+
+  .letter-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .btn-download {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+    padding: 0.35rem 0.55rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-download:hover {
+    transform: translateY(-1px);
+    background: #1d4ed8;
+  }
+
+  .btn-download i {
+    font-size: 0.9rem;
+  }
+}
+
+
