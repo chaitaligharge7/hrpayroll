@@ -7,10 +7,7 @@
     </div>
   </div>
 
-  <div *ngIf="loading" class="text-muted py-4">Loading…</div>
-  <div *ngIf="error" class="alert alert-warning">{{ error }}</div>
-
-  <div class="card shadow-sm border-0" *ngIf="!loading && job">
+  <div class="card shadow-sm border-0" *ngIf="job">
     <div class="card-body">
       <h4 class="card-title">{{ job.job_title }}</h4>
       <p class="text-muted mb-2">{{ job.job_code }} · {{ job.department_name }} · {{ job.designation_name }}</p>

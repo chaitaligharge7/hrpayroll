@@ -1,10 +1,86 @@
-<p>{{ isEditMode ? 'Edit' : 'Create' }} Department</p>
-<form (ngSubmit)="onSubmit()">
-  <input [(ngModel)]="form.department_name" name="name" placeholder="Department Name" required />
-  
-  <input [(ngModel)]="form.department_code" name="code" placeholder="Department Code" required />
+<div class="form-container">
+  <div class="card">
+    <div class="card-header">
+      <h3>{{ isEditMode ? 'Edit Department' : 'Create Department' }}</h3>
+    </div>
 
-  <input [(ngModel)]="form.department_description" name="desc" placeholder="Description" />
+    <div class="card-body">
+      <!-- Loading -->
+      <div *ngIf="loading && isEditMode" class="loading-text">Loading...</div>
 
-  <button type="submit" [disabled]="loading">{{ isEditMode ? 'Update' : 'Create' }} Department</button>
-</form>
+      <form (ngSubmit)="onSubmit()">
+        <!-- Department Name -->
+        <div class="form-group">
+          <label>Department Name *</label>
+          <input
+            type="text"
+            [(ngModel)]="form.department_name"
+            name="department_name"
+            placeholder="Enter department name"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <!-- Department Code -->
+        <div class="form-group">
+          <label>Department Code *</label>
+          <input
+            type="text"
+            [(ngModel)]="form.department_code"
+            name="department_code"
+            placeholder="Enter department code"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label>Description</label>
+          <input
+            type="text"
+            [(ngModel)]="form.department_description"
+            name="department_description"
+            placeholder="Enter description"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Cost Center -->
+        <div class="form-group">
+          <label>Cost Center</label>
+          <input
+            type="text"
+            [(ngModel)]="form.cost_center"
+            name="cost_center"
+            placeholder="Enter cost center"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Active -->
+        <div class="form-group checkbox-group">
+          <input
+            type="checkbox"
+            [(ngModel)]="form.is_active"
+            name="is_active"
+            id="is_active"
+          />
+          <label for="is_active">Active</label>
+        </div>
+
+        <!-- Submit -->
+        <div class="button-group">
+          <button type="submit" [disabled]="loading" class="btn btn-primary">
+            {{ loading ? 'Please wait...' : (isEditMode ? 'Update' : 'Create') }}
+          </button>
+
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

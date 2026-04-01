@@ -8,8 +8,12 @@
           Employees
         </button>
 
-        <button class="btn btn-light btn-sm" [class.active]="true">
-          Departments
+        <button
+          class="btn btn-light btn-sm"
+          (click)="goToDesignation()"
+          [class.active]="true"
+        >
+          Designations
         </button>
       </div>
 
@@ -82,9 +86,13 @@
                 <i class="bi bi-pencil"></i>
               </button>
 
-              <!-- <button class="btn btn-sm btn-outline btn-danger" (click)="deleteDepartment(dept)">
+              <button
+                class="btn btn-sm btn-outline btn-danger"
+                (click)="deleteEmployee(dept)"
+                title="Delete"
+              >
                 <i class="bi bi-trash"></i>
-              </button> -->
+              </button>
             </td>
           </tr>
 
@@ -102,12 +110,6 @@
       *ngIf="!loading && pagination.total_pages > 1"
       class="d-flex justify-content-between align-items-center mt-3"
     >
-      <!-- <div class="text-muted">
-        Showing {{ (pagination.page - 1) * pagination.limit + 1 }}
-        to {{ getMath().min(pagination.page * pagination.limit, pagination.total) }}
-        of {{ pagination.total }} entries
-      </div> -->
-
       <ul class="pagination mb-0">
         <li class="page-item" [class.disabled]="pagination.page === 1">
           <a class="page-link" (click)="onPageChange(pagination.page - 1)"

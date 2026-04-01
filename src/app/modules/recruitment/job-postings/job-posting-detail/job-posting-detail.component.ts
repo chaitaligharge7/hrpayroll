@@ -10,8 +10,6 @@ import { JobPostingsService } from '../job-postings.service';
 })
 export class JobPostingDetailComponent implements OnInit {
   job: any = null;
-  loading = false;
-  error: string | null = null;
   jobId: number | null = null;
 
   constructor(
@@ -21,6 +19,11 @@ export class JobPostingDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const stateJob = window.history.state?.job;
+    if (stateJob) {
+      this.job = stateJob;
+    }
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('jobId');
       if (!id) {
@@ -33,20 +36,14 @@ export class JobPostingDetailComponent implements OnInit {
   }
 
   load(id: number): void {
-    this.loading = true;
-    this.error = null;
     this.jobPostingsService.getJobPosting(id).subscribe({
       next: (res) => {
         if (res.success && res.data) {
           this.job = res.data;
-        } else {
-          this.error = res.message || 'Job not found';
         }
-        this.loading = false;
       },
       error: (e) => {
-        this.error = e?.message || 'Could not load job posting';
-        this.loading = false;
+        console.error('Could not load job posting', e);
       }
     });
   }

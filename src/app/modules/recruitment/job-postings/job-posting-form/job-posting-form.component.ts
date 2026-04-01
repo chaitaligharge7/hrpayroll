@@ -196,17 +196,20 @@ export class JobPostingFormComponent implements OnInit {
         this.saving = false;
         if (res.success) {
           if (this.isEditMode && this.editJobId) {
-            this.router.navigate(['/recruitment/job-postings', this.editJobId]);
+            this.message = 'Job posting updated successfully.';
+            this.error = null;
           } else {
             this.router.navigate(['/recruitment/job-postings']);
           }
         } else {
           this.error = res.message || 'Save failed';
+          this.message = null;
         }
       },
       error: (e: any) => {
         this.saving = false;
         this.error = e?.message || 'Save failed';
+        this.message = null;
       }
     };
     if (this.isEditMode && this.editJobId) {

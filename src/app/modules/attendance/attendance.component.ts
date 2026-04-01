@@ -101,7 +101,7 @@ loadList(): void {
       if (res.success && res.data?.attendance) {
         const att = res.data.attendance as AttendanceRecord;
         const index = this.records.findIndex(r => r.attendance_id === att.attendance_id);
-
+ 
         if (index !== -1) {
           const updatedRecord = {
             ...att,

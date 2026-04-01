@@ -33,6 +33,10 @@ export class DepartmentsService {
   }
 
 updateDepartment(id: number, data: any): Observable<any> {
-  return this.apiService.put(`departments/update.php?id=${id}`, data);
+  return this.apiService.post(`departments/update.php?id=${id}`, data);
+}
+
+deleteDepartment(id: number) {
+  return this.apiService.post(`departments/delete.php?id=${id}`, {});
 }
 }

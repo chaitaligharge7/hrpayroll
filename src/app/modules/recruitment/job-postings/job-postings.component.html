@@ -9,7 +9,10 @@
   <div class="filters-section">
     <div class="filter-group">
       <label>Status:</label>
-      <select [(ngModel)]="filters.status" (change)="onFilterChange()">
+      <select
+        [(ngModel)]="filters.status"
+        (ngModelChange)="onStatusChange($event)"
+      >
         <option value="">All</option>
         <option value="Draft">Draft</option>
         <option value="Published">Published</option>
@@ -18,7 +21,7 @@
     </div>
   </div>
 
-  <div class="table-container" *ngIf="!loading">
+  <div class="table-container">
     <table class="table">
       <thead>
         <tr>
@@ -40,17 +43,35 @@
           <td>{{ job.no_of_positions }}</td>
           <td>{{ job.applications_count || 0 }}</td>
           <td>
-            <span class="badge" [ngClass]="'badge-' + (job.status || 'draft').toLowerCase()">
-              {{ job.status || '—' }}
+            <span
+              class="badge"
+              [ngClass]="'badge-' + (job.status || 'draft').toLowerCase()"
+            >
+              {{ job.status || "—" }}
             </span>
           </td>
-          <td>{{ job.posted_date | date:'shortDate' }}</td>
+          <td>{{ job.posted_date | date: "shortDate" }}</td>
           <td>
-            <button class="btn btn-sm btn-info" (click)="viewJobPosting(job.job_id)">
-              View
+            <button
+              class="btn btn-sm btn-outline"
+              (click)="viewJobPosting(job.job_id, job)"
+              title="View Details"
+            >
+              <i class="bi bi-eye"></i>
             </button>
-            <button class="btn btn-sm btn-warning" (click)="editJobPosting(job.job_id)">
-              Edit
+            <button
+              class="btn btn-sm btn-outline"
+              (click)="editJobPosting(job.job_id)"
+              title="Edit"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+
+            <button
+              class="btn btn-sm btn-outline btn-danger"
+              (click)="deleteJob(job.job_id)"
+            >
+              <i class="bi bi-trash"></i>
             </button>
           </td>
         </tr>
@@ -62,16 +83,20 @@
   </div>
 
   <div class="pagination" *ngIf="total > limit">
-    <button class="btn btn-sm" [disabled]="page === 1" (click)="onPageChange(page - 1)">
+    <button
+      class="btn btn-sm"
+      [disabled]="page === 1"
+      (click)="onPageChange(page - 1)"
+    >
       Previous
     </button>
     <span>Page {{ page }} of {{ getTotalPages() }}</span>
-    <button class="btn btn-sm" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
+    <button
+      class="btn btn-sm"
+      [disabled]="page >= getTotalPages()"
+      (click)="onPageChange(page + 1)"
+    >
       Next
     </button>
-  </div>
-
-  <div class="loading-spinner" *ngIf="loading">
-    <i class="fas fa-spinner fa-spin"></i> Loading...
   </div>
 </div>

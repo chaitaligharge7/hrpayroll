@@ -7,7 +7,6 @@ import { ApiService } from "../../core/services/api.service";
 })
 export class DesignationsService {
   constructor(private apiService: ApiService) {}
-  // ✅ NEW: Get Designations List (with optional department filter)
   getDesignations(params?: Record<string, any>): Observable<any> {
     const query: Record<string, any> = {};
 
@@ -23,8 +22,15 @@ export class DesignationsService {
     return this.apiService.get("designations/list", query);
   }
 
-  // ✅ NEW: Create Designation
   createDesignation(data: any): Observable<any> {
     return this.apiService.post("designations/create.php", data);
+  }
+
+  deleteDesignation(id: number) {
+    return this.apiService.post(`designations/delete.php?id=${id}`, {});
+  }
+
+  updateDesignation(id: number, data: any) {
+    return this.apiService.post(`designations/update.php?id=${id}`, data);
   }
 }

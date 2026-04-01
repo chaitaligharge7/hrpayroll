@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 const routes: Routes = [
   { path: "", component:DesignationListComponent },
   { path: "create", component:CreateDesignation },
+    { path: ":id/edit", component:CreateDesignation }
+  
 ];
 
 @NgModule({

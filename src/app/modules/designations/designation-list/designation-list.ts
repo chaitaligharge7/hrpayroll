@@ -28,18 +28,18 @@ export class DesignationListComponent implements OnInit {
   constructor(
     private designationService: DesignationsService,
     private router: Router,
-    private cdr: ChangeDetectorRef, // ✅ ADD THIS
+    private cdr: ChangeDetectorRef, 
   ) {}
 
   ngOnInit(): void {
-    this.loadDesignations(); // ✅
+    this.loadDesignations(); 
   }
 
   loadDesignations(): void {
     this.loading = true;
 
     const params = {
-      search: this.searchTerm, // ✅ if backend supports
+      search: this.searchTerm, 
     };
 
     this.designationService.getDesignations(params).subscribe({
@@ -48,7 +48,7 @@ export class DesignationListComponent implements OnInit {
           this.designations = res.data || [];
         }
         this.loading = false;
-        this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
+        this.cdr.detectChanges(); 
       },
       error: () => {
         this.loading = false;
@@ -57,11 +57,11 @@ export class DesignationListComponent implements OnInit {
   }
 
   onSearch(): void {
-    this.loadDesignations(); // ✅
+    this.loadDesignations(); 
   }
 
   createDesignation(): void {
-    this.router.navigate(["/designations/create"]); // ✅
+    this.router.navigate(["/designations/create"]); 
   }
 
   editDesignation(item: any): void {
@@ -76,6 +76,43 @@ export class DesignationListComponent implements OnInit {
     this.loadDesignations();
   }
 
-  goToDepartments() {}
-  viewDesignation() {}
+  goToDepartments() {
+    this.router.navigate(["/departments"]);
+  }
+  goToEmployees() {
+    this.router.navigate(["/employees"]);
+  }
+
+  deleteDesignation(designation: any): void {
+    if (!designation?.designation_id) return;
+
+    const confirmDelete = confirm(
+      `Are you sure you want to delete designation "${designation.designation_name}"?`,
+    );
+
+    if (!confirmDelete) return;
+
+    this.loading = true;
+
+    this.designationService
+      .deleteDesignation(designation.designation_id)
+      .subscribe({
+        next: (res: any) => {
+          if (res?.success) {
+            alert("Designation deleted successfully");
+
+            this.loadDesignations();
+          } else {
+            alert(res?.message || "Delete failed");
+          }
+
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error("DELETE ERROR:", err);
+          alert(err?.error?.message || "Error deleting designation");
+          this.loading = false;
+        },
+      });
+  }
 }

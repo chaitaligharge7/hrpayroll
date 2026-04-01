@@ -2,12 +2,13 @@
   <div class="card-header d-flex justify-content-between align-items-center">
     <h3>Designations</h3>
 
-    <button class="btn btn-light btn-sm" (click)="goToDepartments()">
-      Departments
+  
+    <button class="btn btn-light btn-sm" (click)="goToEmployees()" [class.active]="true">
+      Employees
     </button>
 
-    <button class="btn btn-light btn-sm" [class.active]="true">
-      Designations
+    <button class="btn btn-light btn-sm" (click)="goToDepartments()" [class.active]="true">
+      Departments
     </button>
 
     <button class="btn btn-primary" (click)="createDesignation()">
@@ -61,17 +62,17 @@
             <td>{{ d.employee_count }}</td>
 
             <td>
-              <button class="btn btn-sm btn-outline me-1" >
+              <!-- <button class="btn btn-sm btn-outline me-1" >
                 <i class="bi bi-eye"></i>
-              </button>
+              </button> -->
 
               <button class="btn btn-sm btn-outline me-1" (click)="editDesignation(d)">
                 <i class="bi bi-pencil"></i>
               </button>
 
-              <!-- <button class="btn btn-sm btn-outline btn-danger" (click)="deleteDesignation(d)">
+              <button class="btn btn-sm btn-outline btn-danger" (click)="deleteDesignation(d)">
                 <i class="bi bi-trash"></i>
-              </button> -->
+              </button>
             </td>
           </tr>
 

@@ -3,8 +3,7 @@ import { DepartmentsService } from "../departments.service";
 import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef } from "@angular/core"; // ✅ NEW
-
+import { ChangeDetectorRef } from "@angular/core"; 
 @Component({
   selector: "app-department-list",
   standalone: true,
@@ -14,7 +13,7 @@ import { ChangeDetectorRef } from "@angular/core"; // ✅ NEW
 })
 export class DepartmentListComponent implements OnInit {
   departments: any[] = []; // using any as requested
-selectedDeptId!: number;
+  selectedDeptId!: number;
 
   loading = false;
   searchTerm = "";
@@ -29,7 +28,7 @@ selectedDeptId!: number;
   constructor(
     private departmentService: DepartmentsService,
     private router: Router,
-    private cdr: ChangeDetectorRef, // ✅ ADD THIS
+    private cdr: ChangeDetectorRef, 
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +38,6 @@ selectedDeptId!: number;
   loadDepartments(): void {
     this.loading = true;
 
-    // ✅ CHANGED: Pass params (search + pagination)
     const params = {
       search: this.searchTerm,
       page: this.pagination.page,
@@ -51,12 +49,11 @@ selectedDeptId!: number;
         if (res.success) {
           this.departments = res.data || [];
 
-          // ✅ CHANGED: handle pagination response
           this.pagination.total = res.total || 0;
           this.pagination.total_pages = res.total_pages || 0;
         }
         this.loading = false;
-        this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
+        this.cdr.detectChanges(); 
       },
       error: () => {
         this.loading = false;
@@ -64,7 +61,6 @@ selectedDeptId!: number;
     });
   }
 
-  // ✅ CHANGED: Reset page when searching
   onSearch(): void {
     this.pagination.page = 1;
     this.loadDepartments();
@@ -87,7 +83,6 @@ selectedDeptId!: number;
     this.router.navigate(["/departments/create"]);
   }
 
-  // ✅ CHANGED: Fixed crash (removed throw error)
   goToEmployees(): void {
     this.router.navigate(["/employees"]);
   }
@@ -95,6 +90,39 @@ selectedDeptId!: number;
     this.router.navigate(["/designations"]);
   }
 
+ deleteEmployee(dept: any): void {
+  if (!dept?.department_id) return;
+
+  const confirmDelete = confirm(
+    `Are you sure you want to delete department "${dept.department_name}"?`
+  );
+
+  if (!confirmDelete) return;
+
+  this.loading = true;
+
+  this.departmentService.deleteDepartment(dept.department_id).subscribe({
+    next: (res: any) => {
+      if (res?.success) {
+        alert('Department deleted successfully');
+
+        this.loadDepartments();
+      } else {
+        alert(res?.message || 'Delete failed');
+      }
+
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error('DELETE ERROR:', err);
+      alert(err?.error?.message || 'Error deleting department');
+      this.loading = false;
+    }
+  });
+}
 
 
+goToDesignation(){
+  this.router.navigate(['/designations']);
+}
 }

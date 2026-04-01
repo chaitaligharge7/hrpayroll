@@ -1,26 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { DepartmentsService } from '../departments.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from "@angular/core";
+import { DepartmentsService } from "../departments.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { ChangeDetectorRef } from "@angular/core";
 
 @Component({
-  selector: 'app-create-department',
+  selector: "app-create-department",
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './create-department.html',
-  styleUrls: ['./create-department.scss'],
+  templateUrl: "./create-department.html",
+  styleUrls: ["./create-department.scss"],
 })
 export class CreateDepartment implements OnInit {
-  // ✅ NEW: form model
   form: any = {
-    department_name: '',
-    department_code: '',
-    department_description: '',
+    department_name: "",
+    department_code: "",
+    department_description: "",
     parent_department_id: null,
     head_employee_id: null,
-    cost_center: '',
-    is_active: 1
+    cost_center: "",
+    is_active: 1,
   };
 
   loading = false;
@@ -30,60 +30,101 @@ export class CreateDepartment implements OnInit {
   constructor(
     private departmentService: DepartmentsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.departmentId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.departmentId && !isNaN(this.departmentId)) {
-      this.isEditMode = true;
-      this.loadDepartment();
+    const idParam = this.route.snapshot.paramMap.get("id");
+
+    if (idParam) {
+      this.departmentId = Number(idParam);
+
+      if (!isNaN(this.departmentId)) {
+        this.isEditMode = true;
+        this.loadDepartment();
+      }
     }
   }
 
   loadDepartment(): void {
     if (!this.departmentId) return;
-    
+
     this.loading = true;
+
     this.departmentService.getDepartment(this.departmentId).subscribe({
       next: (res: any) => {
-        if (res && res.success && res.data) {
-          this.form = { ...res.data };
+        console.log("GET Department Response:", res);
+
+        if (res?.success && res?.data) {
+          const data = res.data; // ✅ FIX ADDED
+
+          this.form.department_name = data.department_name || "";
+          this.form.department_code = data.department_code || "";
+          this.form.department_description = data.department_description || "";
+          this.form.parent_department_id = data.parent_department_id || null;
+          this.form.head_employee_id = data.head_employee_id || null;
+          this.form.cost_center = data.cost_center || "";
+          this.form.is_active = data.is_active ?? 1;
+
+          this.cdr.detectChanges(); // ✅ optional but good
+        } else {
+          alert("Invalid response from server");
         }
+
         this.loading = false;
       },
       error: (err) => {
-        alert('Error loading department');
+        console.error("GET ERROR:", err); // ✅ DEBUG
+        alert("Error loading department");
         this.loading = false;
-      }
+      },
     });
   }
 
-  // ✅ NEW: submit method
   onSubmit(): void {
     if (!this.form.department_name || !this.form.department_code) {
-      alert('Name and Code are required');
+      alert("Name and Code are required");
       return;
     }
 
+    console.log("FORM DATA:", this.form); // ✅ DEBUG
+
     this.loading = true;
 
-    const operation = this.isEditMode ? 
-      this.departmentService.updateDepartment(this.departmentId!, this.form) : 
-      this.departmentService.createDepartment(this.form);
+    const request = this.isEditMode
+      ? this.departmentService.updateDepartment(this.departmentId!, this.form)
+      : this.departmentService.createDepartment(this.form);
 
-    operation.subscribe({
+    request.subscribe({
       next: (res: any) => {
-        if (res.success) {
-          alert(`Department ${this.isEditMode ? 'updated' : 'created'} successfully`);
-          this.router.navigate(['/departments']); // redirect to list
+        console.log("API RESPONSE:", res); // ✅ DEBUG
+
+        if (res?.success) {
+          alert(
+            `Department ${this.isEditMode ? "updated" : "created"} successfully`,
+          );
+          this.router.navigate(["/departments"]);
+        } else {
+          alert(res?.message || "Operation failed");
         }
+
         this.loading = false;
       },
       error: (err) => {
-        alert(err?.error?.message || `Error ${this.isEditMode ? 'updating' : 'creating'} department`);
+        console.error("API ERROR:", err); // ✅ DEBUG
+
+        alert(
+          err?.error?.message ||
+            err?.message ||
+            `Error ${this.isEditMode ? "updating" : "creating"} department`,
+        );
+
         this.loading = false;
-      }
+      },
     });
+  }
+    cancel(): void {
+    this.router.navigate(["/designations"]);
   }
 }
