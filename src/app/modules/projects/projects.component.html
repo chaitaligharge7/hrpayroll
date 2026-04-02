@@ -1,65 +1,82 @@
-<div class="projects-container">
-  <div class="page-header">
-    <h2>Projects</h2>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>Projects</h3>
     <button class="btn btn-primary" (click)="createProject()">
-      <i class="fas fa-plus"></i> New Project
+      <i class="bi bi-plus-circle"></i> Add Project
     </button>
   </div>
 
-  <div class="filters-section">
-    <div class="filter-group">
-      <label>Status:</label>
-      <select [(ngModel)]="filters.status" (change)="onFilterChange()">
-        <option value="">All</option>
-        <option value="Planning">Planning</option>
-        <option value="Active">Active</option>
-        <option value="On Hold">On Hold</option>
-        <option value="Completed">Completed</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
+  <div class="card-body">
+    <!-- Filter Section -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label small">Status:</label>
+        <select class="form-select form-select-sm" [(ngModel)]="filters.status" (change)="onFilterChange()">
+          <option value="">All Statuses</option>
+          <option value="Planning">Planning</option>
+          <option value="Active">Active</option>
+          <option value="On Hold">On Hold</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <div class="projects-grid" *ngIf="!loading">
-    <div class="project-card" *ngFor="let project of projects">
-      <div class="project-header">
-        <div class="project-code">{{ project.project_code }}</div>
-        <span class="badge badge-{{ project.status.toLowerCase().replace(' ', '-') }}">
-          {{ project.status }}
-        </span>
-      </div>
-      <h3 class="project-title">{{ project.project_name }}</h3>
-      <div class="project-details">
-        <p *ngIf="project.client_name"><strong>Client:</strong> {{ project.client_name }}</p>
-        <p *ngIf="project.manager_first_name">
-          <strong>Manager:</strong> {{ project.manager_first_name }} {{ project.manager_last_name }}
-        </p>
-        <p *ngIf="project.start_date"><strong>Start:</strong> {{ project.start_date | date:'shortDate' }}</p>
-        <p *ngIf="project.end_date"><strong>End:</strong> {{ project.end_date | date:'shortDate' }}</p>
-        <div class="project-stats">
-          <div class="stat-item">
-            <span class="stat-value">{{ project.completed_tasks || 0 }}</span>
-            <span class="stat-label">/ {{ project.total_tasks || 0 }} Tasks</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">{{ project.total_hours || 0 }}</span>
-            <span class="stat-label">Hours</span>
-          </div>
-        </div>
-      </div>
-      <div class="project-actions">
-        <button class="btn btn-sm btn-info" (click)="viewProject(project.project_id)">
-          View Details
-        </button>
-      </div>
+    <!-- Projects Table -->
+    <div *ngIf="projects.length > 0" class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Client</th>
+            <th>Manager</th>
+            <th>Status</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Budget</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of projects">
+            <td>
+              <span class="badge bg-light text-dark">{{ project.project_code }}</span>
+            </td>
+            <td><strong>{{ project.project_name }}</strong></td>
+            <td>{{ project.client_name || '-' }}</td>
+            <td>{{ project.manager_first_name || '-' }} {{ project.manager_last_name || '' }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'bg-secondary': project.status === 'Planning',
+                'bg-success': project.status === 'Active',
+                'bg-warning text-dark': project.status === 'On Hold',
+                'bg-info': project.status === 'Completed',
+                'bg-danger': project.status === 'Cancelled'
+              }">
+                {{ project.status }}
+              </span>
+            </td>
+            <td>{{ project.start_date | date:'shortDate' }}</td>
+            <td>{{ project.end_date | date:'shortDate' }}</td>
+            <td>{{ project.budget ? ('$' + project.budget) : '-' }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline" (click)="viewProject(project.project_id)" title="View Details">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="no-projects" *ngIf="projects.length === 0">
-      <p>No projects found</p>
-    </div>
-  </div>
 
-  <div class="loading-spinner" *ngIf="loading">
-    <i class="fas fa-spinner fa-spin"></i> Loading...
+    <!-- Empty State -->
+    <div *ngIf="projects.length === 0" class="text-center py-5">
+      <p class="text-muted">No projects found</p>
+      <button class="btn btn-sm btn-primary" (click)="createProject()">
+        Create First Project
+      </button>
+    </div>
   </div>
 </div>
 

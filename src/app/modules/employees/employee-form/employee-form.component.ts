@@ -76,7 +76,11 @@ export class EmployeeFormComponent implements OnInit {
     this.api.get("departments/list").subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.departments = Array.isArray(response.data) ? response.data : [];
+          // this.departments = Array.isArray(response.data) ? response.data : [];
+                    this.departments = response.data.departments || [];
+
+          
+
         }
       },
     });
@@ -86,7 +90,7 @@ export class EmployeeFormComponent implements OnInit {
       next: (response: any) => {
         if (response.success) {
           this.designations = Array.isArray(response.data) ? response.data : [];
-          // this.cdr.detectChanges(); // ✅ NEW (IMPORTANT)
+
         }
       },
     });
@@ -96,6 +100,8 @@ export class EmployeeFormComponent implements OnInit {
       next: (response: any) => {
         if (response.success) {
           this.shifts = Array.isArray(response.data) ? response.data : [];
+
+          
         }
       },
     });

@@ -1,20 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ApiService } from '../../../core/services/api.service';
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { ApiService } from "../../../core/services/api.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class JobPostingsService {
-  private readonly base = 'recruitment/job-postings';
+  private readonly base = "recruitment/job-postings";
 
   constructor(private apiService: ApiService) {}
 
-  getJobPostings(params: Record<string, string | number | null | undefined>): Observable<any> {
+  getJobPostings(
+    params: Record<string, string | number | null | undefined>,
+  ): Observable<any> {
     const query: Record<string, string | number> = {};
     Object.keys(params).forEach((key) => {
       const v = params[key];
-      if (v !== null && v !== undefined && v !== '') {
+      if (v !== null && v !== undefined && v !== "") {
         query[key] = v as string | number;
       }
     });
@@ -28,12 +30,21 @@ export class JobPostingsService {
   createJobPosting(data: Record<string, unknown>): Observable<any> {
     return this.apiService.post(`${this.base}/create`, data);
   }
-
-  updateJobPosting(jobId: number, data: Record<string, unknown>): Observable<any> {
-    return this.apiService.put(`${this.base}/update?id=${jobId}`, data);
+  updateJobPosting(
+    jobId: number,
+    data: Record<string, unknown>,
+  ): Observable<any> {
+    return this.apiService.post(`${this.base}/update`, {
+      job_id: jobId,
+      ...data,
+    });
   }
 
   deleteJobPosting(jobId: number): Observable<any> {
     return this.apiService.delete(`${this.base}/delete?id=${jobId}`);
+  }
+
+  getJobPostingStatuses(): Observable<any> {
+    return this.apiService.get(`${this.base}/statuses`);
   }
 }

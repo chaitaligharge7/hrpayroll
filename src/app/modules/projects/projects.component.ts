@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { ProjectsService } from './projects.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-projects',
@@ -10,7 +11,6 @@ import { ProjectsService } from './projects.service';
 })
 export class ProjectsComponent implements OnInit {
   projects: any[] = [];
-  loading = false;
   filters = {
     status: '',
     project_manager_id: null
@@ -18,15 +18,30 @@ export class ProjectsComponent implements OnInit {
 
   constructor(
     private projectsService: ProjectsService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.filters.status = '';
     this.loadProjects();
+
+    // Auto refresh when navigating within projects routes
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        const url = event.urlAfterRedirects || event.url;
+        if (url.startsWith('/projects')) {
+          if (!url.startsWith('/projects/create')) {
+            // When returning to list, reset status filter and refresh
+            this.filters.status = '';
+            this.loadProjects();
+          }
+        }
+      });
   }
 
   loadProjects(): void {
-    this.loading = true;
     const params = { ...this.filters };
 
     this.projectsService.getProjects(params).subscribe({
@@ -34,11 +49,11 @@ export class ProjectsComponent implements OnInit {
         if (response.success) {
           this.projects = response.data || [];
         }
-        this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading projects:', error);
-        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

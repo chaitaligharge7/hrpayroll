@@ -10,10 +10,11 @@
     <div class="filter-group">
       <label>Status:</label>
       <select
-        [(ngModel)]="filters.status"
+        [ngModel]="filters.status"
         (ngModelChange)="onStatusChange($event)"
+        [disabled]="isLoading"
       >
-        <option value="">All</option>
+        <option value="">All Statuses</option>
         <option value="Draft">Draft</option>
         <option value="Published">Published</option>
         <option value="Closed">Closed</option>
@@ -53,14 +54,14 @@
           <td>{{ job.posted_date | date: "shortDate" }}</td>
           <td>
             <button
-              class="btn btn-sm btn-outline"
+              class="btn btn-sm action-btn"
               (click)="viewJobPosting(job.job_id, job)"
               title="View Details"
             >
               <i class="bi bi-eye"></i>
             </button>
             <button
-              class="btn btn-sm btn-outline"
+              class="btn btn-sm"
               (click)="editJobPosting(job.job_id)"
               title="Edit"
             >
@@ -68,7 +69,7 @@
             </button>
 
             <button
-              class="btn btn-sm btn-outline btn-danger"
+              class="btn btn-sm btn-outline"
               (click)="deleteJob(job.job_id)"
             >
               <i class="bi bi-trash"></i>

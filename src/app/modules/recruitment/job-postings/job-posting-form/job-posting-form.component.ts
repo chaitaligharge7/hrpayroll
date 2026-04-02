@@ -198,6 +198,10 @@ export class JobPostingFormComponent implements OnInit {
           if (this.isEditMode && this.editJobId) {
             this.message = 'Job posting updated successfully.';
             this.error = null;
+            // Navigate back to job postings list after 1.5 seconds to show success message
+            setTimeout(() => {
+              this.router.navigate(['/recruitment/job-postings']);
+            }, 1500);
           } else {
             this.router.navigate(['/recruitment/job-postings']);
           }
@@ -214,16 +218,14 @@ export class JobPostingFormComponent implements OnInit {
     };
     if (this.isEditMode && this.editJobId) {
       this.jobPostingsService.updateJobPosting(this.editJobId, payload).subscribe(done);
+
     } else {
       this.jobPostingsService.createJobPosting(payload).subscribe(done);
     }
   }
 
   cancel(): void {
-    if (this.isEditMode && this.editJobId) {
-      this.router.navigate(['/recruitment/job-postings', this.editJobId]);
-    } else {
-      this.router.navigate(['/recruitment/job-postings']);
-    }
+             this.router.navigate(['/recruitment/job-postings']);
+
   }
 }

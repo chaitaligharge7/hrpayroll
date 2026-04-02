@@ -58,7 +58,10 @@ export class EmployeeListComponent implements OnInit {
     this.departmentsService.getDepartments().subscribe({
       next: (response) => {
         if (response.success) {
-          this.departments = response.data || [];
+          // this.departments = response.data || [];
+          this.departments = response.data.departments || [];
+
+          this.cdr.detectChanges(); // 🔥 THIS FIXES YOUR ISSUE
         }
       },
       error: (error) => {
@@ -67,36 +70,6 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
-  // loadEmployees(): void {
-  //   this.loading = true;
-  //   const params = {
-  //     page: this.page,
-  //     limit: this.limit,
-  //     ...this.filters,
-  //   };
-  //   this.employeeService.getEmployees(params).subscribe({
-  //     next: (response: any) => {
-  //       if (response.success && response.data) {
-  //         this.employees = response.data.employees || [];
-  //         this.cdr.detectChanges(); // ✅ FORCE UI UPDATE
-  //         this.total = response.data.pagination?.total || 0;
-  //         this.pagination = {
-  //           page: response.data.pagination?.page || this.page,
-  //           limit: response.data.pagination?.limit || this.limit,
-  //           total: response.data.pagination?.total || 0,
-  //           total_pages:
-  //             response.data.pagination?.total_pages ||
-  //             Math.ceil(this.total / this.limit),
-  //         };
-  //       }
-  //       this.loading = false;
-  //     },
-  //     error: (error) => {
-  //       console.error("Error loading employees:", error);
-  //       this.loading = false;
-  //     },
-  //   });
-  // }
   loadEmployees(): void {
     this.loading = true;
 
@@ -144,8 +117,7 @@ export class EmployeeListComponent implements OnInit {
   }
   viewEmployee(employee: any): void {
     this.router.navigate(["/employees", employee.employee_id || employee.id]);
-      // this.router.navigate(['/employees',employee.employee_id]);
-
+    // this.router.navigate(['/employees',employee.employee_id]);
   }
 
   editEmployee(employee: any): void {

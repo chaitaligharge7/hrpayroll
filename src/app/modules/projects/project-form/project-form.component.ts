@@ -81,10 +81,11 @@ export class ProjectFormComponent implements OnInit {
     this.projectsService.createProject(payload).subscribe({
       next: (res) => {
         this.saving = false;
-        if (res.success && res.data?.project_id) {
-          this.router.navigate(['/projects', res.data.project_id]);
-        } else if (res.success) {
-          this.router.navigate(['/projects']);
+        if (res.success) {
+          // Show project list immediately after create
+          this.router.navigate(['/projects']).then(() => {
+            // no-op; navigation trigger in projects component will refresh list
+          });
         } else {
           this.error = res.message || 'Could not create project';
         }

@@ -47,10 +47,13 @@ export class DepartmentListComponent implements OnInit {
     this.departmentService.getDepartments(params).subscribe({
       next: (res: any) => {
         if (res.success) {
-          this.departments = res.data || [];
+          const responseData = res.data?.departments ?? res.data ?? [];
+          this.departments = Array.isArray(responseData) ? responseData : [];
 
-          this.pagination.total = res.total || 0;
-          this.pagination.total_pages = res.total_pages || 0;
+          // Support new pagination payload and legacy top-level keys
+          const pagination = res.data?.pagination;
+          this.pagination.total = pagination?.total ?? res.total ?? 0;
+          this.pagination.total_pages = pagination?.total_pages ?? res.total_pages ?? 0;
         }
         this.loading = false;
         this.cdr.detectChanges(); 

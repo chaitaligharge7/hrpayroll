@@ -1,132 +1,208 @@
-import { Component, OnInit } from '@angular/core';
-import { forkJoin } from 'rxjs';
-import { Router } from '@angular/router';
-import { JobPostingsService } from './job-postings.service';
+import { Component, OnInit } from "@angular/core";
+import { Router, NavigationEnd } from "@angular/router";
+import { JobPostingsService } from "./job-postings.service";
+import { filter } from "rxjs/operators";
 
 @Component({
-  selector: 'app-job-postings',
-  templateUrl: './job-postings.component.html',
-  styleUrls: ['./job-postings.component.scss'],
-  standalone: false
+  selector: "app-job-postings",
+  templateUrl: "./job-postings.component.html",
+  styleUrls: ["./job-postings.component.scss"],
+  standalone: false,
 })
 export class JobPostingsComponent implements OnInit {
   jobPostings: any[] = [];
   isLoading = false;
+  isInitialLoad = true;
   page = 1;
   limit = 20;
   total = 0;
+
   filters = {
-    status: '',
-    department_id: null
+    status: "",
+    department_id: null,
   };
+
+  statusOptions: Array<{ value: string; label: string }> = [
+    { value: "", label: "All Statuses" },
+  ];
 
   constructor(
     private jobPostingsService: JobPostingsService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.loadJobPostings();
+    // Initial status list comes from backend to support all possible items (34+ etc.)
+    this.loadJobStatusOptions();
+
+    // Load initial data without showing loading indicator
+    this.loadJobPostings(true);
+
+    // ✅ Auto refresh when navigating back
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadJobPostings(true);
+      });
   }
 
-  loadJobPostings(): void {
-    const params = {
+  loadJobStatusOptions(): void {
+    this.jobPostingsService.getJobPostingStatuses().subscribe({
+      next: (response) => {
+        if (response.success && Array.isArray(response.data)) {
+          const rawStatuses = response.data as Array<string | null | undefined>;
+          const statuses: string[] = rawStatuses
+            .map((s) => (s || "").toString().trim())
+            .filter((s): s is string => s !== "");
+          const uniqueStatuses: string[] = Array.from(new Set(statuses)).sort(
+            (a, b) => a.localeCompare(b),
+          );
+
+          this.statusOptions = [
+            { value: "", label: "All Statuses" },
+            ...uniqueStatuses.map((status) => ({
+              value: status,
+              label: status,
+            })),
+          ];
+        } else {
+          // Fallback to default statuses if API fails
+          this.setDefaultStatusOptions();
+        }
+      },
+      error: (err) => {
+        console.error("Failed to load status options, using defaults", err);
+        this.setDefaultStatusOptions();
+      },
+    });
+  }
+
+  private setDefaultStatusOptions(): void {
+    this.statusOptions = [
+      { value: "", label: "All Statuses" },
+      { value: "Draft", label: "Draft" },
+      { value: "Published", label: "Published" },
+      { value: "Closed", label: "Closed" },
+    ];
+  }
+
+  loadJobPostings(isInitial = false): void {
+    // Only show loading if it's not the initial load
+    if (!isInitial) {
+      this.isLoading = true;
+    }
+
+    const params: any = {
       page: this.page,
       limit: this.limit,
-      status: this.filters.status || undefined,
-      department_id: this.filters.department_id || undefined
     };
+
+    if (this.filters.status) {
+      params.status = this.filters.status;
+    }
+    if (this.filters.department_id) {
+      params.department_id = this.filters.department_id;
+    }
+
+    console.log("Loading job postings with params:", params);
 
     this.jobPostingsService.getJobPostings(params).subscribe({
       next: (response) => {
-        if (response.success) {
-          let result = response.data.job_postings || [];
-
-          // Ensure dropdown filtering works client-side if backend is inconsistent
-          if (this.filters.status) {
-            result = result.filter((job: any) => job.status === this.filters.status);
-          }
-          if (this.filters.department_id) {
-            result = result.filter((job: any) => job.department_id === this.filters.department_id);
-          }
-
-          if (!this.filters.status && result.length === 0) {
-            this.loadAllStatuses();
-            return;
-          }
-
+        console.log("API Response:", response);
+        if (response.success && response.data) {
+          const result = response.data.job_postings || [];
           this.jobPostings = result;
-          this.total = (response.data.pagination?.total ?? result.length);
+          this.total = response.data.pagination?.total ?? result.length;
         } else {
           this.jobPostings = [];
           this.total = 0;
         }
+        this.isLoading = false;
+        this.isInitialLoad = false;
       },
       error: (error) => {
-        console.error('Error loading job postings:', error);
+        console.error("Error loading job postings:", error);
         this.jobPostings = [];
         this.total = 0;
         this.isLoading = false;
-      }
+      },
     });
   }
 
   createJobPosting(): void {
-    this.router.navigate(['/recruitment/job-postings/create']);
+    this.router.navigate(["/recruitment/job-postings/create"]);
   }
 
   viewJobPosting(jobId: number, job?: any): void {
-    this.router.navigate(['/recruitment/job-postings', jobId], { state: { job } });
+    this.router.navigate(["/recruitment/job-postings", jobId], {
+      state: { job },
+    });
   }
 
   editJobPosting(jobId: number): void {
-    this.router.navigate(['/recruitment/job-postings', jobId, 'edit']);
+    this.router.navigate(["/recruitment/job-postings", jobId, "edit"]);
+  }
+
+  updateJob(job: any): void {
+    const updatedData = {
+      job_title: job.job_title + " (Updated)",
+    };
+
+    this.jobPostingsService
+      .updateJobPosting(job.job_id, updatedData)
+      .subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            alert("Job updated successfully");
+            this.loadJobPostings(false);
+          } else {
+            alert(res.message || "Update failed");
+          }
+        },
+        error: (err) => {
+          console.error("Update error:", err);
+          alert("Something went wrong while updating");
+        },
+      });
   }
 
   onStatusChange(status: string): void {
-    this.filters.status = status;
+    if (typeof status !== "string") {
+      return;
+    }
+
+    const normalizedStatus = status.trim();
+    const allowedValues = this.statusOptions.map((o) => o.value);
+    if (!allowedValues.includes(normalizedStatus)) {
+      console.warn("Ignoring invalid status filter value:", normalizedStatus);
+      return;
+    }
+
+    if (this.filters.status === normalizedStatus) {
+      // avoid duplicate refresh if value didn't change
+      return;
+    }
+
+    console.log(
+      "Status changed to:",
+      normalizedStatus,
+      "Current filters:",
+      this.filters,
+    );
+
+    this.filters.status = normalizedStatus;
     this.page = 1;
-    this.loadJobPostings();
+    this.loadJobPostings(false);
   }
 
   onFilterChange(): void {
     this.page = 1;
-    this.loadJobPostings();
-  }
-
-  loadAllStatuses(): void {
-    const statuses = ['Draft', 'Published', 'Closed'];
-    const baseParams = {
-      page: 1,
-      limit: 1000,
-      department_id: this.filters.department_id || undefined
-    };
-
-    forkJoin(statuses.map((status) => this.jobPostingsService.getJobPostings({
-      ...baseParams,
-      status
-    }))).subscribe({
-      next: (responses) => {
-        const merged: any[] = [];
-        responses.forEach((resp) => {
-          if (resp.success && Array.isArray(resp.data.job_postings)) {
-            merged.push(...resp.data.job_postings);
-          }
-        });
-
-        this.jobPostings = merged;
-        this.total = merged.length;
-      },
-      error: () => {
-        this.jobPostings = [];
-        this.total = 0;
-      }
-    });
+    this.loadJobPostings(false);
   }
 
   onPageChange(page: number): void {
     this.page = page;
-    this.loadJobPostings();
+    this.loadJobPostings(false);
   }
 
   getTotalPages(): number {
@@ -138,31 +214,28 @@ export class JobPostingsComponent implements OnInit {
   }
 
   deleteJob(jobId: number): void {
-  if (!confirm('Are you sure you want to delete this job posting?')) {
-    return;
-  }
-
-  this.jobPostingsService.deleteJobPosting(jobId).subscribe({
-    next: (response: any) => {
-      if (response?.success) {
-        alert(response.message || 'Job deleted successfully');
-
-        // Navigate back to job list
-        this.router.navigate(['/recruitment/job-postings']);
-      } else {
-        alert(response?.message || 'Delete failed');
-      }
-    },
-    error: (error) => {
-      console.error('Delete API error:', error);
-
-      if (error?.error?.message) {
-        alert(error.error.message);
-      } else {
-        alert('Something went wrong while deleting');
-      }
+    if (!confirm("Are you sure you want to delete this job posting?")) {
+      return;
     }
-  });
-}
-}
 
+    this.jobPostingsService.deleteJobPosting(jobId).subscribe({
+      next: (response: any) => {
+        if (response?.success) {
+          alert(response.message || "Job deleted successfully");
+          this.loadJobPostings(false);
+        } else {
+          alert(response?.message || "Delete failed");
+        }
+      },
+      error: (error) => {
+        console.error("Delete API error:", error);
+
+        if (error?.error?.message) {
+          alert(error.error.message);
+        } else {
+          alert("Something went wrong while deleting");
+        }
+      },
+    });
+  }
+}

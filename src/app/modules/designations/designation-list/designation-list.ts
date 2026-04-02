@@ -39,16 +39,25 @@ export class DesignationListComponent implements OnInit {
     this.loading = true;
 
     const params = {
-      search: this.searchTerm, 
+      search: this.searchTerm,
+      page: this.pagination.page,
+      limit: this.pagination.limit,
     };
 
     this.designationService.getDesignations(params).subscribe({
       next: (res: any) => {
         if (res.success) {
-          this.designations = res.data || [];
+          const data = res.data?.designations ?? res.data ?? [];
+          this.designations = Array.isArray(data) ? data : [];
+
+          const pagination = res.data?.pagination;
+          this.pagination.total = pagination?.total ?? res.total ?? 0;
+          this.pagination.total_pages = pagination?.total_pages ?? res.total_pages ?? 0;
+          this.pagination.page = pagination?.page ?? this.pagination.page;
+          this.pagination.limit = pagination?.limit ?? this.pagination.limit;
         }
         this.loading = false;
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
@@ -57,7 +66,8 @@ export class DesignationListComponent implements OnInit {
   }
 
   onSearch(): void {
-    this.loadDesignations(); 
+    this.pagination.page = 1;
+    this.loadDesignations();
   }
 
   createDesignation(): void {

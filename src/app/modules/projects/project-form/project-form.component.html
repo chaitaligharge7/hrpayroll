@@ -1,64 +1,122 @@
-<div class="container-fluid py-3 project-form-wrap">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Create project</h4>
-    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Cancel</button>
-  </div>
-  <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
-
-  <form [formGroup]="form" (ngSubmit)="submit()" class="card shadow-sm">
-    <div class="card-body row g-3">
-      <div class="col-md-4">
-        <label class="form-label small">Project code *</label>
-        <input class="form-control form-control-sm" formControlName="project_code" />
-      </div>
-      <div class="col-md-8">
-        <label class="form-label small">Project name *</label>
-        <input class="form-control form-control-sm" formControlName="project_name" />
-      </div>
-      <div class="col-12">
-        <label class="form-label small">Description</label>
-        <textarea class="form-control form-control-sm" rows="2" formControlName="project_description"></textarea>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label small">Client</label>
-        <input class="form-control form-control-sm" formControlName="client_name" />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label small">Project manager</label>
-        <select class="form-select form-select-sm" formControlName="project_manager_id">
-          <option [ngValue]="null">—</option>
-          <option *ngFor="let e of managers" [ngValue]="e.employee_id">
-            {{ e.employee_code }} — {{ e.first_name }} {{ e.last_name }}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label small">Start date</label>
-        <input type="date" class="form-control form-control-sm" formControlName="start_date" />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label small">End date</label>
-        <input type="date" class="form-control form-control-sm" formControlName="end_date" />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label small">Budget</label>
-        <input type="number" class="form-control form-control-sm" formControlName="budget" min="0" step="0.01" />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label small">Billing rate</label>
-        <input type="number" class="form-control form-control-sm" formControlName="billing_rate" min="0" step="0.01" />
-      </div>
-      <div class="col-md-4 d-flex align-items-end">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="bill" formControlName="is_billable" />
-          <label class="form-check-label small" for="bill">Billable</label>
-        </div>
-      </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving || loadingManagers">
-          {{ saving ? 'Saving…' : 'Create project' }}
-        </button>
-      </div>
+<div class="container-fluid py-3">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Create Project</h4>
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Cancel</button>
     </div>
-  </form>
+
+    <div class="card-body">
+      <div *ngIf="error" class="alert alert-danger alert-sm" role="alert">
+        <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Project code *</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="project_code"
+            placeholder="e.g. PROJ-001"
+          />
+          <div class="form-error" *ngIf="form.get('project_code')?.touched && form.get('project_code')?.invalid">
+            Project code is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Project name *</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="project_name"
+            placeholder="e.g. Website Redesign"
+          />
+          <div class="form-error" *ngIf="form.get('project_name')?.touched && form.get('project_name')?.invalid">
+            Project name is required
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            formControlName="project_description"
+            placeholder="Enter project description..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Client</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="client_name"
+            placeholder="e.g. Acme Corp"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Project Manager</label>
+          <select class="form-select" formControlName="project_manager_id">
+            <option [ngValue]="null">— Select Manager —</option>
+            <option *ngFor="let e of managers" [ngValue]="e.employee_id">
+              {{ e.first_name }} {{ e.last_name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Start Date</label>
+          <input type="date" class="form-control" formControlName="start_date" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">End Date</label>
+          <input type="date" class="form-control" formControlName="end_date" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Budget</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="budget"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Billing Rate</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="billing_rate"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="form-check">
+            <input class="form-check-input" type="checkbox" formControlName="is_billable" />
+            <span class="form-check-label">Billable Project</span>
+          </label>
+        </div>
+
+        <div class="form-group full-width button-group">
+          <button type="submit" class="btn btn-primary" [disabled]="saving || loadingManagers">
+            <i class="bi bi-check-circle"></i> {{ saving ? 'Creating...' : 'Create Project' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="saving">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
