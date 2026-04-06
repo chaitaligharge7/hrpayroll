@@ -20,6 +20,13 @@ export class ProjectDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const stateProject = history.state?.project || null;
+    if (stateProject) {
+      this.project = stateProject;
+      this.loading = false;
+      this.error = null;
+    }
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('projectId');
       if (!id) {
@@ -31,7 +38,8 @@ export class ProjectDetailComponent implements OnInit {
   }
 
   load(projectId: number): void {
-    this.loading = true;
+    const cached = this.project && this.project.project_id === projectId;
+    this.loading = cached ? false : true;
     this.error = null;
     this.projectsService.getProject(projectId).subscribe({
       next: (res) => {

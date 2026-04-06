@@ -1,8 +1,7 @@
 <div class="container-fluid py-3">
-  <h4 class="mb-3">Attendance</h4>
+  <h4 class="mb-3">Attendance Calendar</h4>
 
-  <div *ngIf="message" class="alert alert-info py-2">{{ message }}</div>
-
+  <!-- Location & Check in/out -->
   <div class="card mb-4">
     <div class="card-body row g-2 align-items-end">
       <div class="col-md-6">
@@ -10,39 +9,64 @@
         <input class="form-control form-control-sm" [(ngModel)]="location" placeholder="Office / Remote" />
       </div>
       <div class="col-md-6 text-md-end">
-        <button type="button" class="btn btn-success btn-sm me-2" (click)="checkIn()">Check in</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="checkOut()">Check out</button>
+        <button class="btn btn-success btn-sm me-2" (click)="checkIn()">Check in</button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="checkOut()">Check out</button>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <span>Recent records</span>
-      <button type="button" class="btn btn-link btn-sm p-0" (click)="loadList()" [disabled]="loading">Refresh</button>
+  <!-- Message -->
+  <div *ngIf="message" class="alert alert-info py-2">{{ message }}</div>
+
+  <!-- Month Navigation -->
+  <div class="calendar-nav mb-2 d-flex justify-content-between">
+    <button class="btn btn-sm btn-outline-secondary" (click)="prevMonth()">Previous</button>
+    <strong>{{ currentMonth | date:'MMMM yyyy' }}</strong>
+    <button class="btn btn-sm btn-outline-secondary" (click)="nextMonth()">Next</button>
+  </div>
+
+  <!-- Calendar + Status Legend Wrapper -->
+  <div class="calendar-wrapper d-flex gap-3">
+
+    <!-- Calendar Grid -->
+    <div class="calendar flex-grow-1">
+      
+      <!-- Weekday Headers -->
+      <div class="calendar-weekdays">
+        <div class="weekday" *ngFor="let wd of ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']">{{ wd }}</div>
+      </div>
+
+      <!-- Calendar Days -->
+      <div class="calendar-grid">
+        <div class="calendar-day" *ngFor="let day of calendarDays" [class.other-month]="!day.isCurrentMonth">
+          <div class="calendar-date">{{ day.date.getDate() }}</div>
+
+          <!-- Attendance Status Balls -->
+          <div class="status-wrapper" *ngIf="day.record">
+            <span class="status-ball status-present" *ngIf="day.record.status === 'Present'"></span>
+            <span class="status-ball status-absent" *ngIf="day.record.status === 'Absent'"></span>
+            <span class="status-ball status-halfday" *ngIf="day.record.status === 'Half Day'"></span>
+            <span class="status-ball status-late" *ngIf="day.record.status === 'Late'"></span>
+            <span class="status-ball status-fine" *ngIf="day.record.status === 'Fine'"></span>
+            <span class="status-ball status-weeklyoff" *ngIf="day.record.status === 'Weekly Off'"></span>
+            <span class="status-ball status-overtime" *ngIf="day.record.status === 'Overtime'"></span>
+          </div>
+
+          <!-- In/Out Times -->
+          <div class="calendar-time" *ngIf="day.record">
+            <small>In: {{ day.record.check_in_time_obj | date:'shortTime' }}</small><br>
+            <small>Out: {{ day.record.check_out_time_obj | date:'shortTime' }}</small>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-body p-0">
-      <div *ngIf="loading" class="p-3 text-muted">Loading…</div>
-      <div *ngIf="!loading && records.length === 0" class="p-3 text-muted">No attendance records.</div>
-      <div class="table-responsive" *ngIf="!loading && records.length > 0">
-        <table class="table table-sm table-striped mb-0">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Check in</th>
-              <th>Check out</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-           <tr *ngFor="let r of records">
-  <td>{{ r.attendance_date_obj | date:'mediumDate' }}</td>
-  <td>{{ r.check_in_time_obj | date:'shortTime' }}</td>
-  <td>{{ r.check_out_time_obj | date:'shortTime' }}</td>
-  <td>{{ r.status || '—' }}</td>
-</tr>
-          </tbody>
-        </table>
+
+    <!-- Status Legend -->
+    <div class="status-legend">
+      <h6>Status Summary</h6>
+      <div *ngFor="let s of statusList" class="legend-item">
+        <span class="status-ball" [ngClass]="s.class"></span>
+        {{ s.name }}: {{ s.count }}
       </div>
     </div>
   </div>

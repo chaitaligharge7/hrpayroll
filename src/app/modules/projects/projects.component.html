@@ -64,6 +64,16 @@
               <button class="btn btn-sm btn-outline" (click)="viewProject(project.project_id)" title="View Details">
                 <i class="bi bi-eye"></i>
               </button>
+
+
+              <button class="btn btn-sm btn-outline me-1" [routerLink]="['/projects', project.project_id, 'edit']" >
+                <i class="bi bi-pencil"></i>
+              </button>
+
+              <button class="btn btn-sm btn-outline btn-danger"    (click)="deleteProject(project.project_id)"
+>
+                <i class="bi bi-trash"></i>
+              </button>
             </td>
           </tr>
         </tbody>

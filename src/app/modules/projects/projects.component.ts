@@ -63,11 +63,40 @@ export class ProjectsComponent implements OnInit {
   }
 
   viewProject(projectId: number): void {
-    this.router.navigate(['/projects', projectId]);
+    const project = this.projects.find((p) => p.project_id === projectId);
+    this.router.navigate(['/projects', projectId], {
+      state: { project }
+    });
+  }
+
+  editProject(projectId: number): void {
+    this.router.navigate(['/projects', projectId, 'edit']);
   }
 
   onFilterChange(): void {
     this.loadProjects();
   }
+
+  deleteProject(projectId: number): void {
+  const confirmed = confirm('Are you sure you want to delete this project?');
+
+  if (!confirmed) return;
+
+  this.projectsService.deleteProject(projectId).subscribe({
+    next: (response) => {
+      if (response.success) {
+        this.projects = this.projects.filter(p => p.project_id !== projectId);
+
+        this.loadProjects();
+      }
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Delete error:', error);
+      alert('Failed to delete project');
+      this.cdr.detectChanges();
+    }
+  });
+}
 }
 

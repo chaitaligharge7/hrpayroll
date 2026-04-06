@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JobPostingsService } from '../job-postings.service';
 import { DepartmentsService } from '../../../departments/departments.service';
 import { ApiService } from '../../../../core/services/api.service';
+
 
 @Component({
   selector: 'app-job-posting-form',
@@ -17,6 +18,8 @@ export class JobPostingFormComponent implements OnInit {
   designations: any[] = [];
   loadingMaster = false;
   loadingJob = false;
+
+  statuses: string[] = [];
   saving = false;
   message: string | null = null;
   error: string | null = null;
@@ -30,7 +33,8 @@ export class JobPostingFormComponent implements OnInit {
     private jobPostingsService: JobPostingsService,
     private departmentsService: DepartmentsService,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       job_code: ['', Validators.required],
@@ -51,27 +55,38 @@ export class JobPostingFormComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    const jobId = this.route.snapshot.paramMap.get('jobId');
-    if (jobId) {
-      this.isEditMode = true;
-      this.editJobId = +jobId;
-    }
-
-    this.form.get('department_id')?.valueChanges.subscribe((deptId) => {
-      if (this.skipDepartmentChange) {
-        return;
-      }
-      this.form.patchValue({ designation_id: null });
-      this.designations = [];
-      if (deptId) {
-        this.loadDesignations(deptId);
-      }
-    });
-
-    this.loadDepartments();
+ngOnInit(): void {
+  const jobId = this.route.snapshot.paramMap.get('jobId');
+  if (jobId) {
+    this.isEditMode = true;
+    this.editJobId = +jobId;
   }
 
+  this.loadStatuses(); // ✅ ADD THIS
+
+  this.form.get('department_id')?.valueChanges.subscribe((deptId) => {
+    if (this.skipDepartmentChange) return;
+    this.form.patchValue({ designation_id: null });
+    this.designations = [];
+    if (deptId) this.loadDesignations(deptId);
+  });
+
+  this.loadDepartments();
+}
+loadStatuses(): void {
+  this.api.get<any>('recruitment/job-postings/statuses').subscribe({
+    next: (res) => {
+      if (res.success && res.data) {
+        this.statuses = res.data;
+            this.cdr.detectChanges(); // 👈 force update
+
+      }
+    },
+    error: () => {
+      this.statuses = [];
+    }
+  });
+}
   loadDepartments(): void {
     this.loadingMaster = true;
     this.departmentsService.getDepartments().subscribe({

@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ReportsService } from './reports.service';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { RowInput, CellInput } from 'jspdf-autotable';
+
 
 @Component({
   selector: 'app-reports',
@@ -30,13 +34,29 @@ export class ReportsComponent implements OnInit {
   constructor(private reportsService: ReportsService) {}
 
   ngOnInit(): void {
-    // Set default dates for attendance summary
+  const today = new Date();
+  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+  this.filters.start_date = firstDay.toISOString().split('T')[0];
+  this.filters.end_date = today.toISOString().split('T')[0];
+  this.filters.payroll_month = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  this.selectedReportType = this.reportTypes[0].value; 
+}
+
+onReportTypeChange(): void {
+  this.reportData = []; 
+  this.generateReport(); 
+  const today = new Date();
+
+ if (this.selectedReportType === 'attendance_summary') {
     const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-    this.filters.start_date = firstDay.toISOString().split('T')[0];
+    this.filters.start_date = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
     this.filters.end_date = today.toISOString().split('T')[0];
+  } else if (this.selectedReportType === 'payroll_summary') {
+    const today = new Date();
     this.filters.payroll_month = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
   }
+  this.generateReport();
+}
 
   generateReport(): void {
     if (!this.selectedReportType) {
@@ -65,24 +85,24 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  exportReport(format: string): void {
-    const params = {
-      report_type: this.selectedReportType,
-      format: format,
-      filters: { ...this.filters }
-    };
+ exportReport(format: string): void {
+  const params = {
+    report_type: this.selectedReportType,
+    format: format,
+    filters: { ...this.filters }
+  };
 
-    this.reportsService.generateReport(params).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.downloadFile(response.data, format);
-        }
-      },
-      error: (error) => {
-        console.error('Error exporting report:', error);
+  this.reportsService.generateReport(params).subscribe({
+    next: (response) => {
+      if (response.success) {
+        this.downloadFile(response.data, format);
       }
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Error exporting report:', error);
+    }
+  });
+}
 
   getTableHeaders(): string[] {
     if (this.reportData.length === 0) return [];
@@ -93,28 +113,33 @@ export class ReportsComponent implements OnInit {
     return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   }
 
-  private downloadFile(data: any, format: string): void {
-    if (format === 'excel' || format === 'xlsx') {
-      this.exportToExcel(data);
-    } else if (format === 'csv') {
-      this.exportToCSV(data);
-    } else if (format === 'pdf') {
-      // PDF export handled by backend
+ private downloadFile(data: any, format: string): void {
+  const reportArray = Array.isArray(data) ? data : data.data || [];
+  if (format === 'excel' || format === 'xlsx') {
+    this.exportToExcel(reportArray);
+  } else if (format === 'csv') {
+    this.exportToCSV(reportArray);
+  } else if (format === 'pdf') {
+    if (Array.isArray(reportArray) && reportArray.length > 0) {
+      this.exportToPDF(reportArray);
+    } else if (data instanceof Blob || (typeof data === 'string' && data.startsWith('data:'))) {
       this.downloadBlob(data, 'application/pdf', `${this.selectedReportType}_report.pdf`);
+    } else {
+      alert('No data available for PDF export.');
     }
+  } else {
+    console.warn('Unknown format:', format);
   }
+}
 
   private async exportToExcel(data: any[]): Promise<void> {
     try {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Report');
 
-      // Add headers
       if (data.length > 0) {
         const headers = Object.keys(data[0]);
         worksheet.addRow(headers.map(h => this.formatHeader(h)));
-
-        // Style header row
         const headerRow = worksheet.getRow(1);
         headerRow.font = { bold: true };
         headerRow.fill = {
@@ -123,13 +148,11 @@ export class ReportsComponent implements OnInit {
           fgColor: { argb: 'FFE0E0E0' }
         };
 
-        // Add data rows
         data.forEach(row => {
           const values = headers.map(header => row[header] || '');
           worksheet.addRow(values);
         });
 
-        // Auto-fit columns
         worksheet.columns.forEach(column => {
           if (column && column.eachCell) {
             let maxLength = 0;
@@ -146,7 +169,6 @@ export class ReportsComponent implements OnInit {
         });
       }
 
-      // Generate buffer and download
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       saveAs(blob, `${this.selectedReportType}_report_${new Date().getTime()}.xlsx`);
@@ -169,7 +191,6 @@ export class ReportsComponent implements OnInit {
       const csvRows = data.map(row => {
         return headers.map(header => {
           const value = row[header] || '';
-          // Escape commas and quotes in CSV
           if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
             return `"${value.replace(/"/g, '""')}"`;
           }
@@ -186,30 +207,65 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  private downloadBlob(data: any, contentType: string, filename: string): void {
-    try {
-      // If data is base64 encoded
-      if (typeof data === 'string' && data.startsWith('data:')) {
-        const link = document.createElement('a');
-        link.href = data;
-        link.download = filename;
-        link.click();
-      } else if (data instanceof Blob) {
-        saveAs(data, filename);
-      } else {
-        // Assume it's a base64 string
-        const byteCharacters = atob(data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: contentType });
-        saveAs(blob, filename);
-      }
-    } catch (error) {
-      console.error('Error downloading file:', error);
-      alert('Error downloading file. Please try again.');
-    }
+   private exportToPDF(data: any[]): void {
+  if (data.length === 0) {
+    alert('No data to export');
+    return;
   }
+
+  const doc = new jsPDF();
+  const headers: string[] = Object.keys(data[0]).map(h => this.formatHeader(h));
+  const rows: RowInput[] = data.map(row => {
+  const values: CellInput[] = Object.values(row).map(val => {
+      if (val === null || val === undefined) return '';
+      if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+        return val;
+      }
+      return JSON.stringify(val); 
+    });
+    return values;
+  });
+
+  autoTable(doc, {
+    head: [headers],
+    body: rows
+  });
+
+  doc.save(`${this.makeSafeFilename(this.selectedReportType)}_report_${new Date().getTime()}.pdf`);
+}
+  private makeSafeFilename(filename: string): string {
+  return filename.replace(/[^a-zA-Z0-9_\-\.]/g, '_');
+}
+private downloadBlob(data: any, contentType: string, filename: string): void {
+  try {
+    // If data is object, maybe backend sent { data: <base64> }
+    if (typeof data === 'object' && data.data) {
+      data = data.data;
+    }
+
+    if (typeof data === 'string' && data.startsWith('data:')) {
+      const link = document.createElement('a');
+      link.href = data;
+      link.download = filename;
+      link.click();
+    } else if (data instanceof Blob) {
+      saveAs(data, filename);
+    } else if (typeof data === 'string') {
+      const byteCharacters = atob(data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: contentType });
+      saveAs(blob, filename);
+    } else {
+      console.error('Unsupported file data type', data);
+      alert('Error downloading file. Unsupported format.');
+    }
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    alert('Error downloading file. Please try again.');
+  }
+}
 }

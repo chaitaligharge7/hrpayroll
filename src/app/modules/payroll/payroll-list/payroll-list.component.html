@@ -1,21 +1,87 @@
 <div class="card">
+  <!-- Card Header -->
   <div class="card-header d-flex justify-content-between align-items-center">
     <h3>Payroll Records</h3>
     <div>
-      <button class="btn btn-success me-2" (click)="generateBankSheet()" [disabled]="!selectedPeriod">
+      <!-- Generate Bank Sheet -->
+      <button class="btn btn-success me-2" 
+              (click)="generateBankSheet()" 
+              [disabled]="!selectedPeriod">
         <i class="bi bi-download"></i> Generate Bank Sheet
+      </button>
+
+      <button class="btn btn-warning me-2" (click)="generatePayroll()" [disabled]="!selectedPeriod">
+  <i class="bi bi-play-circle"></i> Generate Payroll
+</button>
+      <!-- Add Payroll Period -->
+      <button class="btn btn-primary me-2" (click)="openAddPeriodModal()">
+        <i class="bi bi-plus-circle"></i> Add Period
+      </button>
+
+      <!-- Approve Selected Payrolls -->
+      <button class="btn btn-primary" 
+              (click)="approvePayroll(selectedPayrolls)" 
+              [disabled]="selectedPayrolls.length === 0">
+        Approve Selected
       </button>
     </div>
   </div>
 
+  <!-- Add Period Modal -->
+  <div class="modal fade" id="addPeriodModal" tabindex="-1" aria-labelledby="addPeriodLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addPeriodLabel">Add Payroll Period</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #periodForm="ngForm">
+            <div class="mb-3">
+              <label for="periodName" class="form-label">Period Name</label>
+              <input type="text" class="form-control" id="periodName" name="periodName" [(ngModel)]="newPeriod.period_name" required>
+            </div>
+            <div class="mb-3">
+              <label for="startDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" [(ngModel)]="newPeriod.start_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="endDate" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="endDate" name="endDate" [(ngModel)]="newPeriod.end_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="payDate" class="form-label">Pay Date</label>
+              <input type="date" class="form-control" id="payDate" name="payDate" [(ngModel)]="newPeriod.pay_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="periodType" class="form-label">Period Type</label>
+              <select class="form-select" id="periodType" name="periodType" [(ngModel)]="newPeriod.period_type">
+                <option value="Monthly">Monthly</option>
+                <option value="Bi-Weekly">Bi-Weekly</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="addPeriod()">Add Period</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Body -->
   <div class="card-body">
+
     <!-- Filters -->
     <div class="row mb-3">
       <div class="col-md-4">
         <select class="form-select" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
           <option [value]="null">All Periods</option>
           <option *ngFor="let period of periods" [value]="period.period_id">
-            {{ period.period_name }} ({{ period.start_date | date:'short' }})
+            {{ period.period_name }} ({{ period.start_date | date:'shortDate' }})
           </option>
         </select>
       </div>
@@ -30,10 +96,10 @@
       </div>
     </div>
 
-    <!-- Summary -->
+    <!-- Payroll Summary -->
     <div class="row mb-4">
       <div class="col-md-4">
-        <div class="card bg-light">
+        <div class="card bg-light text-center">
           <div class="card-body">
             <h6 class="text-muted">Total Gross</h6>
             <h4>{{ summary.total_gross | number:'1.2-2' }}</h4>
@@ -41,7 +107,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card bg-light">
+        <div class="card bg-light text-center">
           <div class="card-body">
             <h6 class="text-muted">Total Deductions</h6>
             <h4>{{ summary.total_deductions | number:'1.2-2' }}</h4>
@@ -49,7 +115,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card bg-light">
+        <div class="card bg-light text-center">
           <div class="card-body">
             <h6 class="text-muted">Total Net</h6>
             <h4>{{ summary.total_net | number:'1.2-2' }}</h4>
@@ -60,9 +126,10 @@
 
     <!-- Payroll Table -->
     <div class="table-responsive">
-      <table class="table">
-        <thead>
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
           <tr>
+            <th><input type="checkbox" (change)="toggleSelectAll($event)" /></th>
             <th>Employee Code</th>
             <th>Employee Name</th>
             <th>Period</th>
@@ -75,6 +142,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let payroll of payrolls">
+            <td>
+              <input type="checkbox" [(ngModel)]="payroll.selected" (change)="onPayrollSelect(payroll)" />
+            </td>
             <td>{{ payroll.employee_code }}</td>
             <td>{{ payroll.employee_name }}</td>
             <td>{{ payroll.period_name }}</td>
@@ -82,24 +152,24 @@
             <td>{{ payroll.total_deductions | number:'1.2-2' }}</td>
             <td>{{ payroll.net_salary | number:'1.2-2' }}</td>
             <td>
-              <span class="badge" 
+              <span class="badge"
                     [ngClass]="{
-                      'badge-warning': payroll.status === 'Draft',
-                      'badge-info': payroll.status === 'Processed',
-                      'badge-success': payroll.status === 'Approved',
-                      'badge-primary': payroll.status === 'Paid'
+                      'bg-warning text-dark': payroll.status === 'Draft',
+                      'bg-info text-dark': payroll.status === 'Processed',
+                      'bg-success': payroll.status === 'Approved',
+                      'bg-primary': payroll.status === 'Paid'
                     }">
                 {{ payroll.status }}
               </span>
             </td>
             <td>
-              <button class="btn btn-sm btn-outline me-1" (click)="viewPayslip(payroll)">
+              <button class="btn btn-sm btn-outline-primary" (click)="viewPayslip(payroll)">
                 <i class="bi bi-file-pdf"></i> Payslip
               </button>
             </td>
           </tr>
           <tr *ngIf="payrolls.length === 0">
-            <td colspan="8" class="text-center text-muted py-4">
+            <td colspan="9" class="text-center text-muted py-4">
               No payroll records found
             </td>
           </tr>
@@ -132,4 +202,3 @@
     </div>
   </div>
 </div>
-

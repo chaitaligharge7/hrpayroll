@@ -32,4 +32,14 @@ export class ProjectsService {
   createTask(projectId: number, data: Record<string, unknown>): Observable<any> {
     return this.apiService.post(`${this.base}/tasks/create`, { project_id: projectId, ...data });
   }
+
+  updateProject(projectId: number, payload: any) {
+  return this.apiService.post(`projects/update?id=${projectId}`, payload);
+}
+
+ // ✅ NEW: Soft Delete Project
+  // ✅ Soft Delete Project
+deleteProject(projectId: number): Observable<any> {
+  return this.apiService.delete(`${this.base}/delete?id=${projectId}`);
+}
 }

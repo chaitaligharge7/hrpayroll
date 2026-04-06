@@ -25,4 +25,19 @@ export class AttendanceService {
   getAttendanceList(params?: any): Observable<ApiResponse<any>> {
     return this.api.get<any>('attendance/list', params);
   }
+
+  // ✅ NEW: Regularization request
+  regularize(data: any) {
+    return this.api.post<any>('attendance/regularize', data);
+  }
+
+  // ✅ NEW: Approve request (admin side)
+  approveRegularization(id: number) {
+    return this.api.post<any>('attendance/approve', { id });
+  }
+
+  // ✅ OPTIONAL: rules fetch karayche asel tar
+  getRules() {
+    return this.api.get<any>('attendance/rules');
+  }
 }

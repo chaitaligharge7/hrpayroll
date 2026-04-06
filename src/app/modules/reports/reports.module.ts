@@ -9,8 +9,8 @@ import { ReportsService } from './reports.service';
 const routes: Routes = [{ path: '', component: ReportsComponent }];
 
 @NgModule({
-  declarations: [ReportsComponent],
-  imports: [CommonModule, FormsModule, RouterModule.forChild(routes)],
-  providers: [ReportsService]
+  declarations: [ReportsComponent],
+  imports: [CommonModule, FormsModule, RouterModule.forChild(routes)],
+  providers: [ReportsService]
 })
 export class ReportsModule {}

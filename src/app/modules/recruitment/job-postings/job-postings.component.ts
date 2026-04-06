@@ -22,19 +22,12 @@ export class JobPostingsComponent implements OnInit {
     department_id: null,
   };
 
-  statusOptions: Array<{ value: string; label: string }> = [
-    { value: "", label: "All Statuses" },
-  ];
-
   constructor(
     private jobPostingsService: JobPostingsService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    // Initial status list comes from backend to support all possible items (34+ etc.)
-    this.loadJobStatusOptions();
-
     // Load initial data without showing loading indicator
     this.loadJobPostings(true);
 
@@ -44,46 +37,6 @@ export class JobPostingsComponent implements OnInit {
       .subscribe(() => {
         this.loadJobPostings(true);
       });
-  }
-
-  loadJobStatusOptions(): void {
-    this.jobPostingsService.getJobPostingStatuses().subscribe({
-      next: (response) => {
-        if (response.success && Array.isArray(response.data)) {
-          const rawStatuses = response.data as Array<string | null | undefined>;
-          const statuses: string[] = rawStatuses
-            .map((s) => (s || "").toString().trim())
-            .filter((s): s is string => s !== "");
-          const uniqueStatuses: string[] = Array.from(new Set(statuses)).sort(
-            (a, b) => a.localeCompare(b),
-          );
-
-          this.statusOptions = [
-            { value: "", label: "All Statuses" },
-            ...uniqueStatuses.map((status) => ({
-              value: status,
-              label: status,
-            })),
-          ];
-        } else {
-          // Fallback to default statuses if API fails
-          this.setDefaultStatusOptions();
-        }
-      },
-      error: (err) => {
-        console.error("Failed to load status options, using defaults", err);
-        this.setDefaultStatusOptions();
-      },
-    });
-  }
-
-  private setDefaultStatusOptions(): void {
-    this.statusOptions = [
-      { value: "", label: "All Statuses" },
-      { value: "Draft", label: "Draft" },
-      { value: "Published", label: "Published" },
-      { value: "Closed", label: "Closed" },
-    ];
   }
 
   loadJobPostings(isInitial = false): void {
@@ -166,37 +119,9 @@ export class JobPostingsComponent implements OnInit {
       });
   }
 
-  onStatusChange(status: string): void {
-    if (typeof status !== "string") {
-      return;
-    }
-
-    const normalizedStatus = status.trim();
-    const allowedValues = this.statusOptions.map((o) => o.value);
-    if (!allowedValues.includes(normalizedStatus)) {
-      console.warn("Ignoring invalid status filter value:", normalizedStatus);
-      return;
-    }
-
-    if (this.filters.status === normalizedStatus) {
-      // avoid duplicate refresh if value didn't change
-      return;
-    }
-
-    console.log(
-      "Status changed to:",
-      normalizedStatus,
-      "Current filters:",
-      this.filters,
-    );
-
-    this.filters.status = normalizedStatus;
-    this.page = 1;
-    this.loadJobPostings(false);
-  }
-
   onFilterChange(): void {
-    this.page = 1;
+    console.log("onFilterChange called, current status:", this.filters.status);
+    this.page = 1; // Reset to first page when filter changes
     this.loadJobPostings(false);
   }
 

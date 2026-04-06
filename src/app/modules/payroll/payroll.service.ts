@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { ApiService, ApiResponse } from '../../core/services/api.service';
 
 export interface PayrollPeriod {
@@ -34,9 +35,14 @@ export class PayrollService {
     return this.api.get<PayrollPeriod[]>('payroll/periods', params);
   }
 
-  getPayrollList(params?: any): Observable<ApiResponse<any>> {
-    return this.api.get<any>('payroll/list', params);
-  }
+  
+  addPeriod(period: any): Observable<ApiResponse<PayrollPeriod>> {
+   return this.api.post<PayrollPeriod>('payroll/periods', period);
+}
+
+  getPayrollList(params?: { month?: number; year?: number }): Observable<ApiResponse<any>> {
+  return this.api.get<any>('payroll/list', params);
+}
 
   processPayroll(periodId: number, employeeIds?: number[]): Observable<ApiResponse<any>> {
     return this.api.post<any>('payroll/process', {
@@ -55,6 +61,13 @@ export class PayrollService {
     return this.api.get<any>(`payroll/payslip?id=${payrollId}`);
   }
 
+generatePayroll(periodId: number) {
+  return this.api.post<any>(
+    `payroll/generate_payroll`,
+    { period_id: periodId }
+  );
+}
+  
   generateBankSheet(periodId: number, bankName?: string): Observable<ApiResponse<any>> {
     return this.api.post<any>('payroll/bank-sheet', {
       period_id: periodId,

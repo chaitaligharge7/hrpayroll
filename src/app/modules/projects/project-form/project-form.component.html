@@ -1,16 +1,38 @@
 <div class="container-fluid py-3">
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">Create Project</h4>
-      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Cancel</button>
+
+  <!-- Header with title and buttons -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-1">
+          <li class="breadcrumb-item"><a class="text-decoration-none" (click)="cancel()">Projects</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ isEditMode ? 'Edit Project' : 'Create Project' }}</li>
+        </ol>
+      </nav>
+      <h4 class="mb-0">{{ isEditMode ? 'Edit Project' : 'Create Project' }}</h4>
     </div>
+    <div>
+      <button type="button" class="btn btn-back-custom" (click)="cancel()">
+        <i class="bi bi-arrow-left-circle me-1"></i> Back
+      </button>
+    </div>
+  </div>
 
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <strong>Success!</strong> {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = null"></button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error && !successMessage" class="alert alert-danger alert-sm mb-3" role="alert">
+    <i class="bi bi-exclamation-circle-fill me-2"></i> {{ error }}
+  </div>
+
+  <div class="card">
     <div class="card-body">
-      <div *ngIf="error" class="alert alert-danger alert-sm" role="alert">
-        <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
-      </div>
-
-      <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+      <form id="projectForm" [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
         <div class="form-group">
           <label class="form-label">Project code *</label>
           <input
@@ -108,12 +130,13 @@
           </label>
         </div>
 
-        <div class="form-group full-width button-group">
+        <div class="form-group text-end mt-3">
           <button type="submit" class="btn btn-primary" [disabled]="saving || loadingManagers">
-            <i class="bi bi-check-circle"></i> {{ saving ? 'Creating...' : 'Create Project' }}
+            <i class="bi bi-check-circle me-1"></i>
+            {{ saving ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Project' : 'Create Project') }}
           </button>
-          <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="saving">
-            Cancel
+          <button type="button" class="btn btn-secondary ms-2" (click)="cancel()" [disabled]="saving">
+            <i class="bi bi-x-circle me-1"></i> Cancel
           </button>
         </div>
       </form>

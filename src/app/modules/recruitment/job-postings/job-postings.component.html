@@ -10,8 +10,9 @@
     <div class="filter-group">
       <label>Status:</label>
       <select
-        [ngModel]="filters.status"
-        (ngModelChange)="onStatusChange($event)"
+        class="form-select"
+        [(ngModel)]="filters.status"
+        (change)="onFilterChange()"
         [disabled]="isLoading"
       >
         <option value="">All Statuses</option>

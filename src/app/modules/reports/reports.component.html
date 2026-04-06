@@ -6,12 +6,12 @@
   <div class="report-selection">
     <div class="report-type-selector">
       <label>Select Report Type:</label>
-      <select [(ngModel)]="selectedReportType" class="report-select">
-        <option value="">-- Select Report --</option>
-        <option *ngFor="let report of reportTypes" [value]="report.value">
-          {{ report.label }}
-        </option>
-      </select>
+     <select [(ngModel)]="selectedReportType" class="report-select" (change)="onReportTypeChange()">
+     <option value="">-- Select Report --</option>
+     <option *ngFor="let report of reportTypes" [value]="report.value">
+     {{ report.label }}
+     </option>
+    </select>
     </div>
 
     <div class="report-filters" *ngIf="selectedReportType">

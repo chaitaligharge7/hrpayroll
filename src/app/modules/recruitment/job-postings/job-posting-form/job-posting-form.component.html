@@ -11,16 +11,12 @@
 
       <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loadingJob || !isEditMode">
         <div class="row">
+
           <!-- Job Code -->
           <div class="col-md-4">
             <div class="form-group">
               <label>Job Code *</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="job_code"
-                placeholder="e.g. JD-2025-001"
-              />
+              <input type="text" class="form-control" formControlName="job_code" placeholder="e.g. JD-2025-001"/>
               <div class="form-error" *ngIf="form.get('job_code')?.touched && form.get('job_code')?.invalid">
                 Job code is required
               </div>
@@ -31,12 +27,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label>Job Title *</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="job_title"
-                placeholder="e.g. Senior Developer"
-              />
+              <input type="text" class="form-control" formControlName="job_title" placeholder="e.g. Senior Developer"/>
               <div class="form-error" *ngIf="form.get('job_title')?.touched && form.get('job_title')?.invalid">
                 Job title is required
               </div>
@@ -94,35 +85,33 @@
             </div>
           </div>
 
-          <!-- Experience Min -->
+          <!-- Experience -->
           <div class="col-md-3">
             <div class="form-group">
               <label>Experience Min (Years)</label>
-              <input type="number" class="form-control" formControlName="experience_min" min="0" />
+              <input type="number" class="form-control" formControlName="experience_min" min="0"/>
             </div>
           </div>
 
-          <!-- Experience Max -->
           <div class="col-md-3">
             <div class="form-group">
               <label>Experience Max (Years)</label>
-              <input type="number" class="form-control" formControlName="experience_max" min="0" />
+              <input type="number" class="form-control" formControlName="experience_max" min="0"/>
             </div>
           </div>
 
-          <!-- Salary Min -->
+          <!-- Salary -->
           <div class="col-md-3">
             <div class="form-group">
               <label>Salary Min</label>
-              <input type="number" class="form-control" formControlName="salary_min" min="0" />
+              <input type="number" class="form-control" formControlName="salary_min" min="0"/>
             </div>
           </div>
 
-          <!-- Salary Max -->
           <div class="col-md-3">
             <div class="form-group">
               <label>Salary Max</label>
-              <input type="number" class="form-control" formControlName="salary_max" min="0" />
+              <input type="number" class="form-control" formControlName="salary_max" min="0"/>
             </div>
           </div>
 
@@ -130,12 +119,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label>Location</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="location"
-                placeholder="e.g. New York, NY"
-              />
+              <input type="text" class="form-control" formControlName="location" placeholder="e.g. New York, NY"/>
             </div>
           </div>
 
@@ -143,20 +127,15 @@
           <div class="col-md-4">
             <div class="form-group">
               <label>Employment Type</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="employment_type"
-                placeholder="e.g. Full-time"
-              />
+              <input type="text" class="form-control" formControlName="employment_type" placeholder="e.g. Full-time"/>
             </div>
           </div>
 
-          <!-- No. of Positions -->
+          <!-- Openings -->
           <div class="col-md-2">
             <div class="form-group">
               <label>Openings *</label>
-              <input type="number" class="form-control" formControlName="no_of_positions" min="1" />
+              <input type="number" class="form-control" formControlName="no_of_positions" min="1"/>
               <div class="form-error" *ngIf="form.get('no_of_positions')?.touched && form.get('no_of_positions')?.invalid">
                 Openings required (min 1)
               </div>
@@ -167,18 +146,19 @@
           <div class="col-md-2">
             <div class="form-group">
               <label>Closing Date</label>
-              <input type="date" class="form-control" formControlName="closing_date" />
+              <input type="date" class="form-control" formControlName="closing_date"/>
             </div>
           </div>
 
-          <!-- Status -->
+          <!-- ✅ UPDATED STATUS DROPDOWN -->
           <div class="col-md-4">
             <div class="form-group">
               <label>Status</label>
               <select class="form-select" formControlName="status">
-                <option value="Draft">Draft</option>
-                <option value="Published">Published</option>
-                <option value="Closed">Closed</option>
+                <option *ngIf="!statuses?.length" disabled>Loading...</option>
+                <option *ngFor="let s of statuses" [value]="s">
+                  {{ s }}
+                </option>
               </select>
             </div>
           </div>
@@ -194,6 +174,7 @@
               </button>
             </div>
           </div>
+
         </div>
       </form>
     </div>

@@ -95,6 +95,34 @@ td button i{
   font-size: 14px;
 }
 
+
+/* ✏️ EDIT - BLUE (faint) */
+td button:nth-child(2){
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+}
+
+td button:nth-child(2):hover{
+  background: #2563eb;
+  color: #fff;
+}
+
+/* 🗑 DELETE - RED (faint) */
+td button:nth-child(3){
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+td button:nth-child(3):hover{
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ICON SIZE */
+td button i{
+  font-size: 14px;
+}
+
 /* ===================================================== */
 /* GENERAL CARD AND TABLE STYLING */
 /* ===================================================== */

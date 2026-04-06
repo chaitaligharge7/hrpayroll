@@ -1,13 +1,28 @@
 <div class="container-fluid py-3 project-detail-wrap">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Project</h4>
-    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="back()">Back</button>
+  <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap">
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-1">
+          <li class="breadcrumb-item"><a class="text-decoration-none" (click)="back()">Projects</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Project Details</li>
+        </ol>
+      </nav>
+      <h4 class="mb-0">Project Details</h4>
+    </div>
+    <div>
+      <button type="button" class="btn btn-back-custom btn-sm" (click)="back()">
+        <i class="bi bi-arrow-left-circle me-1"></i> Back to Projects
+      </button>
+    </div>
   </div>
 
-  <div *ngIf="loading" class="text-muted">Loading…</div>
-  <div *ngIf="error" class="alert alert-warning">{{ error }}</div>
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+    <div class="mt-2 text-muted">Loading project details...</div>
+  </div>
+  <div *ngIf="error && !loading" class="alert alert-warning">{{ error }}</div>
 
-  <div *ngIf="!loading && project" class="card shadow-sm">
+  <div *ngIf="project && !loading" class="card shadow-sm">
     <div class="card-body">
       <h5>{{ project.project_name }}</h5>
       <p class="text-muted mb-2">{{ project.project_code }} · <span class="badge bg-secondary">{{ project.status }}</span></p>
