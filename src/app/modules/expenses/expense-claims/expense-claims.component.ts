@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ExpenseClaimsService } from './expense-claims.service';
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { ExpenseClaimsService } from "./expense-claims.service";
 
 @Component({
-  selector: 'app-expense-claims',
-  templateUrl: './expense-claims.component.html',
-  styleUrls: ['./expense-claims.component.scss'],
-  standalone: false
+  selector: "app-expense-claims",
+  templateUrl: "./expense-claims.component.html",
+  styleUrls: ["./expense-claims.component.scss"],
+  standalone: false,
 })
 export class ExpenseClaimsComponent implements OnInit {
   expenseClaims: any[] = [];
@@ -15,14 +15,15 @@ export class ExpenseClaimsComponent implements OnInit {
   limit = 20;
   total = 0;
   filters = {
-    status: '',
-    employee_id: null
+    status: "",
+    employee_id: null,
   };
-  userRole = '';
+  userRole = "";
 
   constructor(
     private expenseClaimsService: ExpenseClaimsService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +36,7 @@ export class ExpenseClaimsComponent implements OnInit {
     const params = {
       page: this.page,
       limit: this.limit,
-      ...this.filters
+      ...this.filters,
     };
 
     this.expenseClaimsService.getExpenseClaims(params).subscribe({
@@ -45,48 +46,56 @@ export class ExpenseClaimsComponent implements OnInit {
           this.total = response.data.pagination?.total || 0;
         }
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error loading expense claims:', error);
+        console.error("Error loading expense claims:", error);
         this.loading = false;
-      }
+      },
     });
   }
 
   createExpenseClaim(): void {
-    this.router.navigate(['/expenses/claims/create']);
+    this.router.navigate(["/expenses/claims/create"]);
   }
 
   viewExpenseClaim(claimId: number): void {
-    this.router.navigate(['/expenses/claims', claimId]);
+    this.router.navigate(["/expenses/claims", claimId]);
   }
 
   approveClaim(claimId: number): void {
-    this.expenseClaimsService.approveExpenseClaim(claimId, { action: 'approve' }).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.loadExpenseClaims();
-        }
-      },
-      error: (error) => {
-        console.error('Error approving claim:', error);
-      }
-    });
-  }
-
-  rejectClaim(claimId: number): void {
-    const reason = prompt('Please enter rejection reason:');
-    if (reason) {
-      this.expenseClaimsService.approveExpenseClaim(claimId, { action: 'reject', rejection_reason: reason }).subscribe({
+    this.expenseClaimsService
+      .approveExpenseClaim(claimId, { action: "approve" })
+      .subscribe({
         next: (response) => {
           if (response.success) {
             this.loadExpenseClaims();
           }
         },
         error: (error) => {
-          console.error('Error rejecting claim:', error);
-        }
+          console.error("Error approving claim:", error);
+        },
       });
+  }
+
+  rejectClaim(claimId: number): void {
+    const reason = prompt("Please enter rejection reason:");
+    if (reason) {
+      this.expenseClaimsService
+        .approveExpenseClaim(claimId, {
+          action: "reject",
+          rejection_reason: reason,
+        })
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.loadExpenseClaims();
+            }
+          },
+          error: (error) => {
+            console.error("Error rejecting claim:", error);
+          },
+        });
     }
   }
 
@@ -108,4 +117,3 @@ export class ExpenseClaimsComponent implements OnInit {
     return Math;
   }
 }
-

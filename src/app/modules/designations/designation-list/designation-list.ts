@@ -28,7 +28,7 @@ export class DesignationListComponent implements OnInit {
   constructor(
     private designationService: DesignationsService,
     private router: Router,
-    private cdr: ChangeDetectorRef, 
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {

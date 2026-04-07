@@ -1,72 +1,98 @@
-<div class="expense-claims-container">
-  <div class="page-header">
-    <h2>Expense Claims</h2>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>Expense Claims</h3>
     <button class="btn btn-primary" (click)="createExpenseClaim()">
-      <i class="fas fa-plus"></i> New Claim
+      <i class="bi bi-plus-circle"></i> Create Claim
     </button>
   </div>
 
-  <div class="filters-section">
-    <div class="filter-group">
-      <label>Status:</label>
-      <select [(ngModel)]="filters.status" (change)="onFilterChange()">
-        <option value="">All</option>
-        <option value="Pending">Pending</option>
-        <option value="Approved">Approved</option>
-        <option value="Rejected">Rejected</option>
-        <option value="Paid">Paid</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="claims-list" *ngIf="!loading">
-    <div class="claim-card" *ngFor="let claim of expenseClaims">
-      <div class="claim-header">
-        <div class="claim-amount">
-          <span class="currency">₹</span>
-          <span class="amount">{{ claim.total_amount || 0 }}</span>
-        </div>
-        <span class="badge badge-{{ claim.status.toLowerCase() }}">
-          {{ claim.status }}
-        </span>
-      </div>
-      <div class="claim-details">
-        <p><strong>Employee:</strong> {{ claim.first_name }} {{ claim.last_name }} ({{ claim.employee_code }})</p>
-        <p><strong>Date:</strong> {{ claim.expense_date | date:'shortDate' }}</p>
-        <p><strong>Items:</strong> {{ claim.items_count || 0 }} items</p>
-        <p><strong>Type:</strong> {{ claim.expense_type || 'Other' }}</p>
-      </div>
-      <div class="claim-actions" *ngIf="userRole !== 'employee' && claim.status === 'Pending'">
-        <button class="btn btn-success" (click)="approveClaim(claim.expense_id)">
-          Approve
-        </button>
-        <button class="btn btn-danger" (click)="rejectClaim(claim.expense_id)">
-          Reject
-        </button>
-      </div>
-      <div class="claim-actions">
-        <button class="btn btn-info" (click)="viewExpenseClaim(claim.expense_id)">
-          View Details
-        </button>
+  <div class="card-body">
+    <!-- Filters -->
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <select class="form-select" [(ngModel)]="filters.status" (change)="onFilterChange()">
+          <option value="">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Paid">Paid</option>
+        </select>
       </div>
     </div>
-    <div class="no-claims" *ngIf="expenseClaims.length === 0">
-      <p>No expense claims found</p>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner"></div>
     </div>
-  </div>
 
-  <div class="pagination" *ngIf="total > limit">
-    <button class="btn btn-sm" [disabled]="page === 1" (click)="onPageChange(page - 1)">
-      Previous
-    </button>
-    <span>Page {{ page }} of {{ getTotalPages() }}</span>
-    <button class="btn btn-sm" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
-      Next
-    </button>
-  </div>
+    <!-- Claims Table -->
+    <div class="table-responsive" [hidden]="loading">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Claim Date</th>
+            <th>Type</th>
+            <th>Items</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let claim of expenseClaims">
+            <td>
+              <span class="emp-name">{{ claim.first_name }} {{ claim.last_name }}</span>
+              <span class="emp-code">{{ claim.employee_code }}</span>
+            </td>
+            <td>{{ claim.expense_date | date:'dd-MM-yyyy' }}</td>
+            <td>{{ claim.expense_type || 'Other' }}</td>
+            <td>{{ claim.items_count || 0 }}</td>
+            <td class="amount-cell">₹{{ claim.total_amount || 0 }}</td>
+            <td>
+              <span class="badge badge-{{ claim.status.toLowerCase() }}">{{ claim.status }}</span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-icon btn-view" (click)="viewExpenseClaim(claim.expense_id)" title="View Details">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button
+                *ngIf="userRole !== 'employee' && claim.status === 'Pending'"
+                class="btn btn-sm btn-icon btn-approve"
+                (click)="approveClaim(claim.expense_id)"
+                title="Approve"
+              >
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button
+                *ngIf="userRole !== 'employee' && claim.status === 'Pending'"
+                class="btn btn-sm btn-icon btn-reject"
+                (click)="rejectClaim(claim.expense_id)"
+                title="Reject"
+              >
+                <i class="bi bi-x-circle"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="expenseClaims.length === 0">
+            <td colspan="7" class="text-center py-4 text-muted">No expense claims found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="loading-spinner" *ngIf="loading">
-    <i class="fas fa-spinner fa-spin"></i> Loading...
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="total > limit">
+      <span class="text-muted small">Page {{ page }} of {{ getTotalPages() }}</span>
+      <div class="pagination-btns">
+        <button class="btn btn-sm btn-outline me-1" [disabled]="page === 1" (click)="onPageChange(page - 1)">
+          <i class="bi bi-chevron-left"></i> Previous
+        </button>
+        <button class="btn btn-sm btn-outline" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
+          Next <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

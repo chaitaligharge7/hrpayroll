@@ -1,0 +1,141 @@
+/* --- Card Header --- */
+.card-header {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card-header h3 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #111827;
+  margin: 0;
+  margin-right: 10px;
+}
+
+/* --- Create Category Button (matches Add Employee) --- */
+.card-header .btn-primary {
+  margin-left: auto;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.card-header .btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+/* --- Table --- */
+.table thead th {
+  background-color: #f8f9fc;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e5e7eb;
+  padding: 12px 14px;
+}
+
+.table tbody td {
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #374151;
+  vertical-align: middle;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* --- Badges --- */
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge-approved {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.badge-rejected {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-secondary {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+/* --- Loading Spinner --- */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Badges */
+.badge {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.badge.bg-success {
+  background-color: #1cc88a !important;
+}
+
+.badge.bg-danger {
+  background-color: #e74a3b !important;
+}
+
+.badge.bg-secondary {
+  background-color: #858796 !important;
+}
+
+/* Loading Spinner */
+.spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Alert Styling */
+.alert {
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Empty State */
+.text-center p {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table {
+    font-size: 13px;
+  }
+
+  button.btn-primary {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}

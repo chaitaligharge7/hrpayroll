@@ -1,128 +1,178 @@
-/* Wrapper */
-.calendar-wrapper {
+/* ==================== MAIN CONTAINER ==================== */
+.attendance-layout {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Weekdays Header */
+/* ==================== LEFT COLUMN: EMPLOYEE ==================== */
+.employee-column {
+  width: 160px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.employee-name {
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid #f0f0f0;
+  text-transform: capitalize;
+}
+
+/* ==================== MIDDLE COLUMN: CALENDAR ==================== */
+.calendar-column {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Weekday headers */
+/* Weekday headers */
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 4px; 
+  font-weight: 600;
 }
 
 .weekday {
-  padding: 5px 0;
-  font-size: 12px;
-  color: #555;
+  text-align: center;
+  padding: 4px 0; 
+  font-size: 12px; 
+  line-height: 1.2; 
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #f0f4f8, #e6eefc);
+  border-radius: 6px;
+  min-height: 24px; 
 }
 
-/* Calendar Grid */
+/* Calendar grid */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+  gap: 6px;
 }
 
 .calendar-day {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 5px;
-  min-height: 80px;
+  border-radius: 10px;
+  min-height: 90px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
+  padding: 6px;
   font-size: 12px;
-  background-color: #fff;
-  transition: background-color 0.2s, transform 0.1s;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .calendar-day:hover {
-  background-color: #f1f1f1;
+  background-color: #f3f6fb;
   transform: translateY(-2px);
 }
 
-.other-month {
-  background-color: #f9f9f9;
-  color: #aaa;
-}
-
-/* Date Number */
-.calendar-date {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-/* Attendance Status Balls */
+/* Status balls inside calendar */
 .status-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
-  margin-bottom: 5px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .status-ball {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  display: inline-block;
   border: 1px solid #ccc;
 }
 
-/* Status Colors */
-.status-present { background-color: #28a745; }
-.status-absent { background-color: #dc3545; }
-.status-halfday { background-color: #ffc107; }
-.status-late { background-color: #fd7e14; }
-.status-fine { background-color: #6c757d; }
-.status-weeklyoff { background-color: #17a2b8; }
-.status-overtime { background-color: #007bff; }
+.status-ball.status-present { background-color: #28a745; border-color: #28a745; }
+.status-ball.status-absent { background-color: #dc3545; border-color: #dc3545; }
+.status-ball.status-halfday { background-color: #ffc107; border-color: #ffc107; }
+.status-ball.status-late { background-color: #fd7e14; border-color: #fd7e14; }
+.status-ball.status-fine { background-color: #6c757d; border-color: #6c757d; }
+.status-ball.status-weeklyoff { background-color: #17a2b8; border-color: #17a2b8; }
+.status-ball.status-overtime { background-color: #007bff; border-color: #007bff; }
 
-/* In/Out Time Display */
+/* Full cell backgrounds */
+.bg-present { background: linear-gradient(135deg, #d4f7dc, #e6f5ea); }
+.bg-absent { background: linear-gradient(135deg, #fcdada, #f9e6e6); }
+.bg-halfday { background: linear-gradient(135deg, #fff5d6, #fff8e6); }
+.bg-late { background: linear-gradient(135deg, #ffe3d6, #fff2e6); }
+.bg-fine { background: linear-gradient(135deg, #f0f0f0, #d9d9d9); }
+.bg-weeklyoff { background: linear-gradient(135deg, #d6eef7, #e6f4f9); }
+.bg-overtime { background: linear-gradient(135deg, #dce6ff, #e6f0ff); }
+
+/* Date & time */
+.calendar-date { font-weight: 600; margin-bottom: 6px; }
 .calendar-time {
   font-size: 10px;
-  color: #555;
-  line-height: 1.2;
+  color: #495057;
+  line-height: 1.3;
+  text-align: center;
   margin-top: auto;
 }
 
-/* Status Legend */
-.status-legend {
-  min-width: 160px;
+/* ==================== RIGHT COLUMN: STATUS SUMMARY ==================== */
+.status-column {
+  width: 160px;
   background-color: #f8f9fa;
-  padding: 10px;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 10px;
   font-size: 12px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.05);
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 6px;
 }
 
-/* Buttons & Inputs (optional clean-up) */
-input.form-control-sm {
-  font-size: 12px;
-  padding: 4px 6px;
+
+/* ==================== HEADINGS ROW ==================== */
+.attendance-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
 }
 
-button.btn-sm {
-  font-size: 12px;
-  padding: 4px 8px;
+/* Make all headings the same height */
+.employee-column .employee-heading,
+.calendar-column .calendar-heading,
+.status-column .status-heading {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 0;
+  text-align: center;
+  border-bottom: 2px solid #e0e0e0;
 }
 
-/* Responsive tweak for small screens */
-@media (max-width: 768px) {
-  .calendar-wrapper {
+/* Add a wrapper above weekdays for Calendar heading */
+.calendar-column .calendar-heading {
+  margin-bottom: 6px;
+}
+
+/* Optional: Center the text vertically for neat alignment */
+.employee-column, .calendar-column, .status-column {
+  display: flex;
+  flex-direction: column;
+}
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 992px) {
+  .attendance-layout {
     flex-direction: column;
   }
-  .status-legend {
-    min-width: 100%;
+  .employee-column, .status-column {
+    width: 100%;
+    border-right: none;
   }
 }

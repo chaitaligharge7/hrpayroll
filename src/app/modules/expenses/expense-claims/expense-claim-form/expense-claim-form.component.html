@@ -1,9 +1,10 @@
 <div class="container-fluid py-3 expense-claim-form-wrap">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">New expense claim</h4>
-    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Cancel</button>
   </div>
-  <p class="text-muted small">Claims are created for your employee profile. Add one or more line items.</p>
+  <p class="text-muted small">
+    Claims are created for your employee profile. Add one or more line items.
+  </p>
 
   <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
 
@@ -12,11 +13,19 @@
       <div class="row g-2 mb-3">
         <div class="col-md-4">
           <label class="form-label small">Claim date</label>
-          <input type="date" class="form-control form-control-sm" formControlName="expense_date" />
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            formControlName="expense_date"
+          />
         </div>
         <div class="col-md-4">
           <label class="form-label small">Type</label>
-          <input class="form-control form-control-sm" formControlName="expense_type" placeholder="Travel, Meals" />
+          <input
+            class="form-control form-control-sm"
+            formControlName="expense_type"
+            placeholder="Travel, Meals"
+          />
         </div>
       </div>
 
@@ -41,39 +50,82 @@
           <div class="row g-2">
             <div class="col-md-4">
               <label class="form-label small">Date</label>
-              <input type="date" class="form-control form-control-sm" formControlName="expense_date" />
+              <input
+                type="date"
+                class="form-control form-control-sm"
+                formControlName="expense_date"
+              />
             </div>
             <div class="col-md-8">
               <label class="form-label small">Description</label>
-              <input class="form-control form-control-sm" formControlName="description" />
+              <input
+                class="form-control form-control-sm"
+                formControlName="description"
+              />
             </div>
             <div class="col-md-4">
               <label class="form-label small">Amount</label>
-              <input type="number" class="form-control form-control-sm" formControlName="amount" min="0.01" step="0.01" />
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                formControlName="amount"
+                min="0.01"
+                step="0.01"
+              />
             </div>
             <div class="col-md-4">
               <label class="form-label small">Category</label>
-              <select class="form-select form-select-sm" formControlName="expense_category_id">
+              <select
+                class="form-select form-select-sm"
+                formControlName="expense_category_id"
+              >
                 <option [ngValue]="null">—</option>
-                <option *ngFor="let c of categories" [ngValue]="c.category_id">{{ c.category_name }}</option>
+                <option *ngFor="let c of categories" [ngValue]="c.category_id">
+                  {{ c.category_name }}
+                </option>
               </select>
             </div>
             <div class="col-md-4">
               <label class="form-label small">Project (optional)</label>
-              <select class="form-select form-select-sm" formControlName="project_id">
+              <select
+                class="form-select form-select-sm"
+                formControlName="project_id"
+              >
                 <option [ngValue]="null">—</option>
-                <option *ngFor="let p of projects" [ngValue]="p.project_id">{{ p.project_code }} — {{ p.project_name }}</option>
+                <option *ngFor="let p of projects" [ngValue]="p.project_id">
+                  {{ p.project_code }} — {{ p.project_name }}
+                </option>
               </select>
             </div>
           </div>
         </div>
       </div>
 
-      <button type="button" class="btn btn-outline-primary btn-sm mb-3" (click)="addItem()">+ Add line</button>
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm mb-3"
+        (click)="addItem()"
+      >
+        + Add line
+      </button>
 
-      <div>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving || loading">
-          {{ saving ? 'Submitting…' : 'Submit claim' }}
+      <div class="d-flex justify-content-end gap-2">
+        <!-- Cancel Button -->
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-sm"
+          [disabled]="saving || loading"
+        >
+          {{ saving ? "Submitting…" : "Submit claim" }}
         </button>
       </div>
     </div>

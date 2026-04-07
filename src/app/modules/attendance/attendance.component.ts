@@ -148,7 +148,8 @@ export class AttendanceComponent implements OnInit {
   this.generateCalendar(this.currentMonth);
 }
   
-  // Calendar generation
+
+
 generateCalendar(date: Date) {
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -157,35 +158,50 @@ generateCalendar(date: Date) {
 
   this.calendarDays = [];
 
-  // Add leading empty days (other month) to align weekdays
+  // Leading empty days for alignment
   for (let i = 0; i < firstDay.getDay(); i++) {
     this.calendarDays.push({ date: new Date(year, month, 0 - (firstDay.getDay() - i)), isCurrentMonth: false });
   }
 
-  // Add actual days
+  // Actual days
+  const today = new Date();
   for (let d = 1; d <= lastDay.getDate(); d++) {
     const currentDate = new Date(year, month, d);
     const record = this.records.find(r => r.attendance_date_obj?.toDateString() === currentDate.toDateString());
-    this.calendarDays.push({ date: currentDate, record, isCurrentMonth: true });
+
+    let status = null;
+
+    if (record) {
+      status = this.mapStatus(record.status); // use record
+    } else {
+      const dayOfWeek = currentDate.getDay(); // 0=Sunday, 6=Saturday
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        status = 'Weekly Off'; // weekends
+      } else if (currentDate < today) {
+        status = 'Absent'; // past weekdays with no record
+      } else {
+        status = null; // future days -> no color / no count
+      }
+    }
+
+    this.calendarDays.push({ date: currentDate, record, isCurrentMonth: true, status });
   }
+
   this.updateStatusSummary();
 }
 
-// Status Summary Update
+
+
 updateStatusSummary() {
   this.statusList.forEach(s => s.count = 0);
 
   this.calendarDays.forEach(day => {
     if (!day.isCurrentMonth) return;
 
-    let status = 'Absent'; // ✅ default
-
-    if (day.record) {
-      status = this.mapStatus(day.record.status);
-    }
+    if (!day.status) return; // skip future days
 
     const statusObj = this.statusList.find(
-      s => s.name.toLowerCase() === status.toLowerCase()
+      s => s.name.toLowerCase() === day.status.toLowerCase()
     );
 
     if (statusObj) {

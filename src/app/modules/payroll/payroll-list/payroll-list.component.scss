@@ -1,2 +1,245 @@
 // Payroll List Component Styles
 
+/* --- Card Header --- */
+.card-header {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card-header h3 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #111827;
+  margin: 0;
+  margin-right: 10px;
+}
+
+/* --- Header Buttons --- */
+.card-header .btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.card-header .btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.card-header .btn-success {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+.card-header .btn-success:hover {
+  background: linear-gradient(135deg, #15803d, #166534);
+}
+
+.card-header .btn-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+.card-header .btn-warning:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+}
+
+/* --- Summary Cards --- */
+.card.bg-light {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.card.bg-light .card-body h6 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.card.bg-light .card-body h4 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* --- Filter Selects --- */
+.form-select {
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 13px;
+  color: #374151;
+}
+
+/* --- Table --- */
+.table thead th {
+  background-color: #f8f9fc;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e5e7eb;
+  padding: 12px 14px;
+}
+
+.table tbody td {
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #374151;
+  vertical-align: middle;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* --- Payslip Action Button --- */
+.btn-outline-primary {
+  border: 1px solid rgba(37,99,235,0.3);
+  background: rgba(37,99,235,0.07);
+  color: #2563eb;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 10px;
+  transition: all 0.2s;
+}
+
+.btn-outline-primary:hover {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+/* --- Pagination --- */
+.pagination .page-link {
+  border-radius: 6px;
+  font-size: 13px;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.pagination .page-item.active .page-link {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   MODAL — Add Period
+   ===================================================== */
+
+.modal-content {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+  padding: 16px 20px;
+}
+
+.modal-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2d5be3;
+}
+
+.modal-body {
+  padding: 20px 24px;
+}
+
+.modal-body .form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #34495e;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.modal-body .form-control,
+.modal-body .form-select {
+  border-radius: 6px;
+  border: 1px solid #d1d3e2;
+  font-size: 13px;
+  height: 36px;
+  padding: 5px 10px;
+  color: #374151;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 0.15rem rgba(37,99,235,0.18);
+  outline: none;
+}
+
+.modal-footer {
+  border-top: 1px solid #e3e6f0;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #fafafa;
+}
+
+/* Cancel button in modal */
+.modal-footer .btn-secondary {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  border-radius: 8px;
+  padding: 7px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.modal-footer .btn-secondary:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Add Period button in modal */
+.modal-footer .btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.modal-footer .btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}

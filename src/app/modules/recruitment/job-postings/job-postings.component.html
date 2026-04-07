@@ -12,7 +12,7 @@
       <select
         class="form-select"
         [(ngModel)]="filters.status"
-        (change)="onFilterChange()"
+        (ngModelChange)="onFilterChange()"
         [disabled]="isLoading"
       >
         <option value="">All Statuses</option>

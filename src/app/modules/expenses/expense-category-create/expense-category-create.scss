@@ -1,0 +1,134 @@
+/* Wrapper */
+.category-form-wrap {
+  max-width: 950px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+/* Card */
+.form-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* Card Header (matches employee form header) */
+.form-card-header {
+  background: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+  padding: 18px 24px;
+}
+
+.form-card-header h4 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2d5be3;
+  text-align: center;
+}
+
+/* Card Body */
+.form-card-body {
+  padding: 24px;
+}
+
+/* Labels */
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #34495e;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.required {
+  color: #dc2626;
+}
+
+/* Inputs & Selects */
+.form-control {
+  border-radius: 6px;
+  border: 1px solid #d1d3e2;
+  font-size: 14px;
+  padding: 7px 10px;
+  height: 38px;
+  color: #374151;
+}
+
+.form-control:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 0.15rem rgba(37, 99, 235, 0.18);
+  outline: none;
+}
+
+textarea.form-control {
+  height: auto;
+  resize: none;
+}
+
+/* Alerts */
+.alert {
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* Action Buttons Row */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e3e6f0;
+}
+
+.btn-cancel {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-submit:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+.btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .category-form-wrap {
+    margin: 10px;
+    padding: 0;
+  }
+
+  .form-card-body {
+    padding: 16px;
+  }
+}
+  

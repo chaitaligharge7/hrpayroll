@@ -1,24 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ExpenseService } from '../expense.service';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { ExpenseService } from "../expense.service";
+import { CommonModule } from "@angular/common";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-expense-category-create',
-  imports: [CommonModule,ReactiveFormsModule],
-  templateUrl: './expense-category-create.html',
-  styleUrl: './expense-category-create.scss',
+  selector: "app-expense-category-create",
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: "./expense-category-create.html",
+  styleUrl: "./expense-category-create.scss",
 })
 export class ExpenseCategoryCreate implements OnInit {
-
   categoryForm!: FormGroup;
   loading: boolean = false;
-  successMessage: string = '';
-  errorMessage: string = '';
+  successMessage: string = "";
+  errorMessage: string = "";
 
   constructor(
     private fb: FormBuilder,
-    private expenseService: ExpenseService
+    private expenseService: ExpenseService,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -30,10 +37,10 @@ export class ExpenseCategoryCreate implements OnInit {
    */
   initForm() {
     this.categoryForm = this.fb.group({
-      category_code: ['', Validators.required],
-      category_name: ['', Validators.required],
-      category_description: [''],
-      is_taxable: [0] // default No
+      category_code: ["", Validators.required],
+      category_name: ["", Validators.required],
+      category_description: [""],
+      is_taxable: [0], // default No
     });
   }
 
@@ -41,8 +48,8 @@ export class ExpenseCategoryCreate implements OnInit {
    * Submit form
    */
   onSubmit() {
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.successMessage = "";
+    this.errorMessage = "";
 
     if (this.categoryForm.invalid) {
       this.categoryForm.markAllAsTouched();
@@ -56,15 +63,19 @@ export class ExpenseCategoryCreate implements OnInit {
     this.expenseService.createCategory(payload).subscribe({
       next: (res) => {
         this.loading = false;
-        this.successMessage = res.message || 'Category created successfully';
+        this.successMessage = res.message || "Category created successfully";
         this.categoryForm.reset({ is_taxable: 0 });
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.message || 'Failed to create category';
+        this.errorMessage = err.message || "Failed to create category";
         console.error(err);
-      }
+      },
     });
   }
 
+  cancel(): void {
+    this.router.navigate(["/expenses/expense-categoryList"]);
+  }
 }

@@ -1,0 +1,125 @@
+/* === Leaves Page — Employee Module Theme === */
+
+/* Page title */
+h4 {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+/* Card shared */
+.card {
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+/* --- Apply for Leave card header --- */
+.card-header {
+  background: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #1f2937;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+/* Labels */
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Inputs and Selects */
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border: 1px solid #d1d3e2;
+  font-size: 13px;
+  color: #374151;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 0.15rem rgba(37,99,235,0.15);
+  outline: none;
+}
+
+/* Submit button */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
+/* Refresh link button */
+.btn-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* --- Requests Table --- */
+.table thead th {
+  background-color: #f8f9fc;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e5e7eb;
+  padding: 10px 14px;
+}
+
+.table tbody td {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #374151;
+  vertical-align: middle;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Remove Bootstrap striped default to keep clean rows */
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: transparent;
+}
+
+/* Alert */
+.alert-info {
+  background-color: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0c4a6e;
+  border-radius: 6px;
+  font-size: 13px;
+}

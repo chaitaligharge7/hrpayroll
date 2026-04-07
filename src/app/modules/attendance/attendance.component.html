@@ -1,6 +1,5 @@
 <div class="container-fluid py-3">
   <h4 class="mb-3">Attendance Calendar</h4>
-
   <!-- Location & Check in/out -->
   <div class="card mb-4">
     <div class="card-body row g-2 align-items-end">
@@ -14,33 +13,58 @@
       </div>
     </div>
   </div>
-
   <!-- Message -->
   <div *ngIf="message" class="alert alert-info py-2">{{ message }}</div>
-
-  <!-- Month Navigation -->
-  <div class="calendar-nav mb-2 d-flex justify-content-between">
-    <button class="btn btn-sm btn-outline-secondary" (click)="prevMonth()">Previous</button>
-    <strong>{{ currentMonth | date:'MMMM yyyy' }}</strong>
-    <button class="btn btn-sm btn-outline-secondary" (click)="nextMonth()">Next</button>
-  </div>
-
-  <!-- Calendar + Status Legend Wrapper -->
-  <div class="calendar-wrapper d-flex gap-3">
-
-    <!-- Calendar Grid -->
-    <div class="calendar flex-grow-1">
-      
-      <!-- Weekday Headers -->
-      <div class="calendar-weekdays">
-        <div class="weekday" *ngFor="let wd of ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']">{{ wd }}</div>
+  <!-- ==================== HEADINGS ROW ==================== -->
+  <div class="headings-row d-flex align-items-center mb-2">
+    <!-- Left: Employee Name -->
+    <div class="employee-heading">
+      Employee Name
+    </div>
+    <!-- Middle: Month + Weekdays -->
+    <div class="calendar-heading flex-grow-1 text-center">
+      <div class="month-nav d-flex justify-content-center align-items-center gap-2 mb-1">
+        <button class="btn btn-sm btn-outline-secondary" (click)="prevMonth()">&#171;</button>
+        <span class="month-name">{{ currentMonth | date:'MMMM yyyy' }}</span>
+        <button class="btn btn-sm btn-outline-secondary" (click)="nextMonth()">&#187;</button>
       </div>
-
-      <!-- Calendar Days -->
+      <div class="calendar-weekdays d-grid" style="grid-template-columns: repeat(7, 1fr); gap: 6px;">
+        <div class="weekday" *ngFor="let wd of ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']">
+          {{ wd }}
+        </div>
+      </div>
+    </div>
+    <!-- Right: Status Summary -->
+    <div class="status-heading text-end">
+      Status Summary
+    </div>
+  </div>
+  <!-- ==================== Attendance Table Layout ==================== -->
+  <div class="attendance-layout d-flex gap-3">
+    <!-- Left: Employee Names -->
+    <div class="employee-column">
+      <div class="employee-name" *ngFor="let r of records">
+        {{ r.first_name }} {{ r.last_name }}
+      </div>
+    </div>
+    <!-- Middle: Calendar -->
+    <div class="calendar-column">
       <div class="calendar-grid">
-        <div class="calendar-day" *ngFor="let day of calendarDays" [class.other-month]="!day.isCurrentMonth">
+        <div 
+          class="calendar-day" 
+          *ngFor="let day of calendarDays" 
+          [class.other-month]="!day.isCurrentMonth"
+          [ngClass]="{
+            'bg-present': day.record?.status === 'Present',
+            'bg-absent': day.record?.status === 'Absent',
+            'bg-halfday': day.record?.status === 'Half Day',
+            'bg-late': day.record?.status === 'Late',
+            'bg-fine': day.record?.status === 'Fine',
+            'bg-weeklyoff': day.record?.status === 'Weekly Off',
+            'bg-overtime': day.record?.status === 'Overtime'
+          }"
+        >
           <div class="calendar-date">{{ day.date.getDate() }}</div>
-
           <!-- Attendance Status Balls -->
           <div class="status-wrapper" *ngIf="day.record">
             <span class="status-ball status-present" *ngIf="day.record.status === 'Present'"></span>
@@ -51,7 +75,6 @@
             <span class="status-ball status-weeklyoff" *ngIf="day.record.status === 'Weekly Off'"></span>
             <span class="status-ball status-overtime" *ngIf="day.record.status === 'Overtime'"></span>
           </div>
-
           <!-- In/Out Times -->
           <div class="calendar-time" *ngIf="day.record">
             <small>In: {{ day.record.check_in_time_obj | date:'shortTime' }}</small><br>
@@ -60,10 +83,8 @@
         </div>
       </div>
     </div>
-
-    <!-- Status Legend -->
-    <div class="status-legend">
-      <h6>Status Summary</h6>
+    <!-- Right: Status Summary -->
+    <div class="status-column">
       <div *ngFor="let s of statusList" class="legend-item">
         <span class="status-ball" [ngClass]="s.class"></span>
         {{ s.name }}: {{ s.count }}

@@ -32,17 +32,17 @@
 
 /* --- Card Header --- */
 .card-header {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e3e6f0;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+  background: #f8f9fc;
 }
 
 .card-header h3,
 .page-title {
-  font-weight: 800;
-  font-size: 1.5rem;
+  font-weight: 700;
+  font-size: 1.15rem;
   margin: 0;
-  color: #2563eb;
+  color: #2d5be3;
   text-align: center;
 }
 
@@ -247,14 +247,14 @@ select.is-invalid {
 
 /* Primary Button */
 .btn-primary {
-  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 
   &:hover:not(:disabled) {
-    background: linear-gradient(135deg, #4338ca, #1d4ed8);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
   }
 
   &:active:not(:disabled) {
@@ -266,12 +266,12 @@ select.is-invalid {
 .btn-secondary,
 .btn-outline-secondary,
 .cancel-btn {
-  background-color: #f3f4f6;
+  background-color: #ffffff;
   color: #374151;
   border: 1px solid #d1d5db;
 
   &:hover:not(:disabled) {
-    background-color: #e5e7eb;
+    background-color: #f3f4f6;
     border-color: #9ca3af;
   }
 }
@@ -301,9 +301,11 @@ select.is-invalid {
 .form-actions,
 .d-flex.gap-2 {
   display: flex;
-  gap: 1rem;
+  gap: 10px;
   margin-top: 1.5rem;
-  justify-content: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e3e6f0;
+  justify-content: flex-end;
 
   @media (max-width: 480px) {
     flex-direction: column;
