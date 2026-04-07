@@ -1,0 +1,61 @@
+<div class="container mt-3">
+
+  <h3>Create Expense Category</h3>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+
+    <div class="row">
+
+      <!-- Category Code -->
+      <div class="col-md-6 mb-3">
+        <label>Category Code *</label>
+        <input type="text" class="form-control" formControlName="category_code">
+        <div class="text-danger" *ngIf="categoryForm.get('category_code')?.touched && categoryForm.get('category_code')?.invalid">
+          Category code is required
+        </div>
+      </div>
+
+      <!-- Category Name -->
+      <div class="col-md-6 mb-3">
+        <label>Category Name *</label>
+        <input type="text" class="form-control" formControlName="category_name">
+        <div class="text-danger" *ngIf="categoryForm.get('category_name')?.touched && categoryForm.get('category_name')?.invalid">
+          Category name is required
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="col-md-12 mb-3">
+        <label>Description</label>
+        <textarea class="form-control" rows="3" formControlName="category_description"></textarea>
+      </div>
+
+      <!-- Taxable -->
+      <div class="col-md-6 mb-3">
+        <label>Is Taxable?</label>
+        <select class="form-control" formControlName="is_taxable">
+          <option [value]="1">Yes</option>
+          <option [value]="0">No</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      {{ loading ? 'Saving...' : 'Create Category' }}
+    </button>
+
+  </form>
+
+</div>

@@ -1,0 +1,67 @@
+<div class="container mt-3">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Expense Categories</h3>
+    <!-- Create Category Button -->
+    <button class="btn btn-primary" (click)="goToCreateCategory()">
+      <i class="bi bi-plus-circle"></i> Create Category
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Loading categories...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loading && errorMessage" class="alert alert-danger my-3">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Table -->
+  <table *ngIf="!loading && !errorMessage && categories.length > 0" class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Taxable</th>
+        <th>Status</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let cat of categories; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ cat.category_code }}</td>
+        <td>{{ cat.category_name }}</td>
+        <td>{{ cat.category_description }}</td>
+
+        <!-- Taxable -->
+        <td>
+          <span *ngIf="cat.is_taxable == 1" class="badge bg-success">Yes</span>
+          <span *ngIf="cat.is_taxable == 0" class="badge bg-secondary">No</span>
+        </td>
+
+        <!-- Status -->
+        <td>
+          <span *ngIf="cat.is_active == 1" class="badge bg-success">Active</span>
+          <span *ngIf="cat.is_active == 0" class="badge bg-danger">Inactive</span>
+        </td>
+
+        <td>{{ cat.created_at | date:'medium' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No Data -->
+  <div *ngIf="!loading && !errorMessage && categories.length === 0" class="text-center my-3">
+    <p>No categories found</p>
+  </div>
+
+</div>
