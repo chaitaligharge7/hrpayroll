@@ -23,6 +23,13 @@ export class ExpenseService {
   }
 
   /**
+   * Get single Expense Category by ID
+   */
+  getCategoryById(id: number): Observable<any> {
+    return this.apiService.get(`${this.basePath}/get.php`, { id });
+  }
+
+  /**
    * Create Expense Category
    */
   createCategory(payload: any): Observable<any> {
@@ -30,6 +37,20 @@ export class ExpenseService {
       `${this.basePath}/create.php`,
       payload
     );
+  }
+
+  /**
+   * Update Expense Category
+   */
+  updateCategory(id: number, payload: any): Observable<any> {
+    return this.apiService.put(`${this.basePath}/update.php?id=${id}`, payload);
+  }
+
+  /**
+   * Soft-delete Expense Category
+   */
+  deleteCategory(id: number): Observable<any> {
+    return this.apiService.delete(`${this.basePath}/delete.php?id=${id}`);
   }
 
 }

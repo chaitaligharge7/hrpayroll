@@ -30,11 +30,7 @@ export class ExpenseCategoryList implements OnInit {
 
     this.expenseService.getCategories().subscribe({
       next: (res: any) => {
-        // Check the browser console! If this doesn't print, the API call never finished.
-        console.log("Data received:", res);
-
-        this.loading = false; // Turn off spinner
-
+        this.loading = false;
         if (res && res.success) {
           this.categories = res.data || [];
           this.cdr.detectChanges();
@@ -51,8 +47,34 @@ export class ExpenseCategoryList implements OnInit {
     });
   }
 
-  // Navigate to create category component
   goToCreateCategory() {
     this.router.navigate(["/expenses/expense-categoryCreate"]);
+  }
+
+  viewCategory(cat: any) {
+    this.router.navigate(["/expenses/expense-category", cat.category_id]);
+  }
+
+  editCategory(cat: any) {
+    this.router.navigate(["/expenses/expense-category", cat.category_id, "edit"]);
+  }
+
+  deleteCategory(cat: any) {
+    if (!confirm(`Delete category "${cat.category_name}"? This action cannot be undone.`)) {
+      return;
+    }
+    this.expenseService.deleteCategory(cat.category_id).subscribe({
+      next: (res: any) => {
+        if (res && res.success) {
+          this.loadCategories();
+        } else {
+          alert(res?.message || "Failed to delete category");
+        }
+      },
+      error: (err) => {
+        console.error("Delete error:", err);
+        alert("Failed to delete category");
+      },
+    });
   }
 }

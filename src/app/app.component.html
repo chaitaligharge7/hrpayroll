@@ -118,21 +118,31 @@
               <span class="menu-text">More</span>
             </a>
 
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" routerLink="/assets">Assets</a></li>
+            <ul class="dropdown-menu more-dropdown">
+              <li>
+                <a class="dropdown-item" routerLink="/assets" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-laptop"></i></span>
+                  Assets
+                </a>
+              </li>
 
               <li class="dropdown-submenu">
-                <a class="dropdown-item dropdown-toggle" href="#"> Expenses </a>
+                <a class="dropdown-item dropdown-toggle expenses-toggle" href="#">
+                  <span class="dd-icon" style="background:#ffe4e6;color:#e11d48"><i class="bi bi-receipt"></i></span>
+                  Expenses
+                  <i class="bi bi-chevron-right ms-auto sub-arrow"></i>
+                </a>
 
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu sub-menu">
                   <li>
-                    <a class="dropdown-item" routerLink="/expenses/expense-category">
+                    <a class="dropdown-item" routerLink="/expenses/expense-category" routerLinkActive="dropdown-active">
+                      <span class="dd-icon" style="background:#fef9c3;color:#ca8a04"><i class="bi bi-tags"></i></span>
                       Expense Categories
                     </a>
                   </li>
-
                   <li>
-                    <a class="dropdown-item" routerLink="/expenses/claims">
+                    <a class="dropdown-item" routerLink="/expenses/claims" routerLinkActive="dropdown-active">
+                      <span class="dd-icon" style="background:#fce7f3;color:#db2777"><i class="bi bi-file-earmark-text"></i></span>
                       Expense Claims
                     </a>
                   </li>
@@ -140,38 +150,65 @@
               </li>
 
               <li>
-                <a class="dropdown-item" routerLink="/projects">Projects</a>
+                <a class="dropdown-item" routerLink="/projects" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#dbeafe;color:#1d4ed8"><i class="bi bi-kanban"></i></span>
+                  Projects
+                </a>
               </li>
 
               <li>
-                <a class="dropdown-item" routerLink="/timesheets">Timesheets</a>
-              </li>
-
-              <li><hr class="dropdown-divider" /></li>
-
-              <li>
-                <a class="dropdown-item" routerLink="/letters">Letters</a>
-              </li>
-              <li>
-                <a class="dropdown-item" routerLink="/documents">Documents</a>
-              </li>
-              <li>
-                <a class="dropdown-item" routerLink="/training">Training</a>
-              </li>
-              <li>
-                <a class="dropdown-item" routerLink="/performance"
-                  >Performance</a
-                >
-              </li>
-              <li><a class="dropdown-item" routerLink="/shifts">Shifts</a></li>
-              <li>
-                <a class="dropdown-item" routerLink="/compliance">Compliance</a>
+                <a class="dropdown-item" routerLink="/timesheets" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-clock-history"></i></span>
+                  Timesheets
+                </a>
               </li>
 
               <li><hr class="dropdown-divider" /></li>
 
               <li>
-                <a class="dropdown-item" routerLink="/settings">Settings</a>
+                <a class="dropdown-item" routerLink="/letters" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#e0e7ff;color:#4338ca"><i class="bi bi-envelope-paper"></i></span>
+                  Letters
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/documents" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#f0fdf4;color:#16a34a"><i class="bi bi-folder2-open"></i></span>
+                  Documents
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/training" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#cffafe;color:#0891b2"><i class="bi bi-mortarboard"></i></span>
+                  Training
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/performance" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#fdf4ff;color:#a21caf"><i class="bi bi-graph-up-arrow"></i></span>
+                  Performance
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/shifts" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#fff7ed;color:#ea580c"><i class="bi bi-calendar3"></i></span>
+                  Shifts
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/compliance" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#f1f5f9;color:#475569"><i class="bi bi-shield-check"></i></span>
+                  Compliance
+                </a>
+              </li>
+
+              <li><hr class="dropdown-divider" /></li>
+
+              <li>
+                <a class="dropdown-item" routerLink="/settings" routerLinkActive="dropdown-active">
+                  <span class="dd-icon" style="background:#f3f4f6;color:#374151"><i class="bi bi-gear"></i></span>
+                  Settings
+                </a>
               </li>
             </ul>
           </li>

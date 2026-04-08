@@ -10,6 +10,7 @@ import { ExpenseClaimsService } from "./expense-claims/expense-claims.service";
 import { SharedModule } from "../../shared/shared.module";
 import { ExpenseCategoryList } from "./expense-category-list/expense-category-list";
 import { ExpenseCategoryCreate } from "./expense-category-create/expense-category-create";
+import { ExpenseCategoryDetailComponent } from "./expense-category-detail/expense-category-detail.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "claims" },
@@ -18,6 +19,8 @@ const routes: Routes = [
   { path: "claims/:claimId", component: ExpenseClaimDetailComponent },
   { path: "expense-category", component: ExpenseCategoryList },
   { path: "expense-categoryCreate", component: ExpenseCategoryCreate },
+  { path: "expense-category/:id", component: ExpenseCategoryDetailComponent },
+  { path: "expense-category/:id/edit", component: ExpenseCategoryCreate },
 ];
 
 @NgModule({

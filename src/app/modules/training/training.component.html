@@ -1,51 +1,219 @@
-<div class="container-fluid py-3">
-  <h4 class="mb-3">Training</h4>
+<div class="card">
+  <div class="card-header d-flex align-items-center">
+    <h3>Training</h3>
 
-  <ul class="nav nav-tabs mb-3">
-    <li class="nav-item">
-      <button type="button" class="nav-link" [class.active]="activeTab === 'programs'" (click)="activeTab = 'programs'">Programs</button>
-    </li>
-    <li class="nav-item">
-      <button type="button" class="nav-link" [class.active]="activeTab === 'courses'" (click)="activeTab = 'courses'">Courses</button>
-    </li>
-    <li class="nav-item">
-      <button type="button" class="nav-link" [class.active]="activeTab === 'enrollments'" (click)="activeTab = 'enrollments'">Enrollments</button>
-    </li>
-  </ul>
+    <!-- Tab switchers -->
+    <button type="button" class="btn btn-light btn-sm"
+      [class.active]="activeTab === 'programs'"
+      (click)="activeTab = 'programs'">
+      <i class="bi bi-collection me-1"></i>Programs
+      <span class="hdr-badge">{{ programs.length }}</span>
+    </button>
+    <button type="button" class="btn btn-light btn-sm"
+      [class.active]="activeTab === 'courses'"
+      (click)="activeTab = 'courses'">
+      <i class="bi bi-book me-1"></i>Courses
+      <span class="hdr-badge">{{ courses.length }}</span>
+    </button>
+    <button type="button" class="btn btn-light btn-sm"
+      [class.active]="activeTab === 'enrollments'"
+      (click)="activeTab = 'enrollments'">
+      <i class="bi bi-people me-1"></i>Enrollments
+      <span class="hdr-badge">{{ enrollments.length }}</span>
+    </button>
 
-  <div *ngIf="loading" class="text-muted">Loading…</div>
-
-  <div *ngIf="activeTab === 'programs'">
-    <div class="d-flex justify-content-between mb-2">
-      <span class="text-muted small">{{ programs.length }} program(s)</span>
-      <button type="button" class="btn btn-primary btn-sm" (click)="createProgram()">New program</button>
-    </div>
-    <ul class="list-group">
-      <li *ngFor="let p of programs" class="list-group-item d-flex justify-content-between align-items-center">
-        <span>{{ p.program_name || p.name }}</span>
-        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="enrollInTraining(p.program_id || p.id)">Enroll</button>
-      </li>
-    </ul>
+    <!-- Action button -->
+    <button *ngIf="activeTab === 'programs'" class="btn btn-primary" (click)="createProgram()">
+      <i class="bi bi-plus-circle me-1"></i>New Program
+    </button>
+    <button *ngIf="activeTab === 'courses'" class="btn btn-primary" (click)="createCourse()">
+      <i class="bi bi-plus-circle me-1"></i>New Course
+    </button>
   </div>
 
-  <div *ngIf="activeTab === 'courses'">
-    <div class="d-flex justify-content-between mb-2">
-      <span class="text-muted small">{{ courses.length }} course(s)</span>
-      <button type="button" class="btn btn-primary btn-sm" (click)="createCourse()">New course</button>
-    </div>
-    <ul class="list-group">
-      <li *ngFor="let c of courses" class="list-group-item d-flex justify-content-between align-items-center">
-        <span>{{ c.course_name || c.name }}</span>
-        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="enrollInTraining(undefined, c.course_id || c.id)">Enroll</button>
-      </li>
-    </ul>
-  </div>
+  <div class="card-body">
 
-  <div *ngIf="activeTab === 'enrollments'">
-    <ul class="list-group">
-      <li *ngFor="let e of enrollments" class="list-group-item">
-        {{ e.program_name || e.course_name || 'Enrollment' }} — <span class="text-muted">{{ e.status }}</span>
-      </li>
-    </ul>
+    <!-- ========== PROGRAMS TAB ========== -->
+    <div *ngIf="activeTab === 'programs'">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Program Name</th>
+              <th>Type</th>
+              <th>Duration</th>
+              <th>Dates</th>
+              <th>Enrolled</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of programs">
+              <td><span class="code-chip">{{ p.program_code }}</span></td>
+              <td>
+                <div class="fw-semibold">{{ p.program_name }}</div>
+                <div class="text-muted small" *ngIf="p.trainer_first_name">
+                  <i class="bi bi-person"></i> {{ p.trainer_first_name }} {{ p.trainer_last_name }}
+                </div>
+              </td>
+              <td>{{ p.program_type || '—' }}</td>
+              <td>{{ p.duration_hours ? (p.duration_hours + 'h') : '—' }}</td>
+              <td class="text-muted small">
+                <span *ngIf="p.start_date">{{ p.start_date | date:'dd MMM yyyy' }}</span>
+                <span *ngIf="!p.start_date">—</span>
+              </td>
+              <td>{{ p.enrolled_count || 0 }}</td>
+              <td>
+                <span class="badge"
+                  [ngClass]="{
+                    'badge-success': p.status === 'Active',
+                    'badge-warning': p.status === 'Draft' || !p.status,
+                    'badge-primary': p.status === 'Completed',
+                    'badge-danger': p.status === 'Cancelled'
+                  }">
+                  {{ p.status || 'Draft' }}
+                </span>
+              </td>
+              <td>
+                <button title="View" (click)="viewProgram(p.program_id)">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button title="Edit" (click)="editProgram(p.program_id)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button title="Delete" (click)="deleteProgram(p)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="programs.length === 0 && !loadingPrograms">
+              <td colspan="8" class="text-center text-muted py-4">
+                No training programs found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========== COURSES TAB ========== -->
+    <div *ngIf="activeTab === 'courses'">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Course Name</th>
+              <th>Program</th>
+              <th>Type</th>
+              <th>Duration</th>
+              <th>Enrolled</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of courses">
+              <td><span class="code-chip">{{ c.course_code }}</span></td>
+              <td class="fw-semibold">{{ c.course_name }}</td>
+              <td class="text-muted">{{ c.program_name || '—' }}</td>
+              <td>
+                <span class="badge badge-info" *ngIf="c.course_type">{{ c.course_type }}</span>
+                <span class="text-muted" *ngIf="!c.course_type">—</span>
+              </td>
+              <td class="text-muted">{{ c.duration_hours ? (c.duration_hours + 'h') : '—' }}</td>
+              <td>{{ c.enrolled_count || 0 }}</td>
+              <td>
+                <button title="View" (click)="viewCourse(c.course_id)">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button title="Edit" (click)="editCourse(c.course_id)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button title="Delete" (click)="deleteCourse(c)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="courses.length === 0 && !loadingCourses">
+              <td colspan="7" class="text-center text-muted py-4">
+                No training courses found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========== ENROLLMENTS TAB ========== -->
+    <div *ngIf="activeTab === 'enrollments'">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Program / Course</th>
+              <th>Enrolled Date</th>
+              <th>Completion</th>
+              <th>Score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let e of enrollments">
+              <td class="fw-semibold">{{ e.first_name }} {{ e.last_name }}</td>
+              <td>{{ e.program_name || e.course_name || '—' }}</td>
+              <td class="text-muted">{{ e.enrolled_date | date:'dd MMM yyyy' }}</td>
+              <td>
+                <div class="progress-wrap">
+                  <div class="progress-bar-mini"
+                    [style.width.%]="e.completion_percentage || 0"></div>
+                </div>
+                <span class="text-muted small">{{ e.completion_percentage || 0 }}%</span>
+              </td>
+              <td class="text-muted">{{ e.score !== null && e.score !== undefined ? e.score : '—' }}</td>
+              <td>
+                <span class="badge"
+                  [ngClass]="{
+                    'badge-success': e.status === 'Completed',
+                    'badge-primary': e.status === 'Enrolled' || e.status === 'In Progress',
+                    'badge-warning': e.status === 'Pending' || !e.status,
+                    'badge-danger': e.status === 'Cancelled'
+                  }">
+                  {{ e.status || 'Pending' }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="enrollments.length === 0 && !loadingEnrollments">
+              <td colspan="6" class="text-center text-muted py-4">
+                No enrollments found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-backdrop" *ngIf="deleteModal.show" (click)="closeDeleteModal()"></div>
+<div class="delete-modal" *ngIf="deleteModal.show">
+  <div class="delete-modal-header">
+    <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+    Confirm Delete
+  </div>
+  <div class="delete-modal-body">
+    Are you sure you want to delete <strong>{{ deleteModal.name }}</strong>? This action cannot be undone.
+  </div>
+  <div class="delete-modal-footer">
+    <button class="btn btn-secondary btn-sm" (click)="closeDeleteModal()">Cancel</button>
+    <button class="btn btn-danger btn-sm" (click)="confirmDelete()" [disabled]="deleteModal.loading">
+      <span *ngIf="deleteModal.loading" class="spinner-border spinner-border-sm me-1"></span>
+      {{ deleteModal.loading ? 'Deleting…' : 'Delete' }}
+    </button>
+  </div>
+</div>
+

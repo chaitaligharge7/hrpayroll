@@ -22,18 +22,17 @@
       <table class="table">
         <thead>
           <tr>
-            <th>#</th>
             <th>Code</th>
             <th>Name</th>
             <th>Description</th>
             <th>Taxable</th>
             <th>Status</th>
             <th>Created At</th>
+            <th class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let cat of categories; let i = index">
-            <td>{{ i + 1 }}</td>
             <td><strong>{{ cat.category_code }}</strong></td>
             <td>{{ cat.category_name }}</td>
             <td class="text-muted">{{ cat.category_description || '—' }}</td>
@@ -44,6 +43,17 @@
               <span class="badge" [ngClass]="cat.is_active == 1 ? 'badge-approved' : 'badge-rejected'">{{ cat.is_active == 1 ? 'Active' : 'Inactive' }}</span>
             </td>
             <td>{{ cat.created_at | date:'dd-MM-yyyy' }}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-action btn-view me-1" (click)="viewCategory(cat)" title="View Details">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-action btn-edit me-1" (click)="editCategory(cat)" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-action btn-delete" (click)="deleteCategory(cat)" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
           </tr>
           <tr *ngIf="!loading && categories.length === 0">
             <td colspan="7" class="text-center py-4 text-muted">No categories found</td>

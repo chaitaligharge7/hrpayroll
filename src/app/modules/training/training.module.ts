@@ -4,30 +4,27 @@ import { RouterModule, Routes } from '@angular/router';
 import { TrainingComponent } from './training.component';
 import { TrainingService } from './training.service';
 import { SharedModule } from '../../shared/shared.module';
-import { RoutePlaceholderComponent } from '../../shared/route-placeholder/route-placeholder.component';
+import { TrainingProgramCreateComponent } from './training-program-create/training-program-create.component';
+import { TrainingCourseCreateComponent } from './training-course-create/training-course-create.component';
 
 const routes: Routes = [
   { path: '', component: TrainingComponent },
-  {
-    path: 'programs/create',
-    component: RoutePlaceholderComponent,
-    data: { title: 'Create training program' }
-  },
-  {
-    path: 'courses/create',
-    component: RoutePlaceholderComponent,
-    data: { title: 'Create course' }
-  },
-  {
-    path: 'enroll',
-    component: RoutePlaceholderComponent,
-    data: { title: 'Enroll in training' }
-  }
+  { path: 'programs/create', component: TrainingProgramCreateComponent },
+  { path: 'programs/edit/:id', component: TrainingProgramCreateComponent },
+  { path: 'courses/create', component: TrainingCourseCreateComponent },
+  { path: 'courses/edit/:id', component: TrainingCourseCreateComponent },
+  { path: 'enroll', component: TrainingComponent }
 ];
 
 @NgModule({
   declarations: [TrainingComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    TrainingProgramCreateComponent,
+    TrainingCourseCreateComponent
+  ],
   providers: [TrainingService]
 })
 export class TrainingModule {}

@@ -1,0 +1,97 @@
+<div class="form-container">
+  <div class="card">
+    <div class="card-header">
+      <h3>{{ isEditMode ? 'Edit Training Course' : 'Create Training Course' }}</h3>
+    </div>
+
+    <div class="card-body">
+
+      <div *ngIf="loadingData" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <ng-container *ngIf="!loadingData">
+
+        <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+          <i class="bi bi-exclamation-circle me-2"></i>{{ errorMessage }}
+        </div>
+
+      <form #courseForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <!-- Section: Basic Info -->
+        <h5>Course Details</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Course Code <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="form.course_code"
+                name="course_code" placeholder="e.g. CRS-001" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Course Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" [(ngModel)]="form.course_name"
+                name="course_name" placeholder="e.g. Advanced Excel" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Training Program</label>
+              <select class="form-control" [(ngModel)]="form.program_id" name="program_id">
+                <option value="">— None / Standalone —</option>
+                <option *ngIf="loadingPrograms" value="" disabled>Loading programs…</option>
+                <option *ngFor="let p of programs" [value]="p.program_id">
+                  {{ p.program_name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Course Type</label>
+              <select class="form-control" [(ngModel)]="form.course_type" name="course_type">
+                <option value="">— Select type —</option>
+                <option *ngFor="let t of courseTypes" [value]="t">{{ t }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Duration (Hours)</label>
+              <input type="number" class="form-control" [(ngModel)]="form.duration_hours"
+                name="duration_hours" placeholder="e.g. 8" min="0">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Course URL</label>
+              <input type="text" class="form-control" [(ngModel)]="form.course_url"
+                name="course_url" placeholder="https://...">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Description</label>
+              <textarea class="form-control" [(ngModel)]="form.course_description"
+                name="course_description" rows="3"
+                placeholder="Brief description of this course…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            {{ loading ? (isEditMode ? 'Saving…' : 'Creating…') : (isEditMode ? 'Save Changes' : 'Create Course') }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+
+      </form>
+
+      </ng-container>
+    </div>
+  </div>
+</div>

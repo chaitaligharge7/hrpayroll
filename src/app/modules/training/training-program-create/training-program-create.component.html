@@ -1,0 +1,144 @@
+<div class="form-container">
+  <div class="card">
+    <div class="card-header">
+      <h3>{{ isEditMode ? 'Edit Training Program' : 'Create Training Program' }}</h3>
+    </div>
+
+    <div class="card-body">
+
+      <div *ngIf="loadingData" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <ng-container *ngIf="!loadingData">
+
+        <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+          <i class="bi bi-exclamation-circle me-2"></i>{{ errorMessage }}
+        </div>
+
+        <form #programForm="ngForm" (ngSubmit)="onSubmit()">
+
+          <!-- Section: Basic Info -->
+          <h5>Basic Information</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Program Code <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="form.program_code"
+                  name="program_code" placeholder="e.g. TRN-001" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Program Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="form.program_name"
+                  name="program_name" placeholder="e.g. Leadership Development" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Program Type</label>
+                <select class="form-control" [(ngModel)]="form.program_type" name="program_type">
+                  <option value="">— Select type —</option>
+                  <option *ngFor="let t of programTypes" [value]="t">{{ t }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Duration (Hours)</label>
+                <input type="number" class="form-control" [(ngModel)]="form.duration_hours"
+                  name="duration_hours" placeholder="e.g. 40" min="0">
+              </div>
+            </div>
+            <div *ngIf="isEditMode" class="col-md-6">
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" [(ngModel)]="form.status" name="status">
+                  <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" [(ngModel)]="form.program_description"
+                  name="program_description" rows="3"
+                  placeholder="Brief description of this training program…"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Schedule -->
+          <h5>Schedule &amp; Location</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" class="form-control" [(ngModel)]="form.start_date" name="start_date">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>End Date</label>
+                <input type="date" class="form-control" [(ngModel)]="form.end_date" name="end_date">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" class="form-control" [(ngModel)]="form.location"
+                  name="location" placeholder="e.g. Conference Room A / Online">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Max Participants</label>
+                <input type="number" class="form-control" [(ngModel)]="form.max_participants"
+                  name="max_participants" placeholder="e.g. 25" min="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Trainer & Cost -->
+          <h5>Trainer &amp; Budget</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>External Trainer Name</label>
+                <input type="text" class="form-control" [(ngModel)]="form.external_trainer"
+                  name="external_trainer" placeholder="e.g. John Smith (optional)">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Cost per Participant</label>
+                <input type="number" class="form-control" [(ngModel)]="form.cost_per_participant"
+                  name="cost_per_participant" placeholder="0.00" min="0" step="0.01">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Total Budget</label>
+                <input type="number" class="form-control" [(ngModel)]="form.total_budget"
+                  name="total_budget" placeholder="0.00" min="0" step="0.01">
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="button-group">
+            <button type="submit" class="btn btn-primary" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              {{ loading ? (isEditMode ? 'Saving…' : 'Creating…') : (isEditMode ? 'Save Changes' : 'Create Program') }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </div>
+
+        </form>
+
+      </ng-container>
+    </div>
+  </div>
+</div>
+

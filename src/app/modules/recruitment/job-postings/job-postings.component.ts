@@ -31,7 +31,6 @@ export class JobPostingsComponent implements OnInit {
     // Load initial data without showing loading indicator
     this.loadJobPostings(true);
 
-    // ✅ Auto refresh when navigating back
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {

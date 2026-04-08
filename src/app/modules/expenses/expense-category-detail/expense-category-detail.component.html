@@ -1,0 +1,108 @@
+<div class="detail-wrap">
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="!loading && errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Detail Card -->
+  <div *ngIf="!loading && category" class="detail-card">
+
+    <!-- Header -->
+    <div class="detail-header">
+      <div class="header-left">
+        <div class="category-icon">
+          <i class="bi bi-receipt"></i>
+        </div>
+        <div>
+          <h4 class="category-name">{{ category.category_name }}</h4>
+          <span class="category-code-badge">{{ category.category_code }}</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-back" (click)="back()">
+          <i class="bi bi-arrow-left me-1"></i> Back
+        </button>
+        <button class="btn btn-edit-main" (click)="editCategory()">
+          <i class="bi bi-pencil me-1"></i> Edit
+        </button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="detail-body">
+
+      <!-- Info Grid -->
+      <div class="info-grid">
+
+        <div class="info-row">
+          <div class="info-item">
+            <span class="info-label">
+              <i class="bi bi-hash text-primary me-1"></i>Category Code
+            </span>
+            <span class="info-value fw-semibold">{{ category.category_code }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">
+              <i class="bi bi-tag text-success me-1"></i>Category Name
+            </span>
+            <span class="info-value">{{ category.category_name }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item">
+            <span class="info-label">
+              <i class="bi bi-percent text-warning me-1"></i>Is Taxable
+            </span>
+            <span class="info-value">
+              <span class="status-badge" [ngClass]="category.is_taxable == 1 ? 'badge-yes' : 'badge-no'">
+                {{ category.is_taxable == 1 ? 'Yes' : 'No' }}
+              </span>
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">
+              <i class="bi bi-toggle-on text-indigo me-1"></i>Status
+            </span>
+            <span class="info-value">
+              <span class="status-badge" [ngClass]="category.is_active == 1 ? 'badge-active' : 'badge-inactive'">
+                {{ category.is_active == 1 ? 'Active' : 'Inactive' }}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="info-row single">
+          <div class="info-item full-width">
+            <span class="info-label">
+              <i class="bi bi-calendar3 text-secondary me-1"></i>Created At
+            </span>
+            <span class="info-value">{{ category.created_at | date:'dd MMM yyyy, hh:mm a' }}</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="info-section" *ngIf="category.category_description">
+          <span class="info-label">
+            <i class="bi bi-text-left text-muted me-1"></i>Description
+          </span>
+          <p class="description-text">{{ category.category_description }}</p>
+        </div>
+        <div class="info-section" *ngIf="!category.category_description">
+          <span class="info-label">
+            <i class="bi bi-text-left text-muted me-1"></i>Description
+          </span>
+          <p class="description-text text-muted fst-italic">No description provided.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

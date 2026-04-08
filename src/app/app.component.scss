@@ -62,105 +62,220 @@
 
 /* LINKS */
 
-.sidebar-link{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px 16px;
-  font-size:14px;
-  font-weight:500;
-  color:#374151 !important;
-  border-radius:10px;
-  margin:4px 10px;
-  transition:all .2s ease;
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #374151 !important;
+  border-radius: 10px;
+  margin: 2px 6px;
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 
-/* ICONS */
+/* ICONS — base pill */
 
-.sidebar-link i{
-  font-size:18px;
-  width:22px;
+.sidebar-link i {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* default fallback */
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+/* ── Colorful icons per nav position ── */
+/* 1 Dashboard — blue */
+.sidebar-menu .nav-item:nth-child(1) .sidebar-link i {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+/* 2 Employees — emerald */
+.sidebar-menu .nav-item:nth-child(2) .sidebar-link i {
+  background: #d1fae5;
+  color: #059669;
+}
+/* 3 Payroll — amber */
+.sidebar-menu .nav-item:nth-child(3) .sidebar-link i {
+  background: #fef3c7;
+  color: #d97706;
+}
+/* 4 Attendance — violet */
+.sidebar-menu .nav-item:nth-child(4) .sidebar-link i {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+/* 5 Leaves — rose */
+.sidebar-menu .nav-item:nth-child(5) .sidebar-link i {
+  background: #ffe4e6;
+  color: #e11d48;
+}
+/* 6 Recruitment — cyan */
+.sidebar-menu .nav-item:nth-child(6) .sidebar-link i {
+  background: #cffafe;
+  color: #0891b2;
+}
+/* 7 Reports — indigo */
+.sidebar-menu .nav-item:nth-child(7) .sidebar-link i {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+/* 8 More — slate */
+.sidebar-menu .nav-item:nth-child(8) .sidebar-link i {
+  background: #f1f5f9;
+  color: #475569;
 }
 
 
 /* TEXT */
 
-.menu-text{
-  flex:1;
-  font-size: large;
-  font-weight: bold;
-  
+.menu-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: 0.01em;
 }
 
 
 /* HOVER */
 
-.sidebar-link:hover{
-  background:#eef2ff;
-  color:#2563eb !important;
+.sidebar-link:hover {
+  background: #f5f7ff;
+  color: #1d4ed8 !important;
+
+  i {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  }
+
+  .menu-text {
+    color: #1d4ed8;
+  }
 }
 
 
 /* ACTIVE MENU */
 
-.sidebar-link.active{
-  background:linear-gradient(135deg,#2563eb,#3b82f6);
-  color:#ffffff !important;
-  box-shadow:0 4px 12px rgba(37,99,235,0.25);
+.sidebar-link.active {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+
+  i {
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff !important;
+    transform: scale(1);
+    box-shadow: none;
+  }
+
+  .menu-text {
+    color: #ffffff;
+    font-weight: 600;
+  }
+}
+
+/* Active sidebar-user icon */
+.sidebar-user .sidebar-link i {
+  background: #e0e7ff;
+  color: #4338ca;
 }
 
 
 /* DROPDOWN */
 
-.dropdown-menu{
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 6px;
-  margin-left: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-  min-width: 200px;
+/* Main More dropdown panel */
+.more-dropdown {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 8px;
+  margin-left: 6px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.13), 0 4px 12px rgba(0, 0, 0, 0.06);
+  min-width: 230px;
+  background: #ffffff;
+  animation: ddFadeIn 0.15s ease;
 }
 
-.dropdown-item{
+@keyframes ddFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Keep legacy .dropdown-menu for user section */
+.dropdown-menu {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  background: #ffffff;
+}
+
+/* All dropdown rows */
+.dropdown-item {
   font-size: 13.5px;
   font-weight: 600;
-  color: #374151;
-  padding: 9px 14px;
-  border-radius: 7px;
+  color: #1e293b;
+  padding: 7px 10px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.18s ease;
-  letter-spacing: 0.01em;
+  gap: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  background: transparent;
+
+  &::before { display: none; }   /* kill old dot bullet */
+
+  &:hover {
+    background: #f0f4ff;
+    color: #1d4ed8;
+    .dd-icon { transform: scale(1.1); }
+  }
+
+  &.dropdown-active {
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
 }
 
-.dropdown-item::before {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #d1d5db;
+/* Colorful icon pill inside each dropdown row */
+.dd-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
   flex-shrink: 0;
-  transition: background 0.18s;
+  transition: transform 0.15s ease;
 }
 
-.dropdown-item:hover{
-  background: #eef2ff;
-  color: #2563eb;
-}
-
-.dropdown-item:hover::before {
-  background: #2563eb;
+/* Sub-arrow chevron */
+.sub-arrow {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-left: auto;
 }
 
 .dropdown-divider {
-  border-color: #f0f0f0;
-  margin: 4px 6px;
+  border-color: #f1f5f9;
+  margin: 6px 8px;
 }
 
-/* Submenu toggle arrow */
+/* Submenu toggle — hide default Bootstrap dot */
 .dropdown-submenu > .dropdown-item.dropdown-toggle::before {
   display: none;
 }
@@ -225,13 +340,21 @@
   position: relative;
 }
 
-.dropdown-submenu .dropdown-menu {
+.dropdown-submenu .sub-menu {
+  position: absolute;
   top: 0;
   left: 100%;
-  margin-left: 0.1rem;
+  margin-left: 4px;
   display: none;
+  border-radius: 14px;
+  padding: 8px;
+  min-width: 210px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.13);
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  animation: ddFadeIn 0.15s ease;
 }
 
-.dropdown-submenu:hover .dropdown-menu {
+.dropdown-submenu:hover .sub-menu {
   display: block;
 }

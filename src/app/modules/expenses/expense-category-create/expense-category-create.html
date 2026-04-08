@@ -1,7 +1,7 @@
 <div class="category-form-wrap">
   <div class="form-card">
     <div class="form-card-header">
-      <h4>Create Expense Category</h4>
+      <h4>{{ isEditMode ? 'Edit Expense Category' : 'Create Expense Category' }}</h4>
     </div>
 
     <div class="form-card-body">
@@ -52,6 +52,15 @@
             </select>
           </div>
 
+          <!-- Status (edit mode only) -->
+          <div class="col-md-6 mb-3" *ngIf="isEditMode">
+            <label class="form-label">Status</label>
+            <select class="form-control" formControlName="is_active">
+              <option [value]="1">Active</option>
+              <option [value]="0">Inactive</option>
+            </select>
+          </div>
+
         </div>
 
         <!-- Action Buttons -->
@@ -60,7 +69,9 @@
             Cancel
           </button>
           <button type="submit" class="btn btn-submit" [disabled]="loading">
-            {{ loading ? 'Saving...' : 'Create Category' }}
+            <span *ngIf="loading"><i class="bi bi-hourglass-split me-1"></i>Saving...</span>
+            <span *ngIf="!loading && !isEditMode"><i class="bi bi-plus-circle me-1"></i>Create Category</span>
+            <span *ngIf="!loading && isEditMode"><i class="bi bi-check-circle me-1"></i>Update Category</span>
           </button>
         </div>
 

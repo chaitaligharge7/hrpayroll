@@ -28,17 +28,40 @@ export class TrainingService {
     return this.apiService.get(`${this.base}/programs/list`, this.query(params));
   }
 
+  getProgram(id: number): Observable<any> {
+    return this.apiService.get(`${this.base}/programs/get?id=${id}`);
+  }
+
   createProgram(data: unknown): Observable<any> {
     return this.apiService.post(`${this.base}/programs/create`, data);
   }
 
-  /** Courses list is a GET endpoint in PHP */
+  updateProgram(id: number, data: unknown): Observable<any> {
+    return this.apiService.put(`${this.base}/programs/update?id=${id}`, data);
+  }
+
+  deleteProgram(id: number): Observable<any> {
+    return this.apiService.delete(`${this.base}/programs/delete?id=${id}`);
+  }
+
   getCourses(params?: Record<string, unknown>): Observable<any> {
     return this.apiService.get(`${this.base}/courses/list`, this.query(params));
   }
 
+  getCourse(id: number): Observable<any> {
+    return this.apiService.get(`${this.base}/courses/get?id=${id}`);
+  }
+
   createCourse(data: unknown): Observable<any> {
     return this.apiService.post(`${this.base}/courses/create`, data);
+  }
+
+  updateCourse(id: number, data: unknown): Observable<any> {
+    return this.apiService.put(`${this.base}/courses/update?id=${id}`, data);
+  }
+
+  deleteCourse(id: number): Observable<any> {
+    return this.apiService.delete(`${this.base}/courses/delete?id=${id}`);
   }
 
   enroll(data: unknown): Observable<any> {
