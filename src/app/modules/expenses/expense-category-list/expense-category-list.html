@@ -7,7 +7,21 @@
   </div>
 
   <div class="card-body">
-    <!-- Error -->
+    <!-- Search -->
+    <div class="search-bar mb-3">
+      <div class="search-input-wrap">
+        <i class="bi bi-search search-icon"></i>
+        <input
+          type="text"
+          class="form-control search-input"
+          [(ngModel)]="searchTerm"
+          placeholder="Search by category name or code..."
+        />
+        <button *ngIf="searchTerm" class="search-clear" (click)="searchTerm = ''" title="Clear">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+    </div>
     <div *ngIf="!loading && errorMessage" class="alert alert-danger">
       {{ errorMessage }}
     </div>
@@ -32,7 +46,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let cat of categories; let i = index">
+          <tr *ngFor="let cat of filteredCategories; let i = index">
             <td><strong>{{ cat.category_code }}</strong></td>
             <td>{{ cat.category_name }}</td>
             <td class="text-muted">{{ cat.category_description || '—' }}</td>
@@ -55,8 +69,11 @@
               </button>
             </td>
           </tr>
-          <tr *ngIf="!loading && categories.length === 0">
-            <td colspan="7" class="text-center py-4 text-muted">No categories found</td>
+          <tr *ngIf="!loading && filteredCategories.length === 0">
+            <td colspan="7" class="text-center py-4 text-muted">
+              <span *ngIf="searchTerm">No categories match "{{ searchTerm }}"</span>
+              <span *ngIf="!searchTerm">No categories found</span>
+            </td>
           </tr>
         </tbody>
       </table>

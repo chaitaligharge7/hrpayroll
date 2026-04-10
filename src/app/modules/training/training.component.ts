@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TrainingService } from './training.service';
 
 @Component({
@@ -17,20 +17,73 @@ export class TrainingComponent implements OnInit {
   loadingEnrollments = false;
   activeTab = 'programs';
 
-  deleteModal = {
-    show: false,
-    type: '' as 'program' | 'course' | '',
-    id: 0,
-    name: '',
-    loading: false
-  };
+  // Program filters
+  programSearch = '';
+  programStatusFilter = '';
+  programStatusOptions = ['Draft', 'Scheduled', 'Ongoing', 'Completed', 'Cancelled'];
+
+  // Course filters
+  courseSearch = '';
+  courseTypeFilter = '';
+  courseTypeOptions = ['Mandatory', 'Optional', 'Certification', 'Skill Development'];
+
+  // Enrollment filters
+  enrollmentSearch = '';
+  enrollmentStatusFilter = '';
+  enrollmentStatusOptions = ['Enrolled', 'In Progress', 'Completed', 'Dropped', 'Failed'];
+
+  get filteredEnrollments(): any[] {
+    const search = this.enrollmentSearch.trim().toLowerCase();
+    return this.enrollments.filter(e => {
+      const matchSearch = !search ||
+        (e.first_name + ' ' + e.last_name).toLowerCase().includes(search) ||
+        (e.employee_code || '').toLowerCase().includes(search) ||
+        (e.program_name || '').toLowerCase().includes(search) ||
+        (e.course_name || '').toLowerCase().includes(search);
+      const matchStatus = !this.enrollmentStatusFilter || e.status === this.enrollmentStatusFilter;
+      return matchSearch && matchStatus;
+    });
+  }
+
+  get filteredPrograms(): any[] {
+    const search = this.programSearch.trim().toLowerCase();
+    return this.programs.filter(p => {
+      const matchSearch = !search ||
+        (p.program_name || '').toLowerCase().includes(search) ||
+        (p.program_code || '').toLowerCase().includes(search);
+      const matchStatus = !this.programStatusFilter || p.status === this.programStatusFilter;
+      return matchSearch && matchStatus;
+    });
+  }
+
+  get filteredCourses(): any[] {
+    const search = this.courseSearch.trim().toLowerCase();
+    return this.courses.filter(c => {
+      const matchSearch = !search ||
+        (c.course_name || '').toLowerCase().includes(search) ||
+        (c.course_code || '').toLowerCase().includes(search);
+      const matchType = !this.courseTypeFilter || c.course_type === this.courseTypeFilter;
+      return matchSearch && matchType;
+    });
+  }
 
   constructor(
     private trainingService: TrainingService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    // Support returning from enrollment form via ?tab=enrollments
+    const tabParam = this.route.snapshot.queryParamMap.get('tab');
+    const pathParam = this.route.snapshot.routeConfig?.path ?? '';
+    if (tabParam) {
+      this.activeTab = tabParam;
+    } else {
+      this.activeTab = pathParam === 'enroll' ? 'enrollments' : 'programs';
+    }
+
     this.loadPrograms();
     this.loadCourses();
     this.loadEnrollments();
@@ -44,10 +97,12 @@ export class TrainingComponent implements OnInit {
           this.programs = response.data || [];
         }
         this.loadingPrograms = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading programs:', error);
         this.loadingPrograms = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -60,10 +115,12 @@ export class TrainingComponent implements OnInit {
           this.courses = response.data || [];
         }
         this.loadingCourses = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading courses:', error);
         this.loadingCourses = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -76,12 +133,34 @@ export class TrainingComponent implements OnInit {
           this.enrollments = response.data || [];
         }
         this.loadingEnrollments = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading enrollments:', error);
         this.loadingEnrollments = false;
       }
     });
+  }
+
+  createEnrollment(): void {
+    this.router.navigate(['/training/enrollments/create']);
+  }
+
+  viewEnrollment(id: number): void {
+    this.router.navigate(['/training/enrollments/view', id]);
+  }
+
+  editEnrollment(id: number): void {
+    this.router.navigate(['/training/enrollments/edit', id]);
+  }
+
+  deleteEnrollment(enrollment: any): void {
+    if (confirm(`Remove enrollment for ${enrollment.first_name} ${enrollment.last_name}?`)) {
+      this.enrollments = this.enrollments.filter(e => e.enrollment_id !== enrollment.enrollment_id);
+      this.trainingService.deleteEnrollment(enrollment.enrollment_id).subscribe({
+        error: () => { this.loadEnrollments(); }
+      });
+    }
   }
 
   createProgram(): void {
@@ -101,7 +180,15 @@ export class TrainingComponent implements OnInit {
   }
 
   deleteProgram(program: any): void {
-    this.deleteModal = { show: true, type: 'program', id: program.program_id, name: program.program_name, loading: false };
+    if (confirm(`Are you sure you want to delete Training Program "${program.program_name}"?`)) {
+      this.programs = this.programs.filter(p => p.program_id !== program.program_id);
+      this.trainingService.deleteProgram(program.program_id).subscribe({
+        error: () => {
+          // restore on failure
+          this.loadPrograms();
+        }
+      });
+    }
   }
 
   viewCourse(id: number): void {
@@ -113,38 +200,19 @@ export class TrainingComponent implements OnInit {
   }
 
   deleteCourse(course: any): void {
-    this.deleteModal = { show: true, type: 'course', id: course.course_id, name: course.course_name, loading: false };
-  }
-
-  closeDeleteModal(): void {
-    if (!this.deleteModal.loading) {
-      this.deleteModal = { show: false, type: '', id: 0, name: '', loading: false };
+    if (confirm(`Are you sure you want to delete Training Course "${course.course_name}"?`)) {
+      this.courses = this.courses.filter(c => c.course_id !== course.course_id);
+      this.trainingService.deleteCourse(course.course_id).subscribe({
+        error: () => {
+          // restore on failure
+          this.loadCourses();
+        }
+      });
     }
   }
 
-  confirmDelete(): void {
-    this.deleteModal.loading = true;
-    const obs = this.deleteModal.type === 'program'
-      ? this.trainingService.deleteProgram(this.deleteModal.id)
-      : this.trainingService.deleteCourse(this.deleteModal.id);
-
-    obs.subscribe({
-      next: () => {
-        if (this.deleteModal.type === 'program') {
-          this.programs = this.programs.filter(p => p.program_id !== this.deleteModal.id);
-        } else {
-          this.courses = this.courses.filter(c => c.course_id !== this.deleteModal.id);
-        }
-        this.closeDeleteModal();
-      },
-      error: () => {
-        this.deleteModal.loading = false;
-      }
-    });
-  }
-
-  enrollInTraining(programId?: number, courseId?: number): void {
-    this.router.navigate(['/training/enroll'], { queryParams: { program_id: programId, course_id: courseId } });
+  enrollInTraining(_programId?: number, _courseId?: number): void {
+    this.router.navigate(['/training/enrollments/create']);
   }
 }
 

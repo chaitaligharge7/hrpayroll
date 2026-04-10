@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssetsService } from './assets.service';
 
@@ -22,7 +22,8 @@ export class AssetsComponent implements OnInit {
 
   constructor(
     private assetsService: AssetsService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +45,7 @@ export class AssetsComponent implements OnInit {
           this.total = response.data.pagination?.total || 0;
         }
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading assets:', error);
@@ -91,6 +93,17 @@ export class AssetsComponent implements OnInit {
 
   getTotalPages(): number {
     return Math.ceil(this.total / this.limit);
+  }
+
+  getStatusClass(status: string): string {
+    if (!status) return 'badge-secondary';
+    switch (status.toLowerCase()) {
+      case 'available':         return 'badge-approved';
+      case 'issued':            return 'badge-info';
+      case 'under maintenance': return 'badge-warning';
+      case 'retired':           return 'badge-rejected';
+      default:                  return 'badge-secondary';
+    }
   }
 }
 

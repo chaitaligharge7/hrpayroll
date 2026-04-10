@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -25,22 +25,23 @@ export class TrainingProgramCreateComponent implements OnInit {
     location: '',
     cost_per_participant: '',
     total_budget: '',
-    status: ''
+    status: 'Draft'
   };
 
   isEditMode = false;
   programId: number | null = null;
   loading = false;
-  loadingData = false;
   errorMessage = '';
+  successMessage = '';
 
-  programTypes = ['Classroom', 'Online', 'Blended', 'On-the-Job', 'Workshop', 'Seminar'];
-  statusOptions = ['Draft', 'Active', 'Completed', 'Cancelled'];
+  programTypes = ['Online', 'Classroom', 'Workshop', 'Seminar', 'E-Learning', 'Blended'];
+  statusOptions = ['Draft', 'Scheduled', 'Ongoing', 'Completed', 'Cancelled'];
 
   constructor(
     private trainingService: TrainingService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -53,10 +54,8 @@ export class TrainingProgramCreateComponent implements OnInit {
   }
 
   loadProgram(): void {
-    this.loadingData = true;
     this.trainingService.getProgram(this.programId!).subscribe({
       next: (res: any) => {
-        this.loadingData = false;
         if (res.success && res.data) {
           const p = res.data;
           this.form = {
@@ -74,12 +73,12 @@ export class TrainingProgramCreateComponent implements OnInit {
             total_budget: p.total_budget || '',
             status: p.status || 'Draft'
           };
+          this.cdr.detectChanges();
         } else {
           this.errorMessage = 'Program not found.';
         }
       },
       error: () => {
-        this.loadingData = false;
         this.errorMessage = 'Failed to load program.';
       }
     });
@@ -102,24 +101,24 @@ export class TrainingProgramCreateComponent implements OnInit {
         next: (res: any) => {
           this.loading = false;
           if (res.success) {
-            this.router.navigate(['/training']);
+            this.successMessage = 'Training program updated successfully!';
+            this.errorMessage = '';
+            setTimeout(() => {
+              this.router.navigate(['/training']);
+            }, 2000);
           } else {
             this.errorMessage = res.message || 'Failed to update program.';
+            this.successMessage = '';
           }
         },
         error: (err: any) => {
           this.loading = false;
           this.errorMessage = err?.error?.message || 'An error occurred. Please try again.';
+          this.successMessage = '';
         }
       });
     } else {
-      const createPayload: any = {};
-      Object.keys(payload).forEach(key => {
-        if (payload[key] !== '' && payload[key] !== null) {
-          createPayload[key] = payload[key];
-        }
-      });
-      this.trainingService.createProgram(createPayload).subscribe({
+      this.trainingService.createProgram(payload).subscribe({
         next: (res: any) => {
           this.loading = false;
           if (res.success) {

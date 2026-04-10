@@ -37,7 +37,7 @@ export class ExpenseClaimFormComponent implements OnInit {
     this.expenseClaimsService.getCategories().subscribe({
       next: (res) => {
         if (res.success && res.data) {
-          this.categories = Array.isArray(res.data) ? res.data : [];
+          this.categories = res.data.categories ?? res.data.expense_categories ?? (Array.isArray(res.data) ? res.data : []);
         }
       },
       error: () => {}
@@ -45,7 +45,7 @@ export class ExpenseClaimFormComponent implements OnInit {
     this.projectsService.getProjects({}).subscribe({
       next: (res) => {
         if (res.success && res.data) {
-          this.projects = Array.isArray(res.data) ? res.data : [];
+          this.projects = res.data.projects ?? (Array.isArray(res.data) ? res.data : []);
         }
         this.loading = false;
       },
@@ -112,9 +112,7 @@ export class ExpenseClaimFormComponent implements OnInit {
     this.expenseClaimsService.createExpenseClaim(payload).subscribe({
       next: (res) => {
         this.saving = false;
-        if (res.success && res.data?.expense_id) {
-          this.router.navigate(['/expenses/claims', res.data.expense_id]);
-        } else if (res.success) {
+        if (res.success) {
           this.router.navigate(['/expenses/claims']);
         } else {
           this.error = res.message || 'Could not submit claim';

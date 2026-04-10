@@ -1,0 +1,94 @@
+<div class="form-container">
+  <div class="card">
+    <div class="card-header">
+      <h3>{{ isEditMode ? 'Edit Enrollment' : 'Enroll Employee' }}</h3>
+    </div>
+
+    <div class="card-body">
+
+      <div *ngIf="successMessage" class="alert alert-success mb-3">
+        <i class="bi bi-check-circle me-2"></i>{{ successMessage }}
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+        <i class="bi bi-exclamation-circle me-2"></i>{{ errorMessage }}
+      </div>
+
+      <form #enrollForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <!-- Section: Employee -->
+        <h5>Employee</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Employee <span class="text-danger">*</span></label>
+              <select class="form-control" [(ngModel)]="form.employee_id" name="employee_id" required [disabled]="isEditMode">
+                <option value="">— Select Employee —</option>
+                <option *ngFor="let emp of employees" [value]="emp.employee_id">
+                  {{ emp.first_name }} {{ emp.last_name }}
+                  <ng-container *ngIf="emp.employee_code"> ({{ emp.employee_code }})</ng-container>
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Training -->
+        <h5>Training Details</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Course</label>
+              <select class="form-control" [(ngModel)]="form.course_id" name="course_id" (change)="onCourseChange()">
+                <option value="">— Select Course —</option>
+                <option *ngFor="let c of courses" [value]="c.course_id">{{ c.course_name }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Program</label>
+              <select class="form-control" [(ngModel)]="form.program_id" name="program_id">
+                <option value="">— Select Program —</option>
+                <option *ngFor="let p of programs" [value]="p.program_id">{{ p.program_name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Schedule & Status -->
+        <h5>Schedule &amp; Status</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Enroll Date</label>
+              <input type="date" class="form-control" [(ngModel)]="form.enrolled_date" name="enrolled_date">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Status</label>
+              <select class="form-control" [(ngModel)]="form.status" name="status">
+                <option value="Enrolled">Active (Enrolled)</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            {{ loading ? (isEditMode ? 'Saving…' : 'Enrolling…') : (isEditMode ? 'Save Changes' : 'Enroll Employee') }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

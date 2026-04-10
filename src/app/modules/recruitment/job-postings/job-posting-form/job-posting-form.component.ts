@@ -62,13 +62,17 @@ ngOnInit(): void {
     this.editJobId = +jobId;
   }
 
-  this.loadStatuses(); // ✅ ADD THIS
+  this.loadStatuses();
+  this.loadAllDesignations();
 
   this.form.get('department_id')?.valueChanges.subscribe((deptId) => {
     if (this.skipDepartmentChange) return;
     this.form.patchValue({ designation_id: null });
-    this.designations = [];
-    if (deptId) this.loadDesignations(deptId);
+    if (deptId) {
+      this.loadDesignations(deptId);
+    } else {
+      this.loadAllDesignations();
+    }
   });
 
   this.loadDepartments();
@@ -92,7 +96,8 @@ loadStatuses(): void {
     this.departmentsService.getDepartments().subscribe({
       next: (res) => {
         if (res.success && res.data) {
-          this.departments = Array.isArray(res.data) ? res.data : [];
+          this.departments = res.data.departments ?? (Array.isArray(res.data) ? res.data : []);
+          this.cdr.detectChanges();
         }
         this.loadingMaster = false;
         if (this.isEditMode && this.editJobId) {
@@ -154,11 +159,24 @@ loadStatuses(): void {
     });
   }
 
+  loadAllDesignations(): void {
+    this.api.get<any>('designations/list').subscribe({
+      next: (res: any) => {
+        if (res.success && res.data) {
+          this.designations = res.data.designations ?? (Array.isArray(res.data) ? res.data : []);
+          this.cdr.detectChanges();
+        }
+      },
+      error: () => { this.designations = []; }
+    });
+  }
+
   loadDesignations(departmentId: number, selectDesignationId?: number | null): void {
     this.api.get<any[]>('designations/list', { department_id: departmentId }).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         if (res.success && res.data) {
-          this.designations = Array.isArray(res.data) ? res.data : [];
+          this.designations = res.data.designations ?? (Array.isArray(res.data) ? res.data : []);
+          this.cdr.detectChanges();
         }
         if (selectDesignationId != null) {
           this.form.patchValue({ designation_id: selectDesignationId }, { emitEvent: false });

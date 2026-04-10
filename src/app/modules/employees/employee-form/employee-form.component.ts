@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { EmployeeService } from "../employee.service";
@@ -26,7 +26,8 @@ export class EmployeeFormComponent implements OnInit {
     private employeeService: EmployeeService,
     private api: ApiService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     this.employeeForm = this.createForm();
   }
@@ -89,8 +90,8 @@ export class EmployeeFormComponent implements OnInit {
     this.api.get("designations/list").subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.designations = Array.isArray(response.data) ? response.data : [];
-
+          this.designations = response.data?.designations ?? (Array.isArray(response.data) ? response.data : []);
+          this.cdr.detectChanges();
         }
       },
     });
@@ -210,12 +211,21 @@ export class EmployeeFormComponent implements OnInit {
         .subscribe({
           next: (response: any) => {
             if (response.success) {
-              this.designations = Array.isArray(response.data)
-                ? response.data
-                : [];
+              this.designations = response.data?.designations ?? (Array.isArray(response.data) ? response.data : []);
+              this.cdr.detectChanges();
             }
           },
         });
+    } else {
+      // Reset to all designations when no department selected
+      this.api.get("designations/list").subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.designations = response.data?.designations ?? (Array.isArray(response.data) ? response.data : []);
+            this.cdr.detectChanges();
+          }
+        },
+      });
     }
   }
 

@@ -99,6 +99,82 @@
   padding: 0;
 }
 
+/* ---- Filter row ---- */
+.filter-row {
+  // padding: 14px 16px 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  .form-control,
+  .form-select {
+    height: 36px;
+    font-size: 0.875rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 7px;
+    color: #374151;
+    background: #fff;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+  }
+}
+
+/* ---- Filter dropdown — compact fixed width ---- */
+.filter-select {
+  width: 155px;
+  padding-right: 2rem !important;
+}
+
+/* ---- Search input with inline clear icon ---- */
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 11px;
+    color: #9ca3af;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .search-input {
+    padding-left: 32px !important;
+    padding-right: 30px !important;
+    width: 100%;
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 7px;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 15px;
+    line-height: 1;
+    z-index: 1;
+
+    &:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+  }
+}
+
 /* ---- Table ---- */
 .table-responsive {
   overflow-x: auto;
@@ -139,11 +215,22 @@
 }
 
 /* ---- Utility ---- */
-.fw-semibold { font-weight: 600; }
-.text-muted   { color: #6b7280; }
-.small        { font-size: 0.8rem; }
-.py-4         { padding-top: 1.5rem; padding-bottom: 1.5rem; }
-.text-center  { text-align: center; }
+.fw-semibold {
+  font-weight: 600;
+}
+.text-muted {
+  color: #6b7280;
+}
+.small {
+  font-size: 0.8rem;
+}
+.py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.text-center {
+  text-align: center;
+}
 
 /* ---- Code chip ---- */
 .code-chip {
@@ -322,5 +409,39 @@ td button:nth-child(3):hover {
   transition: background 0.2s;
 }
 
-.btn-danger:hover:not(:disabled) { background: #b91c1c; }
-.btn-danger:disabled { opacity: 0.65; cursor: not-allowed; }
+.btn-danger:hover:not(:disabled) {
+  background: #b91c1c;
+}
+.btn-danger:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.delete-success-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #16a34a;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  animation: slideInToast 0.3s ease;
+}
+
+@keyframes slideInToast {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

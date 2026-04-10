@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ExpenseService } from "../expense.service";
 import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 
 @Component({
   selector: "app-expense-category-list",
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: "./expense-category-list.html",
   styleUrl: "./expense-category-list.scss",
 })
@@ -13,6 +14,17 @@ export class ExpenseCategoryList implements OnInit {
   categories: any[] = [];
   loading: boolean = false;
   errorMessage: string = "";
+  searchTerm: string = "";
+
+  get filteredCategories(): any[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) return this.categories;
+    return this.categories.filter(
+      (cat) =>
+        cat.category_name?.toLowerCase().includes(term) ||
+        cat.category_code?.toLowerCase().includes(term)
+    );
+  }
 
   constructor(
     private expenseService: ExpenseService,

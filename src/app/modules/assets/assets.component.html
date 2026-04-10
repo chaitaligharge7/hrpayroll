@@ -1,72 +1,101 @@
-<div class="assets-container">
-  <div class="page-header">
-    <h2>Assets</h2>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3>Assets</h3>
     <button class="btn btn-primary" (click)="createAsset()">
-      <i class="fas fa-plus"></i> Add Asset
+      <i class="bi bi-plus-circle"></i> Add Asset
     </button>
   </div>
 
-  <div class="filters-section">
-    <div class="filter-group">
-      <label>Status:</label>
-      <select [(ngModel)]="filters.status" (change)="onFilterChange()">
-        <option value="">All</option>
-        <option value="Available">Available</option>
-        <option value="Issued">Issued</option>
-        <option value="Under Maintenance">Under Maintenance</option>
-        <option value="Retired">Retired</option>
-      </select>
-    </div>
-  </div>
+  <div class="card-body">
 
-  <div class="assets-grid" *ngIf="!loading">
-    <div class="asset-card" *ngFor="let asset of assets">
-      <div class="asset-header">
-        <h3>{{ asset.asset_name }}</h3>
-        <span class="badge badge-{{ asset.status.toLowerCase().replace(' ', '-') }}">
-          {{ asset.status }}
-        </span>
-      </div>
-      <div class="asset-details">
-        <p><strong>Code:</strong> {{ asset.asset_code }}</p>
-        <p><strong>Category:</strong> {{ asset.category_name || 'N/A' }}</p>
-        <p><strong>Serial:</strong> {{ asset.serial_number || 'N/A' }}</p>
-        <p *ngIf="asset.assigned_to"><strong>Assigned to:</strong> {{ asset.assigned_first_name }} {{ asset.assigned_last_name }}</p>
-        <p><strong>Location:</strong> {{ asset.location || 'N/A' }}</p>
-      </div>
-      <div class="asset-actions">
-        <button class="btn btn-sm btn-info" (click)="viewAsset(asset.asset_id)">
-          View
-        </button>
-        <button class="btn btn-sm btn-success" 
-                *ngIf="asset.status === 'Available'" 
-                (click)="issueAsset(asset.asset_id)">
-          Issue
-        </button>
-        <button class="btn btn-sm btn-warning" 
-                *ngIf="asset.status === 'Issued'" 
-                (click)="returnAsset(asset.asset_id)">
-          Return
-        </button>
+    <!-- Filters -->
+    <div class="assets-filters mb-3">
+      <div class="filter-wrap">
+        <label>Status</label>
+        <select class="form-select" [(ngModel)]="filters.status" (change)="onFilterChange()">
+          <option value="">All Statuses</option>
+          <option value="Available">Available</option>
+          <option value="Issued">Issued</option>
+          <option value="Under Maintenance">Under Maintenance</option>
+          <option value="Retired">Retired</option>
+        </select>
       </div>
     </div>
-    <div class="no-assets" *ngIf="assets.length === 0">
-      <p>No assets found</p>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner"></div>
     </div>
-  </div>
 
-  <div class="pagination" *ngIf="total > limit">
-    <button class="btn btn-sm" [disabled]="page === 1" (click)="onPageChange(page - 1)">
-      Previous
-    </button>
-    <span>Page {{ page }} of {{ getTotalPages() }}</span>
-    <button class="btn btn-sm" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
-      Next
-    </button>
-  </div>
+    <!-- Table -->
+    <div class="table-responsive" [hidden]="loading">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Asset Name</th>
+            <th>Category</th>
+            <th>Serial No.</th>
+            <th>Location</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let asset of assets">
+            <td><strong>{{ asset.asset_code }}</strong></td>
+            <td>{{ asset.asset_name }}</td>
+            <td>{{ asset.category_name || '—' }}</td>
+            <td class="text-muted">{{ asset.serial_number || '—' }}</td>
+            <td class="text-muted">{{ asset.location || '—' }}</td>
+            <td>
+              <span *ngIf="asset.assigned_to; else noAssign">
+                {{ asset.assigned_first_name }} {{ asset.assigned_last_name }}
+              </span>
+              <ng-template #noAssign><span class="text-muted">—</span></ng-template>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getStatusClass(asset.status)">
+                {{ asset.status || '—' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-action btn-view me-1" (click)="viewAsset(asset.asset_id)" title="View">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-action btn-edit me-1"
+                      *ngIf="asset.status === 'Available'"
+                      (click)="issueAsset(asset.asset_id)" title="Issue">
+                <i class="bi bi-box-arrow-up-right"></i>
+              </button>
+              <button class="btn btn-sm btn-action btn-delete"
+                      *ngIf="asset.status === 'Issued'"
+                      (click)="returnAsset(asset.asset_id)" title="Return">
+                <i class="bi bi-box-arrow-in-down-left"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="!loading && assets.length === 0">
+            <td colspan="8" class="text-center py-4 text-muted">No assets found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="loading-spinner" *ngIf="loading">
-    <i class="fas fa-spinner fa-spin"></i> Loading...
+    <!-- Pagination -->
+    <div class="assets-pagination" *ngIf="total > limit && !loading">
+      <span class="pagination-info">Page {{ page }} of {{ getTotalPages() }}</span>
+      <div class="pagination-btns">
+        <button class="btn btn-sm btn-outline" [disabled]="page === 1" (click)="onPageChange(page - 1)">
+          <i class="bi bi-chevron-left"></i> Previous
+        </button>
+        <button class="btn btn-sm btn-outline" [disabled]="page >= getTotalPages()" (click)="onPageChange(page + 1)">
+          Next <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 

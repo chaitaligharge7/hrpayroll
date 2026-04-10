@@ -6,6 +6,12 @@ import { ApiService, ApiResponse } from '../../core/services/api.service';
   providedIn: 'root'
 })
 export class AttendanceService {
+ getRegularization(): Observable<ApiResponse<any>> {
+  return this.api.get<any>('attendance/get_regularization.php');
+}
+ requestRegularize(data: any): Observable<ApiResponse<any>> {
+  return this.api.post<any>('attendance/regularize.php', data);
+}
   constructor(private api: ApiService) {}
 
   checkIn(location?: string): Observable<ApiResponse<any>> {
@@ -26,17 +32,23 @@ export class AttendanceService {
     return this.api.get<any>('attendance/list', params);
   }
 
-  // ✅ NEW: Regularization request
   regularize(data: any) {
-    return this.api.post<any>('attendance/regularize', data);
-  }
+  return this.api.post<any>('attendance/regularize.php', data);
+}
+approveRegularization(
+  id: number,
+  action: 'approve' | 'reject',
+  rejection_reason?: string
+) {
+  return this.api.post<any>(
+    `attendance/regularize/approve.php?id=${id}`,
+    {
+      action,
+      rejection_reason
+    }
+  );
+}
 
-  // ✅ NEW: Approve request (admin side)
-  approveRegularization(id: number) {
-    return this.api.post<any>('attendance/approve', { id });
-  }
-
-  // ✅ OPTIONAL: rules fetch karayche asel tar
   getRules() {
     return this.api.get<any>('attendance/rules');
   }

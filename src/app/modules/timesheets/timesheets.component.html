@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="filters-section">
+  <!-- <div class="filters-section">
     <div class="filter-group">
       <label>Start Date:</label>
       <input type="date" [(ngModel)]="filters.start_date" (change)="onFilterChange()">
@@ -55,8 +55,55 @@
         <option value="Rejected">Rejected</option>
       </select>
     </div>
+  </div> -->
+
+  <div class="filters-section">
+
+  <!-- Start Date -->
+  <div class="filter-group">
+    <label for="startDate">Start Date</label>
+    <input
+      id="startDate"
+      type="date"
+      [(ngModel)]="filters.start_date"
+      (ngModelChange)="onFilterChange()"
+      class="form-control"
+    />
   </div>
 
+  <!-- End Date -->
+  <div class="filter-group">
+    <label for="endDate">End Date</label>
+    <input
+      id="endDate"
+      type="date"
+      [(ngModel)]="filters.end_date"
+      (ngModelChange)="onFilterChange()"
+      class="form-control"
+    />
+  </div>
+
+  <!-- Status -->
+  <div class="filter-group">
+    <label for="status">Status</label>
+    <select
+      id="status"
+      [(ngModel)]="filters.status"
+      (ngModelChange)="onFilterChange()"
+      class="form-control"
+    >
+      <option value="">All Status</option>
+      <option value="Draft">Draft</option>
+      <option value="Submitted">Submitted</option>
+      <option value="Approved">Approved</option>
+      <option value="Rejected">Rejected</option>
+    </select>
+  </div>
+
+
+ 
+
+</div>
   <div class="timesheets-list" *ngIf="!loading">
     <div class="timesheet-card" *ngFor="let timesheet of timesheets">
       <div class="timesheet-header">

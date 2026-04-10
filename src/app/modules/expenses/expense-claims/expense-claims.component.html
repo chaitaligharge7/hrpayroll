@@ -50,7 +50,7 @@
             <td>{{ claim.items_count || 0 }}</td>
             <td class="amount-cell">₹{{ claim.total_amount || 0 }}</td>
             <td>
-              <span class="badge badge-{{ claim.status.toLowerCase() }}">{{ claim.status }}</span>
+              <span class="badge" [ngClass]="getStatusClass(claim.status)">{{ claim.status }}</span>
             </td>
             <td>
               <button class="btn btn-sm btn-icon btn-view" (click)="viewExpenseClaim(claim.expense_id)" title="View Details">

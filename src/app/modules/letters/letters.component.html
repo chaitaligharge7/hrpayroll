@@ -18,6 +18,7 @@
         </small>
       </div>
 
+     
       <div class="form-group">
         <label>Employee:</label>
         <input type="number" [(ngModel)]="selectedEmployeeId" class="form-control" placeholder="Employee ID">
@@ -42,21 +43,26 @@
     <div class="letter-preview" *ngIf="generatedLetter">
       <div class="preview-header">
         <h3>Letter Generated Successfully</h3>
-        <button class="btn btn-success" (click)="downloadLetter()">
-          <i class="fas fa-download"></i> Download Letter
-        </button>
       </div>
       <div class="preview-info">
         <p><strong>File:</strong> {{ generatedLetter.filename }}</p>
         <p><strong>Path:</strong> {{ generatedLetter.letter_path }}</p>
-        <a [href]="generatedLetter.letter_url" target="_blank" class="btn btn-info">
-          <i class="fas fa-external-link-alt"></i> View Letter
-        </a>
+       <a
+  class="btn btn-info"
+  [href]="generatedLetter?.letter_url"
+  target="_blank"
+>
+  <i class="fas fa-eye"></i> 
+</a>
+
+<button class="btn btn-info" (click)="downloadLetter(generatedLetter)">
+  <i class="fas fa-download"></i> 
+</button>
       </div>
     </div>
   </div>
 
-  <div class="available-letters">
+  <!-- <div class="available-letters">
     <h3>Available Letter Types</h3>
     <div class="letters-grid">
       <div class="letter-card" *ngFor="let type of letterTypes">
@@ -72,7 +78,49 @@
         </div>
       </div>
     </div>
+  </div> -->
+
+
+  <div class="available-letters">
+  <h3>Available Letter Types</h3>
+  <div class="letters-grid">
+    <!-- Static letters -->
+    <div class="letter-card" *ngFor="let type of letterTypes">
+      <div class="letter-icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+      <div class="letter-info">
+        <h4>{{ type.name }}</h4>
+        <p>{{ type.description }}</p>
+        <div class="letter-requirements" *ngIf="type.requires.length > 0">
+          <small>Requires: {{ type.requires.join(', ') }}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generated letters -->
+    <div class="letter-card generated" *ngFor="let letter of generatedLetters">
+      <div class="letter-icon">
+        <i class="fas fa-file-download"></i>
+      </div>
+      <div class="letter-info">
+        <h4>{{ letter.filename }}</h4>
+        <p><strong>Employee ID:</strong> {{ letter.employeeId }}</p>
+<a
+  class="btn btn-info"
+  [href]="letter.letter_url"
+  target="_blank"
+>
+  <i class="fas fa-eye"></i> 
+</a>
+
+<button class="btn btn-info" (click)="downloadLetter(letter)">
+  <i class="fas fa-download"></i> 
+</button>
+      </div>
+    </div>
   </div>
+</div>
 
   <div class="loading-spinner" *ngIf="loading">
     <i class="fas fa-spinner fa-spin"></i> Generating letter...

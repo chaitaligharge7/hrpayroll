@@ -72,6 +72,18 @@ export class TrainingService {
     return this.apiService.get(`${this.base}/enrollments/list`, this.query(params));
   }
 
+  createEnrollment(data: unknown): Observable<any> {
+    return this.apiService.post(`${this.base}/enrollments/create`, data);
+  }
+
+  updateEnrollment(id: number, data: unknown): Observable<any> {
+    return this.apiService.put(`${this.base}/enrollments/update?id=${id}`, data);
+  }
+
+  deleteEnrollment(id: number): Observable<any> {
+    return this.apiService.delete(`${this.base}/enrollments/delete?id=${id}`);
+  }
+
   completeEnrollment(enrollmentId: number, data: unknown): Observable<any> {
     return this.apiService.post(`${this.base}/enrollments/complete?id=${enrollmentId}`, data);
   }

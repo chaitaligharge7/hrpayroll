@@ -201,4 +201,12 @@
     }
   }
 }
-
+.letter-dropdown-wrapper {
+  position: relative;
+  z-index: 10; /* dropdown always on top */
+}
+.letter-preview {
+  position: relative;
+  z-index: 15; /* above everything else */
+  margin-top: 24px;
+}

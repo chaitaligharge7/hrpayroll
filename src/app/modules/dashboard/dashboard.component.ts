@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { DashboardService } from "./dashboard.service";
-import { ChangeDetectorRef } from "@angular/core"; // ✅ NEW
+import { ChangeDetectorRef } from "@angular/core";
+import { TrainingService } from "../training/training.service";
 
 @Component({
   selector: "app-dashboard",
@@ -98,18 +99,43 @@ export class DashboardComponent implements OnInit {
     ];
   isLoading = true;
   welcomeMessage = "";
+  totalPrograms = 0;
+  totalCourses = 0;
 
   recentActivities: any[] = [];
   upcomingEvents: any[] = [];
 
   constructor(
     private dashboardService: DashboardService,
-    private cdr: ChangeDetectorRef, // ✅ ADD THIS
+    private trainingService: TrainingService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
+    this.loadTrainingStats();
   }
+  loadTrainingStats(): void {
+    this.trainingService.getPrograms().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.totalPrograms = (res.data || []).length;
+          this.cdr.detectChanges();
+        }
+      },
+      error: () => {}
+    });
+    this.trainingService.getCourses().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.totalCourses = (res.data || []).length;
+          this.cdr.detectChanges();
+        }
+      },
+      error: () => {}
+    });
+  }
+
   setWelcomeMessage(): void {
     const hour = new Date().getHours();
     const name = this.currentUser?.first_name || "Admin";

@@ -46,24 +46,25 @@ export class PayrollListComponent implements OnInit {
     });
   }
 
-  loadPayrolls(): void {
-    this.loading = true;
-    const params: any = { page: this.pagination.page, limit: this.pagination.limit };
-    if (this.selectedPeriod) params.period_id = this.selectedPeriod;
-    if (this.selectedStatus) params.status = this.selectedStatus;
+loadPayrolls(): void {
+    this.loading = true;
+    const params: any = { page: this.pagination.page, limit: this.pagination.limit };
+    if (this.selectedPeriod) params.period_id = this.selectedPeriod;
+    if (this.selectedStatus) params.status = this.selectedStatus;
 
-    this.payrollService.getPayrollList(params).subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.payrolls = res.data.payroll || [];
-          this.pagination = res.data.pagination || this.pagination;
-          this.summary = res.data.summary || this.summary;
-        }
-        this.loading = false;
-      },
-      error: () => this.loading = false
-    });
-  }
+    this.payrollService.getPayrollList(params).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.payrolls = res.data.payroll || [];
+          this.pagination = res.data.pagination || this.pagination;
+          this.summary = res.data.summary || this.summary;
+        }
+        this.loading = false;
+        this.cd.detectChanges();
+      },
+      error: () => this.loading = false
+    });
+  }
 
   onPeriodChange(): void { this.pagination.page = 1; this.loadPayrolls(); }
   onStatusChange(): void { 

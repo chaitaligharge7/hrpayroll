@@ -3,38 +3,94 @@
     <h3>Training</h3>
 
     <!-- Tab switchers -->
-    <button type="button" class="btn btn-light btn-sm"
+    <button
+      type="button"
+      class="btn btn-light btn-sm"
       [class.active]="activeTab === 'programs'"
-      (click)="activeTab = 'programs'">
+      (click)="activeTab = 'programs'"
+    >
       <i class="bi bi-collection me-1"></i>Programs
-      <span class="hdr-badge">{{ programs.length }}</span>
+      <span class="hdr-badge">{{ filteredPrograms.length }}</span>
     </button>
-    <button type="button" class="btn btn-light btn-sm"
+    <button
+      type="button"
+      class="btn btn-light btn-sm"
       [class.active]="activeTab === 'courses'"
-      (click)="activeTab = 'courses'">
+      (click)="activeTab = 'courses'"
+    >
       <i class="bi bi-book me-1"></i>Courses
-      <span class="hdr-badge">{{ courses.length }}</span>
+      <span class="hdr-badge">{{ filteredCourses.length }}</span>
     </button>
-    <button type="button" class="btn btn-light btn-sm"
+    <button
+      type="button"
+      class="btn btn-light btn-sm"
       [class.active]="activeTab === 'enrollments'"
-      (click)="activeTab = 'enrollments'">
+      (click)="activeTab = 'enrollments'"
+    >
       <i class="bi bi-people me-1"></i>Enrollments
       <span class="hdr-badge">{{ enrollments.length }}</span>
     </button>
 
     <!-- Action button -->
-    <button *ngIf="activeTab === 'programs'" class="btn btn-primary" (click)="createProgram()">
+    <button
+      *ngIf="activeTab === 'programs'"
+      class="btn btn-primary"
+      (click)="createProgram()"
+    >
       <i class="bi bi-plus-circle me-1"></i>New Program
     </button>
-    <button *ngIf="activeTab === 'courses'" class="btn btn-primary" (click)="createCourse()">
+    <button
+      *ngIf="activeTab === 'courses'"
+      class="btn btn-primary"
+      (click)="createCourse()"
+    >
       <i class="bi bi-plus-circle me-1"></i>New Course
+    </button>
+    <button
+      *ngIf="activeTab === 'enrollments'"
+      class="btn btn-primary"
+      (click)="createEnrollment()"
+    >
+      <i class="bi bi-person-plus me-1"></i>Enroll Employee
     </button>
   </div>
 
   <div class="card-body">
-
     <!-- ========== PROGRAMS TAB ========== -->
     <div *ngIf="activeTab === 'programs'">
+      <!-- Filters -->
+      <div class="row filter-row g-2">
+        <div class="col-md-7">
+          <div class="search-wrap">
+            <i class="bi bi-search search-icon"></i>
+            <input
+              type="text"
+              class="form-control search-input"
+              placeholder="Search by program name or code…"
+              [(ngModel)]="programSearch"
+            />
+            <button
+              *ngIf="programSearch || programStatusFilter"
+              class="search-clear"
+              (click)="programSearch = ''; programStatusFilter = ''"
+            >
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-auto">
+          <select
+            class="form-select filter-select"
+            [(ngModel)]="programStatusFilter"
+          >
+            <option value="">All Statuses</option>
+            <option *ngFor="let s of programStatusOptions" [value]="s">
+              {{ s }}
+            </option>
+          </select>
+        </div>
+      </div>
+
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -50,30 +106,38 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let p of programs">
-              <td><span class="code-chip">{{ p.program_code }}</span></td>
+            <tr *ngFor="let p of filteredPrograms">
+              <td>
+                <span class="code-chip">{{ p.program_code }}</span>
+              </td>
               <td>
                 <div class="fw-semibold">{{ p.program_name }}</div>
                 <div class="text-muted small" *ngIf="p.trainer_first_name">
-                  <i class="bi bi-person"></i> {{ p.trainer_first_name }} {{ p.trainer_last_name }}
+                  <i class="bi bi-person"></i> {{ p.trainer_first_name }}
+                  {{ p.trainer_last_name }}
                 </div>
               </td>
-              <td>{{ p.program_type || '—' }}</td>
-              <td>{{ p.duration_hours ? (p.duration_hours + 'h') : '—' }}</td>
+              <td>{{ p.program_type || "—" }}</td>
+              <td>{{ p.duration_hours ? p.duration_hours + "h" : "—" }}</td>
               <td class="text-muted small">
-                <span *ngIf="p.start_date">{{ p.start_date | date:'dd MMM yyyy' }}</span>
+                <span *ngIf="p.start_date">{{
+                  p.start_date | date: "dd MMM yyyy"
+                }}</span>
                 <span *ngIf="!p.start_date">—</span>
               </td>
               <td>{{ p.enrolled_count || 0 }}</td>
               <td>
-                <span class="badge"
+                <span
+                  class="badge"
                   [ngClass]="{
-                    'badge-success': p.status === 'Active',
+                    'badge-success': p.status === 'Completed',
                     'badge-warning': p.status === 'Draft' || !p.status,
-                    'badge-primary': p.status === 'Completed',
-                    'badge-danger': p.status === 'Cancelled'
-                  }">
-                  {{ p.status || 'Draft' }}
+                    'badge-primary': p.status === 'Ongoing',
+                    'badge-info': p.status === 'Scheduled',
+                    'badge-danger': p.status === 'Cancelled',
+                  }"
+                >
+                  {{ p.status || "Draft" }}
                 </span>
               </td>
               <td>
@@ -88,7 +152,7 @@
                 </button>
               </td>
             </tr>
-            <tr *ngIf="programs.length === 0 && !loadingPrograms">
+            <tr *ngIf="filteredPrograms.length === 0 && !loadingPrograms">
               <td colspan="8" class="text-center text-muted py-4">
                 No training programs found
               </td>
@@ -100,6 +164,39 @@
 
     <!-- ========== COURSES TAB ========== -->
     <div *ngIf="activeTab === 'courses'">
+      <!-- Filters -->
+      <div class="row filter-row g-2">
+        <div class="col-md-7">
+          <div class="search-wrap">
+            <i class="bi bi-search search-icon"></i>
+            <input
+              type="text"
+              class="form-control search-input"
+              placeholder="Search by course name or code…"
+              [(ngModel)]="courseSearch"
+            />
+            <button
+              *ngIf="courseSearch || courseTypeFilter"
+              class="search-clear"
+              (click)="courseSearch = ''; courseTypeFilter = ''"
+            >
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-auto">
+          <select
+            class="form-select filter-select"
+            [(ngModel)]="courseTypeFilter"
+          >
+            <option value="">All Types</option>
+            <option *ngFor="let t of courseTypeOptions" [value]="t">
+              {{ t }}
+            </option>
+          </select>
+        </div>
+      </div>
+
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -114,15 +211,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let c of courses">
-              <td><span class="code-chip">{{ c.course_code }}</span></td>
-              <td class="fw-semibold">{{ c.course_name }}</td>
-              <td class="text-muted">{{ c.program_name || '—' }}</td>
+            <tr *ngFor="let c of filteredCourses">
               <td>
-                <span class="badge badge-info" *ngIf="c.course_type">{{ c.course_type }}</span>
+                <span class="code-chip">{{ c.course_code }}</span>
+              </td>
+              <td class="fw-semibold">{{ c.course_name }}</td>
+              <td class="text-muted">{{ c.program_name || "—" }}</td>
+              <td>
+                <span class="badge badge-info" *ngIf="c.course_type">{{
+                  c.course_type
+                }}</span>
                 <span class="text-muted" *ngIf="!c.course_type">—</span>
               </td>
-              <td class="text-muted">{{ c.duration_hours ? (c.duration_hours + 'h') : '—' }}</td>
+              <td class="text-muted">
+                {{ c.duration_hours ? c.duration_hours + "h" : "—" }}
+              </td>
               <td>{{ c.enrolled_count || 0 }}</td>
               <td>
                 <button title="View" (click)="viewCourse(c.course_id)">
@@ -136,7 +239,7 @@
                 </button>
               </td>
             </tr>
-            <tr *ngIf="courses.length === 0 && !loadingCourses">
+            <tr *ngIf="filteredCourses.length === 0 && !loadingCourses">
               <td colspan="7" class="text-center text-muted py-4">
                 No training courses found
               </td>
@@ -148,6 +251,31 @@
 
     <!-- ========== ENROLLMENTS TAB ========== -->
     <div *ngIf="activeTab === 'enrollments'">
+
+      <!-- Enrollment Filters -->
+      <div class="row filter-row g-2 align-items-center">
+        <div class="col">
+          <div class="search-wrap">
+            <i class="bi bi-search search-icon"></i>
+            <input
+              type="text"
+              class="form-control search-input"
+              placeholder="Search by employee, program or course…"
+              [(ngModel)]="enrollmentSearch"
+            />
+            <button *ngIf="enrollmentSearch" class="search-clear" (click)="enrollmentSearch = ''">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-auto">
+          <select class="form-select filter-select" [(ngModel)]="enrollmentStatusFilter">
+            <option value="">All Statuses</option>
+            <option *ngFor="let s of enrollmentStatusOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+      </div>
+
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -158,35 +286,58 @@
               <th>Completion</th>
               <th>Score</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let e of enrollments">
-              <td class="fw-semibold">{{ e.first_name }} {{ e.last_name }}</td>
-              <td>{{ e.program_name || e.course_name || '—' }}</td>
-              <td class="text-muted">{{ e.enrolled_date | date:'dd MMM yyyy' }}</td>
+            <tr *ngFor="let e of filteredEnrollments">
+              <td>
+                <div class="fw-semibold">{{ e.first_name }} {{ e.last_name }}</div>
+                <div class="text-muted small" *ngIf="e.employee_code">{{ e.employee_code }}</div>
+              </td>
+              <td>{{ e.program_name || e.course_name || "—" }}</td>
+              <td class="text-muted">
+                {{ e.enrolled_date | date: "dd MMM yyyy" }}
+              </td>
               <td>
                 <div class="progress-wrap">
-                  <div class="progress-bar-mini"
-                    [style.width.%]="e.completion_percentage || 0"></div>
+                  <div
+                    class="progress-bar-mini"
+                    [style.width.%]="e.completion_percentage || 0"
+                  ></div>
                 </div>
                 <span class="text-muted small">{{ e.completion_percentage || 0 }}%</span>
               </td>
-              <td class="text-muted">{{ e.score !== null && e.score !== undefined ? e.score : '—' }}</td>
+              <td class="text-muted">
+                {{ e.score !== null && e.score !== undefined ? e.score : "—" }}
+              </td>
               <td>
-                <span class="badge"
+                <span
+                  class="badge"
                   [ngClass]="{
                     'badge-success': e.status === 'Completed',
                     'badge-primary': e.status === 'Enrolled' || e.status === 'In Progress',
                     'badge-warning': e.status === 'Pending' || !e.status,
-                    'badge-danger': e.status === 'Cancelled'
-                  }">
-                  {{ e.status || 'Pending' }}
+                    'badge-danger':  e.status === 'Cancelled'
+                  }"
+                >
+                  {{ e.status || "Pending" }}
                 </span>
               </td>
+              <td>
+                <button title="View" (click)="viewEnrollment(e.enrollment_id)">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button title="Edit" (click)="editEnrollment(e.enrollment_id)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button title="Delete" (click)="deleteEnrollment(e)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
             </tr>
-            <tr *ngIf="enrollments.length === 0 && !loadingEnrollments">
-              <td colspan="6" class="text-center text-muted py-4">
+            <tr *ngIf="filteredEnrollments.length === 0 && !loadingEnrollments">
+              <td colspan="7" class="text-center text-muted py-4">
                 No enrollments found
               </td>
             </tr>
@@ -194,26 +345,5 @@
         </table>
       </div>
     </div>
-
   </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal-backdrop" *ngIf="deleteModal.show" (click)="closeDeleteModal()"></div>
-<div class="delete-modal" *ngIf="deleteModal.show">
-  <div class="delete-modal-header">
-    <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
-    Confirm Delete
-  </div>
-  <div class="delete-modal-body">
-    Are you sure you want to delete <strong>{{ deleteModal.name }}</strong>? This action cannot be undone.
-  </div>
-  <div class="delete-modal-footer">
-    <button class="btn btn-secondary btn-sm" (click)="closeDeleteModal()">Cancel</button>
-    <button class="btn btn-danger btn-sm" (click)="confirmDelete()" [disabled]="deleteModal.loading">
-      <span *ngIf="deleteModal.loading" class="spinner-border spinner-border-sm me-1"></span>
-      {{ deleteModal.loading ? 'Deleting…' : 'Delete' }}
-    </button>
-  </div>
-</div>
-

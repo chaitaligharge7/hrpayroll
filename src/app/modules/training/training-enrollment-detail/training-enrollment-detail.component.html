@@ -1,0 +1,168 @@
+<div class="detail-container">
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-wrap">
+    <div class="spinner"></div>
+    <p>Loading enrollment details…</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="!loading && errorMessage" class="card error-card">
+    <div class="card-body text-center py-5">
+      <i class="bi bi-exclamation-circle error-icon"></i>
+      <p class="error-text mt-3">{{ errorMessage }}</p>
+      <button class="btn btn-outline" (click)="goBack()">
+        <i class="bi bi-arrow-left me-1"></i>Back to Enrollments
+      </button>
+    </div>
+  </div>
+
+  <!-- Detail card -->
+  <div *ngIf="!loading && !errorMessage && enrollment" class="card">
+
+    <!-- Header -->
+    <div class="card-header">
+      <button class="btn-back" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <div class="header-info">
+        <h3>Enrollment Details</h3>
+        <span class="header-id">ID #{{ enrollment.enrollment_id }}</span>
+      </div>
+      <span class="badge header-badge" [ngClass]="getStatusClass(enrollment.status)">
+        {{ enrollment.status || 'Pending' }}
+      </span>
+      <button class="btn btn-primary" (click)="editEnrollment()">
+        <i class="bi bi-pencil me-1"></i>Edit
+      </button>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Employee Info -->
+      <div class="section">
+        <div class="section-title">
+          <i class="bi bi-person-circle"></i> Employee
+        </div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Full Name</span>
+            <span class="detail-value">{{ enrollment.first_name }} {{ enrollment.last_name }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Employee Code</span>
+            <span class="detail-value">
+              <span class="code-chip" *ngIf="enrollment.employee_code">{{ enrollment.employee_code }}</span>
+              <span class="text-muted" *ngIf="!enrollment.employee_code">—</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Training Info -->
+      <div class="section">
+        <div class="section-title">
+          <i class="bi bi-mortarboard"></i> Training Details
+        </div>
+        <div class="detail-grid">
+          <div class="detail-item" *ngIf="enrollment.program_name">
+            <span class="detail-label">Program</span>
+            <span class="detail-value fw-semibold">{{ enrollment.program_name }}</span>
+          </div>
+          <div class="detail-item" *ngIf="enrollment.course_name">
+            <span class="detail-label">Course</span>
+            <span class="detail-value fw-semibold">{{ enrollment.course_name }}</span>
+          </div>
+          <div class="detail-item" *ngIf="!enrollment.program_name && !enrollment.course_name">
+            <span class="detail-label">Training</span>
+            <span class="detail-value text-muted">—</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Enrollment Type</span>
+            <span class="detail-value">{{ enrollment.enrollment_type || '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="section">
+        <div class="section-title">
+          <i class="bi bi-calendar3"></i> Schedule
+        </div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Enrolled Date</span>
+            <span class="detail-value">
+              {{ enrollment.enrolled_date ? (enrollment.enrolled_date | date:'dd MMM yyyy') : '—' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Completion Date</span>
+            <span class="detail-value">
+              {{ enrollment.completion_date ? (enrollment.completion_date | date:'dd MMM yyyy') : '—' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Due Date</span>
+            <span class="detail-value">
+              {{ enrollment.due_date ? (enrollment.due_date | date:'dd MMM yyyy') : '—' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress & Score -->
+      <div class="section">
+        <div class="section-title">
+          <i class="bi bi-bar-chart-line"></i> Progress &amp; Score
+        </div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Completion</span>
+            <div class="progress-container">
+              <div class="progress-track">
+                <div class="progress-fill" [style.width.%]="enrollment.completion_percentage || 0"></div>
+              </div>
+              <span class="progress-label">{{ enrollment.completion_percentage || 0 }}%</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Score</span>
+            <span class="detail-value score-value" *ngIf="enrollment.score !== null && enrollment.score !== undefined">
+              {{ enrollment.score }}
+            </span>
+            <span class="detail-value text-muted" *ngIf="enrollment.score === null || enrollment.score === undefined">
+              —
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Status</span>
+            <span class="badge" [ngClass]="getStatusClass(enrollment.status)">
+              {{ enrollment.status || 'Pending' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remarks -->
+      <div class="section" *ngIf="enrollment.remarks">
+        <div class="section-title">
+          <i class="bi bi-chat-text"></i> Remarks
+        </div>
+        <p class="remarks-text">{{ enrollment.remarks }}</p>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <button class="btn btn-outline" (click)="goBack()">
+        <i class="bi bi-arrow-left me-1"></i>Back
+      </button>
+      <button class="btn btn-primary" (click)="editEnrollment()">
+        <i class="bi bi-pencil me-1"></i>Edit Enrollment
+      </button>
+    </div>
+
+  </div>
+</div>

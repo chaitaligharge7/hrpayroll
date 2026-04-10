@@ -34,6 +34,6 @@ export class ExpenseClaimsService {
   }
 
   getCategories(): Observable<any> {
-    return this.apiService.get('expenses/categories/list');
+    return this.apiService.get('expenses/categories/list.php');
   }
 }

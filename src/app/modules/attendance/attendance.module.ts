@@ -9,8 +9,12 @@ import { AttendanceService } from './attendance.service';
 const routes: Routes = [{ path: '', component: AttendanceComponent }];
 
 @NgModule({
-  declarations: [AttendanceComponent],
-  imports: [CommonModule, FormsModule, RouterModule.forChild(routes)],
+  declarations: [AttendanceComponent],   
+  imports: [
+    CommonModule,                       
+    FormsModule,                         
+    RouterModule.forChild(routes)
+  ],
   providers: [AttendanceService]
 })
 export class AttendanceModule {}

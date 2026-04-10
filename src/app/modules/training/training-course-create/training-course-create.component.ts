@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -30,22 +30,22 @@ export class TrainingCourseCreateComponent implements OnInit {
   loadingPrograms = false;
   errorMessage = '';
 
-  courseTypes = ['Technical', 'Soft Skills', 'Compliance', 'Safety', 'Product', 'Leadership', 'Other'];
+  courseTypes = ['Mandatory', 'Optional', 'Certification', 'Skill Development'];
 
   constructor(
     private trainingService: TrainingService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.loadPrograms();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
       this.courseId = +id;
-      this.loadCourse();
     }
+    this.loadPrograms();
   }
 
   loadCourse(): void {
@@ -58,12 +58,13 @@ export class TrainingCourseCreateComponent implements OnInit {
           this.form = {
             course_code: c.course_code || '',
             course_name: c.course_name || '',
-            program_id: c.program_id || '',
+            program_id: c.program_id ? String(c.program_id) : '',
             course_type: c.course_type || '',
             course_description: c.course_description || '',
             duration_hours: c.duration_hours || '',
             course_url: c.course_url || ''
           };
+          this.cdr.detectChanges();
         } else {
           this.errorMessage = 'Course not found.';
         }
@@ -83,9 +84,16 @@ export class TrainingCourseCreateComponent implements OnInit {
           this.programs = res.data || [];
         }
         this.loadingPrograms = false;
+        this.cdr.detectChanges();
+        if (this.isEditMode && this.courseId) {
+          this.loadCourse();
+        }
       },
       error: () => {
         this.loadingPrograms = false;
+        if (this.isEditMode && this.courseId) {
+          this.loadCourse();
+        }
       }
     });
   }

@@ -113,6 +113,17 @@ export class ExpenseClaimsComponent implements OnInit {
     return Math.ceil(this.total / this.limit);
   }
 
+  getStatusClass(status: string): string {
+    if (!status) return '';
+    switch (status.toLowerCase()) {
+      case 'pending':  return 'badge-pending';
+      case 'approved': return 'badge-approved';
+      case 'rejected': return 'badge-rejected';
+      case 'paid':     return 'badge-paid';
+      default:         return '';
+    }
+  }
+
   getMath(): typeof Math {
     return Math;
   }
